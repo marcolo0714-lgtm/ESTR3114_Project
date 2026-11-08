@@ -1,0 +1,24 @@
+{
+  "model": "openai-community/gpt2",
+  "model_revision_requested": "main",
+  "model_revision_resolved": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+  "model_snapshot": "C:\\Users\\marco\\OneDrive\\\u6587\u4ef6\\VSCODE\\ESTR3114 Project\\resources\\model",
+  "dataset": "cardiffnlp/tweet_eval/sentiment",
+  "dataset_revision_requested": "main",
+  "dataset_revision_resolved": "b3a375baf0f409c77e6bc7aa35102b7b3534f8be",
+  "dataset_fingerprints": {
+    "train": "17601d7b30ad36da",
+    "validation": "96cfe0d503f5182d",
+    "test": "c70d63b8adb64464"
+  },
+  "counts": {
+    "train": 45615,
+    "validation": 2000,
+    "test": 12284
+  },
+  "label_names": [
+    "negative",
+    "neutral",
+    "positive"
+  ]
+}
