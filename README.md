@@ -30,60 +30,7 @@ only. The dataset and model files are too large to include in a source checkout;
 run the preparation step before training. Sources are listed in
 `resources/REFERENCES.md`. Do not tune on the test split.
 
-The root scripts are numbered by workflow: **1** prepare assets, **2** train one
-condition, **3** run the full experiment, **4** analyze results, and **5** inspect
-a saved checkpoint. Step 3 calls step 2 internally; step 5 requires a checkpoint
-saved with `--save-model`. The numbers are a guide, not a requirement to run
-every script in sequence.
 
-## Root Python scripts
-
-Install the packages in `requirements.txt` first. Paths below use the default
-output locations.
-
-- **`1_prepare_assets.py`**
-  - **Purpose:** Download GPT-2 and TweetEval sentiment for later offline use.
-  - **Dependencies:** Internet access; `datasets` and `huggingface_hub`
-    (installed through the requirements). No earlier script is required.
-  - **Output:** `resources/model/` (weights and tokenizer),
-    `resources/data/{train,validation,test}.jsonl`, `resources/hf_cache/`, and
-    `resources/manifest.json` (revisions and dataset metadata).
-- **`2_train.py`**
-  - **Purpose:** Train and evaluate one token-only, sentiment-only, joint, or
-    PCGrad condition.
-  - **Dependencies:** Assets from step 1; `src/data.py`, `src/model.py`,
-    `src/gradients.py`, and `src/evaluation.py`; PyTorch, Transformers, NumPy,
-    and scikit-learn.
-  - **Output:** `results/<method>_w<weight>_seed<seed>/` containing
-    `config.json`, `history.jsonl`, and `summary.json`. `--test` adds test
-    metrics; `--save-model` also writes `final_model.pt` and `tokenizer/`.
-- **`3_run_experiments.py`**
-  - **Purpose:** Select the sentiment weight using a validation pilot, then
-    compare all four methods across seeds.
-  - **Dependencies:** Calls `2_train.py` internally and inherits its
-    dependencies and prepared assets. No separate step 2 run is needed.
-  - **Output:** `results/comparison/pilot/` and `main/` with per-run
-    configuration, history, and summary files; `pilot_selection.json` and
-    `main_summary.csv`. Defaults: 4 pilot runs and 12 main runs. Does not save
-    model checkpoints.
-- **`4_analyze.py`**
-  - **Purpose:** Plot results and aggregate performance, gradient conflicts,
-    and runtime.
-  - **Dependencies:** Step 3's `main/*/history.jsonl` and `main_summary.csv`;
-    optionally `pilot_selection.json`; Matplotlib and NumPy.
-  - **Output:** Under `results/comparison/`, `analysis_summary.json` and
-    `figures/convergence.png`, `tradeoff.png`, and `runtime.png`, plus
-    `layer_conflicts.png` when gradient diagnostics exist.
-- **`5_predict.py`**
-  - **Purpose:** Inspect one text's sentiment, sentiment probabilities, token
-    loss, and perplexity.
-  - **Dependencies:** `final_model.pt` from step 2 with `--save-model`;
-    step 1's local model/tokenizer assets; `src/model.py`, PyTorch, and
-    Transformers.
-  - **Output:** Prints a JSON result to the terminal. Creates no files.
-
-Steps 2 and 3 accept `--output` to change their destination; step 4 accepts
-`--results` to choose the experiment folder to analyze.
 
 ## Run one condition
 
@@ -213,6 +160,61 @@ appear as training and analysis complete; model checkpoints are optional.
 └── requirements.txt                   # Python dependencies
 ```
 
+The root scripts are numbered by workflow: **1** prepare assets, **2** train one
+condition, **3** run the full experiment, **4** analyze results, and **5** inspect
+a saved checkpoint. Step 3 calls step 2 internally; step 5 requires a checkpoint
+saved with `--save-model`. The numbers are a guide, not a requirement to run
+every script in sequence.
+
 Run local checks with `python -m pytest -q`. These tests use tiny tensors and
 do not require model downloads. To verify full integration, run the two-step
 development command above after preparing the resources.
+
+## Root Python scripts
+
+Install the packages in `requirements.txt` first. Paths below use the default
+output locations.
+
+- **`1_prepare_assets.py`**
+  - **Purpose:** Download GPT-2 and TweetEval sentiment for later offline use.
+  - **Dependencies:** Internet access; `datasets` and `huggingface_hub`
+    (installed through the requirements). No earlier script is required.
+  - **Output:** `resources/model/` (weights and tokenizer),
+    `resources/data/{train,validation,test}.jsonl`, `resources/hf_cache/`, and
+    `resources/manifest.json` (revisions and dataset metadata).
+- **`2_train.py`**
+  - **Purpose:** Train and evaluate one token-only, sentiment-only, joint, or
+    PCGrad condition.
+  - **Dependencies:** Assets from step 1; `src/data.py`, `src/model.py`,
+    `src/gradients.py`, and `src/evaluation.py`; PyTorch, Transformers, NumPy,
+    and scikit-learn.
+  - **Output:** `results/<method>_w<weight>_seed<seed>/` containing
+    `config.json`, `history.jsonl`, and `summary.json`. `--test` adds test
+    metrics; `--save-model` also writes `final_model.pt` and `tokenizer/`.
+- **`3_run_experiments.py`**
+  - **Purpose:** Select the sentiment weight using a validation pilot, then
+    compare all four methods across seeds.
+  - **Dependencies:** Calls `2_train.py` internally and inherits its
+    dependencies and prepared assets. No separate step 2 run is needed.
+  - **Output:** `results/comparison/pilot/` and `main/` with per-run
+    configuration, history, and summary files; `pilot_selection.json` and
+    `main_summary.csv`. Defaults: 4 pilot runs and 12 main runs. Does not save
+    model checkpoints.
+- **`4_analyze.py`**
+  - **Purpose:** Plot results and aggregate performance, gradient conflicts,
+    and runtime.
+  - **Dependencies:** Step 3's `main/*/history.jsonl` and `main_summary.csv`;
+    optionally `pilot_selection.json`; Matplotlib and NumPy.
+  - **Output:** Under `results/comparison/`, `analysis_summary.json` and
+    `figures/convergence.png`, `tradeoff.png`, and `runtime.png`, plus
+    `layer_conflicts.png` when gradient diagnostics exist.
+- **`5_predict.py`**
+  - **Purpose:** Inspect one text's sentiment, sentiment probabilities, token
+    loss, and perplexity.
+  - **Dependencies:** `final_model.pt` from step 2 with `--save-model`;
+    step 1's local model/tokenizer assets; `src/model.py`, PyTorch, and
+    Transformers.
+  - **Output:** Prints a JSON result to the terminal. Creates no files.
+
+Steps 2 and 3 accept `--output` to change their destination; step 4 accepts
+`--results` to choose the experiment folder to analyze.
