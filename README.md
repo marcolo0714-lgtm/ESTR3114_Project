@@ -32,7 +32,26 @@ run the preparation step before training. Sources are listed in
 
 
 
-## Run one condition
+## How to use
+
+Run commands from the project root after installing the requirements. Prepare
+assets first, then choose either an individual training run or the full
+experiment. Step 3 calls step 2 internally; you do not need to run both.
+
+### 1. Prepare assets: `1_prepare_assets.py`
+
+```powershell
+python 1_prepare_assets.py
+```
+
+This downloads GPT-2, its tokenizer, and TweetEval sentiment into `resources/`
+with revision metadata. Internet access is required for preparation; subsequent
+training and prediction use local files. Skip this step if assets are already
+prepared.
+
+### 2. Train one condition: `2_train.py`
+
+Use this script to train and evaluate one method:
 
 ```powershell
 python 2_train.py --method joint --weight 0.3 --seed 42 --steps 1000
@@ -52,19 +71,15 @@ python 2_train.py --method pcgrad --steps 2 --eval-every 2 `
   --validation-limit 8 --max-length 32 --device cpu
 ```
 
-To inspect a trained checkpoint, use `--save-model` while training and then:
+Each run saves `config.json`, `history.jsonl`, and `summary.json` under
+`results/<method>_w<weight>_seed<seed>/` by default. For joint and PCGrad,
+`--weight` controls the sentiment task's contribution to the update.
 
-```powershell
-python 5_predict.py --checkpoint results/pcgrad_w0.3_seed42/final_model.pt `
-  --text "I love this!"
-```
-
-## Full experiment
+### 3. Run the full experiment: `3_run_experiments.py`
 
 ```powershell
 python 3_run_experiments.py --weights 0.1 0.3 1.0 --seeds 42 43 44 `
   --pilot-steps 100 --main-steps 1000
-python 4_analyze.py --results results/comparison
 ```
 
 The pilot compares weighted joint AdamW candidates to a token-only control on
@@ -75,6 +90,50 @@ three seeds and all four main conditions. The main runs evaluate the test split
 only after training. `main_summary.csv`, each run's `config.json`, `history.jsonl`,
 and `summary.json`, plus four figures and `analysis_summary.json` provide the
 project's results. Runtime varies substantially by device.
+
+With these defaults, there are 4 pilot runs and 12 main runs. Training outputs
+are saved under `results/comparison/pilot/` and `results/comparison/main/`, with
+`pilot_selection.json` and `main_summary.csv` at the comparison folder's root.
+Use `--output` to change that folder. This script saves metrics but does not
+save model checkpoints. Run step 4 separately to create the figures and
+analysis summary.
+
+### 4. Analyze results: `4_analyze.py`
+
+After the full experiment completes, run:
+
+```powershell
+python 4_analyze.py --results results/comparison
+```
+
+`--results` selects the experiment folder. The script reads the main run
+histories and `main_summary.csv`, plus optional pilot results, and writes
+`analysis_summary.json` and plots under `figures/`:
+
+- `convergence.png`: validation token loss and macro-F1 over training.
+- `tradeoff.png`: token loss versus sentiment macro-F1 across methods.
+- `runtime.png`: mean wall-clock seconds per training step.
+- `layer_conflicts.png`: per-layer conflict frequency, when gradient
+  diagnostics are available.
+
+### 5. Inspect a checkpoint: `5_predict.py`
+
+To inspect a trained checkpoint, use `--save-model` while training:
+
+```powershell
+python 2_train.py --method pcgrad --weight 0.3 --seed 42 --steps 1000 --save-model
+```
+
+Then provide the saved weights and a text:
+
+```powershell
+python 5_predict.py --checkpoint results/pcgrad_w0.3_seed42/final_model.pt `
+  --text "I love this!"
+```
+
+The script requires the local model/tokenizer assets from step 1. It prints
+JSON containing the predicted sentiment, probabilities for all three labels,
+token loss, and perplexity. It creates no files.
 
 ## What is measured
 
