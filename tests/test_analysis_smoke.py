@@ -3,7 +3,9 @@
 import csv
 import json
 
-from analyze import plot_all
+from importlib import import_module
+
+plot_all = import_module("4_analyze").plot_all
 
 
 def test_analysis_creates_all_figures(tmp_path):

@@ -1,6 +1,6 @@
 """Download exact inputs into resources/ for offline training afterwards.
 
-Run once with network access: python prepare_assets.py
+Run once with network access: python 1_prepare_assets.py
 """
 
 import argparse

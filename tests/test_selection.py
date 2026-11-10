@@ -1,4 +1,6 @@
-from run_experiments import choose_weight
+from importlib import import_module
+
+choose_weight = import_module("3_run_experiments").choose_weight
 
 
 def test_validation_selection_respects_token_loss_guardrail():

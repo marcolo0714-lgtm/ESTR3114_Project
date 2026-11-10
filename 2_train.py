@@ -1,6 +1,6 @@
 """Train one condition; save JSONL curves and reproducibility metadata.
 
-Example: python train.py --method pcgrad --weight 0.3 --seed 42
+Example: python 2_train.py --method pcgrad --weight 0.3 --seed 42
 """
 
 import argparse
@@ -62,7 +62,7 @@ def run(args):
     data_dir = ROOT / "resources" / "data"
     for path in (model_dir / "config.json", data_dir / "train.jsonl", data_dir / "validation.jsonl"):
         if not path.exists():
-            raise FileNotFoundError(f"Missing {path}; run python prepare_assets.py first")
+            raise FileNotFoundError(f"Missing {path}; run python 1_prepare_assets.py first")
 
     from transformers import AutoTokenizer, GPT2Model
 

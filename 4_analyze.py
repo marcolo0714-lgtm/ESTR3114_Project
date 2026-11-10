@@ -1,6 +1,6 @@
 """Build trade-off, learning, gradient-conflict and overhead figures.
 
-Usage: python analyze.py --results results/comparison
+Usage: python 4_analyze.py --results results/comparison
 """
 
 import argparse

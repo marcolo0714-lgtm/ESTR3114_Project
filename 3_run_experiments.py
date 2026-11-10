@@ -8,7 +8,11 @@ import csv
 import json
 from pathlib import Path
 
-from train import ROOT, run
+from importlib import import_module
+
+# importlib supports the numbered training script filename.
+train = import_module("2_train")
+ROOT, run = train.ROOT, train.run
 
 
 def parse_args():

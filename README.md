@@ -16,25 +16,47 @@ needs are substantial. Reduce `--batch-size` and `--max-length` when needed.
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python prepare_assets.py
+python 1_prepare_assets.py
 ```
 
 For a GPU, install a CUDA-enabled PyTorch build using the instructions for your
 driver at https://pytorch.org/get-started/locally/ before installing the remaining
 requirements. Check `python -c "import torch; print(torch.cuda.is_available())"`.
 
-`prepare_assets.py` requires internet **once**. It writes the GPT-2 checkpoint,
+`1_prepare_assets.py` requires internet **once**. It writes the GPT-2 checkpoint,
 tokenizer, TweetEval's original train/validation/test splits, download cache, and
 revision metadata under `resources/`. After that, training reads local files
 only. The dataset and model files are too large to include in a source checkout;
 run the preparation step before training. Sources are listed in
 `resources/REFERENCES.md`. Do not tune on the test split.
 
+The root scripts are numbered by workflow: **1** prepare assets, **2** train one
+condition, **3** run the full experiment, **4** analyze results, and **5** inspect
+a saved checkpoint. Step 3 calls step 2 internally; step 5 requires a checkpoint
+saved with `--save-model`. The numbers are a guide, not a requirement to run
+every script in sequence.
+
+## Root Python scripts
+
+Install the packages in `requirements.txt` first. The table lists each script's
+main Python dependencies, required inputs, and outputs (using default paths).
+
+| Script | Purpose | Dependencies and inputs | Output |
+| --- | --- | --- | --- |
+| `1_prepare_assets.py` | Download GPT-2 and TweetEval sentiment for later offline use. | Internet access; `datasets` and `huggingface_hub` (installed through the requirements). No earlier script is required. | `resources/model/` (weights and tokenizer), `resources/data/{train,validation,test}.jsonl`, `resources/hf_cache/`, and `resources/manifest.json` (revisions and dataset metadata). |
+| `2_train.py` | Train one token-only, sentiment-only, joint, or PCGrad condition and evaluate it. | Assets from step 1; `src/data.py`, `src/model.py`, `src/gradients.py`, and `src/evaluation.py`; PyTorch, Transformers, NumPy, and scikit-learn. | `results/<method>_w<weight>_seed<seed>/` containing `config.json`, `history.jsonl`, and `summary.json`. `--test` adds test metrics to the summary; `--save-model` also writes `final_model.pt` and `tokenizer/`. |
+| `3_run_experiments.py` | Select the sentiment weight using a validation pilot, then compare all four methods across seeds. | Calls `2_train.py` internally and inherits its dependencies and prepared assets. No separate step 2 run is needed. | `results/comparison/pilot/` and `main/` with per-run configuration, history, and summary files; `pilot_selection.json` and `main_summary.csv`. Defaults: 4 pilot runs and 12 main runs. Does not save model checkpoints. |
+| `4_analyze.py` | Plot experiment results and aggregate performance, gradient conflicts, and runtime. | Results from step 3: `main/*/history.jsonl` and `main_summary.csv`; optionally `pilot_selection.json`; Matplotlib and NumPy. | Under `results/comparison/`: `analysis_summary.json` and `figures/convergence.png`, `tradeoff.png`, `runtime.png`, plus `layer_conflicts.png` when gradient diagnostics exist. |
+| `5_predict.py` | Inspect one text's predicted sentiment, sentiment probabilities, token loss, and perplexity. | `final_model.pt` from step 2 with `--save-model`; local model/tokenizer assets from step 1; `src/model.py`, PyTorch, and Transformers. | Prints a JSON result to the terminal. Creates no files. |
+
+Steps 2 and 3 accept `--output` to change their destination; step 4 accepts
+`--results` to choose the experiment folder to analyze.
+
 ## Run one condition
 
 ```powershell
-python train.py --method joint --weight 0.3 --seed 42 --steps 1000
-python train.py --method pcgrad --weight 0.3 --seed 42 --steps 1000
+python 2_train.py --method joint --weight 0.3 --seed 42 --steps 1000
+python 2_train.py --method pcgrad --weight 0.3 --seed 42 --steps 1000
 ```
 
 `--method` accepts `token`, `sentiment`, `joint`, and `pcgrad`. Use the same
@@ -45,7 +67,7 @@ and can consume substantial disk space; metrics are always saved. A smaller
 development run, once the resources are prepared:
 
 ```powershell
-python train.py --method pcgrad --steps 2 --eval-every 2 `
+python 2_train.py --method pcgrad --steps 2 --eval-every 2 `
   --diagnostics-every 1 --batch-size 1 --train-limit 8 `
   --validation-limit 8 --max-length 32 --device cpu
 ```
@@ -53,16 +75,16 @@ python train.py --method pcgrad --steps 2 --eval-every 2 `
 To inspect a trained checkpoint, use `--save-model` while training and then:
 
 ```powershell
-python predict.py --checkpoint results/pcgrad_w0.3_seed42/final_model.pt `
+python 5_predict.py --checkpoint results/pcgrad_w0.3_seed42/final_model.pt `
   --text "I love this!"
 ```
 
 ## Full experiment
 
 ```powershell
-python run_experiments.py --weights 0.1 0.3 1.0 --seeds 42 43 44 `
+python 3_run_experiments.py --weights 0.1 0.3 1.0 --seeds 42 43 44 `
   --pilot-steps 100 --main-steps 1000
-python analyze.py --results results/comparison
+python 4_analyze.py --results results/comparison
 ```
 
 The pilot compares weighted joint AdamW candidates to a token-only control on
@@ -106,15 +128,15 @@ as well as improvements.
 
 | File | Purpose |
 | --- | --- |
-| `prepare_assets.py` | Download and record local model/data resources |
+| `1_prepare_assets.py` | Download and record local model/data resources |
 | `src/data.py` | Tokenization, EOS, and right padding |
 | `src/model.py` | Two heads and masked task losses |
 | `src/gradients.py` | Gradient extraction, PCGrad, and diagnostics |
 | `src/evaluation.py` | Aggregate validation/test metrics |
-| `train.py` | Reproducible single-condition training |
-| `run_experiments.py` | Validation pilot and matched three-seed comparison |
-| `analyze.py` | Figures and aggregate summary |
-| `predict.py` | Inspect a saved checkpoint on one text |
+| `2_train.py` | Reproducible single-condition training |
+| `3_run_experiments.py` | Validation pilot and matched three-seed comparison |
+| `4_analyze.py` | Figures and aggregate summary |
+| `5_predict.py` | Inspect a saved checkpoint on one text |
 
 Run local checks with `python -m pytest -q`. These tests use tiny tensors and
 do not require model downloads. To verify full integration, run the two-step

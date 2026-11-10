@@ -1,6 +1,6 @@
 """Inspect sentiment probabilities and token perplexity from saved final weights.
 
-Example: python predict.py --checkpoint results/pcgrad_w0.3_seed42/final_model.pt --text "I love this!"
+Example: python 5_predict.py --checkpoint results/pcgrad_w0.3_seed42/final_model.pt --text "I love this!"
 """
 
 import argparse
@@ -21,7 +21,7 @@ LABELS = ("negative", "neutral", "positive")
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--checkpoint", type=Path, required=True,
-                        help="Final weights saved by train.py --save-model")
+                        help="Final weights saved by 2_train.py --save-model")
     parser.add_argument("--text", required=True)
     parser.add_argument("--max-length", type=int, default=96)
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")

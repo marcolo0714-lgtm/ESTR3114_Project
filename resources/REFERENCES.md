@@ -1,6 +1,6 @@
 # Project resources
 
-The proposal is in `../estr3114_proposal.pdf`. `prepare_assets.py` downloads
+The proposal is in `../estr3114_proposal.pdf`. `1_prepare_assets.py` downloads
 the actual model and dataset into this directory; no extra external cache is
 needed for a run after preparation.
 

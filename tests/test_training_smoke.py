@@ -11,7 +11,9 @@ from types import SimpleNamespace
 import torch
 from torch import nn
 
-import train
+from importlib import import_module
+
+train = import_module("2_train")
 
 
 class TinyTokenizer:
