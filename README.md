@@ -38,16 +38,49 @@ every script in sequence.
 
 ## Root Python scripts
 
-Install the packages in `requirements.txt` first. The table lists each script's
-main Python dependencies, required inputs, and outputs (using default paths).
+Install the packages in `requirements.txt` first. Paths below use the default
+output locations.
 
-| Script | Purpose | Dependencies and inputs | Output |
-| --- | --- | --- | --- |
-| `1_prepare_assets.py` | Download GPT-2 and TweetEval sentiment for later offline use. | Internet access; `datasets` and `huggingface_hub` (installed through the requirements). No earlier script is required. | `resources/model/` (weights and tokenizer), `resources/data/{train,validation,test}.jsonl`, `resources/hf_cache/`, and `resources/manifest.json` (revisions and dataset metadata). |
-| `2_train.py` | Train one token-only, sentiment-only, joint, or PCGrad condition and evaluate it. | Assets from step 1; `src/data.py`, `src/model.py`, `src/gradients.py`, and `src/evaluation.py`; PyTorch, Transformers, NumPy, and scikit-learn. | `results/<method>_w<weight>_seed<seed>/` containing `config.json`, `history.jsonl`, and `summary.json`. `--test` adds test metrics to the summary; `--save-model` also writes `final_model.pt` and `tokenizer/`. |
-| `3_run_experiments.py` | Select the sentiment weight using a validation pilot, then compare all four methods across seeds. | Calls `2_train.py` internally and inherits its dependencies and prepared assets. No separate step 2 run is needed. | `results/comparison/pilot/` and `main/` with per-run configuration, history, and summary files; `pilot_selection.json` and `main_summary.csv`. Defaults: 4 pilot runs and 12 main runs. Does not save model checkpoints. |
-| `4_analyze.py` | Plot experiment results and aggregate performance, gradient conflicts, and runtime. | Results from step 3: `main/*/history.jsonl` and `main_summary.csv`; optionally `pilot_selection.json`; Matplotlib and NumPy. | Under `results/comparison/`: `analysis_summary.json` and `figures/convergence.png`, `tradeoff.png`, `runtime.png`, plus `layer_conflicts.png` when gradient diagnostics exist. |
-| `5_predict.py` | Inspect one text's predicted sentiment, sentiment probabilities, token loss, and perplexity. | `final_model.pt` from step 2 with `--save-model`; local model/tokenizer assets from step 1; `src/model.py`, PyTorch, and Transformers. | Prints a JSON result to the terminal. Creates no files. |
+- **`1_prepare_assets.py`**
+  - **Purpose:** Download GPT-2 and TweetEval sentiment for later offline use.
+  - **Dependencies:** Internet access; `datasets` and `huggingface_hub`
+    (installed through the requirements). No earlier script is required.
+  - **Output:** `resources/model/` (weights and tokenizer),
+    `resources/data/{train,validation,test}.jsonl`, `resources/hf_cache/`, and
+    `resources/manifest.json` (revisions and dataset metadata).
+- **`2_train.py`**
+  - **Purpose:** Train and evaluate one token-only, sentiment-only, joint, or
+    PCGrad condition.
+  - **Dependencies:** Assets from step 1; `src/data.py`, `src/model.py`,
+    `src/gradients.py`, and `src/evaluation.py`; PyTorch, Transformers, NumPy,
+    and scikit-learn.
+  - **Output:** `results/<method>_w<weight>_seed<seed>/` containing
+    `config.json`, `history.jsonl`, and `summary.json`. `--test` adds test
+    metrics; `--save-model` also writes `final_model.pt` and `tokenizer/`.
+- **`3_run_experiments.py`**
+  - **Purpose:** Select the sentiment weight using a validation pilot, then
+    compare all four methods across seeds.
+  - **Dependencies:** Calls `2_train.py` internally and inherits its
+    dependencies and prepared assets. No separate step 2 run is needed.
+  - **Output:** `results/comparison/pilot/` and `main/` with per-run
+    configuration, history, and summary files; `pilot_selection.json` and
+    `main_summary.csv`. Defaults: 4 pilot runs and 12 main runs. Does not save
+    model checkpoints.
+- **`4_analyze.py`**
+  - **Purpose:** Plot results and aggregate performance, gradient conflicts,
+    and runtime.
+  - **Dependencies:** Step 3's `main/*/history.jsonl` and `main_summary.csv`;
+    optionally `pilot_selection.json`; Matplotlib and NumPy.
+  - **Output:** Under `results/comparison/`, `analysis_summary.json` and
+    `figures/convergence.png`, `tradeoff.png`, and `runtime.png`, plus
+    `layer_conflicts.png` when gradient diagnostics exist.
+- **`5_predict.py`**
+  - **Purpose:** Inspect one text's sentiment, sentiment probabilities, token
+    loss, and perplexity.
+  - **Dependencies:** `final_model.pt` from step 2 with `--save-model`;
+    step 1's local model/tokenizer assets; `src/model.py`, PyTorch, and
+    Transformers.
+  - **Output:** Prints a JSON result to the terminal. Creates no files.
 
 Steps 2 and 3 accept `--output` to change their destination; step 4 accepts
 `--results` to choose the experiment folder to analyze.
@@ -124,19 +157,61 @@ conflict removal: losses, gradients, and optimization trajectories change with
 lambda. Report means and variability across seeds and discuss negative findings
 as well as improvements.
 
-## Code map and checks
+## Folder structure
 
-| File | Purpose |
-| --- | --- |
-| `1_prepare_assets.py` | Download and record local model/data resources |
-| `src/data.py` | Tokenization, EOS, and right padding |
-| `src/model.py` | Two heads and masked task losses |
-| `src/gradients.py` | Gradient extraction, PCGrad, and diagnostics |
-| `src/evaluation.py` | Aggregate validation/test metrics |
-| `2_train.py` | Reproducible single-condition training |
-| `3_run_experiments.py` | Validation pilot and matched three-seed comparison |
-| `4_analyze.py` | Figures and aggregate summary |
-| `5_predict.py` | Inspect a saved checkpoint on one text |
+The map shows the main project files and generated output locations. Results
+appear as training and analysis complete; model checkpoints are optional.
+
+```
+├── 1_prepare_assets.py                 # Download local model and data
+├── 2_train.py                          # Train one condition
+├── 3_run_experiments.py                # Run pilot and full comparison
+├── 4_analyze.py                        # Plot and aggregate results
+├── 5_predict.py                        # Inspect a saved checkpoint
+├── src/                               # Reusable implementation
+│   ├── __init__.py                     # Package marker
+│   ├── data.py                         # Tokenization, EOS, and padding
+│   ├── model.py                        # Shared backbone, heads, and losses
+│   ├── gradients.py                    # PCGrad and gradient diagnostics
+│   └── evaluation.py                   # Validation/test metrics
+├── tests/                             # Small automated checks
+│   ├── test_data_and_losses.py         # Padding and task losses
+│   ├── test_gradients.py               # Gradient combination and PCGrad
+│   ├── test_selection.py               # Pilot weight selection
+│   ├── test_training_smoke.py          # Training-loop integration
+│   └── test_analysis_smoke.py          # Analysis output generation
+├── resources/                         # Prepared assets and references
+│   ├── REFERENCES.md                   # Dataset, model, and paper links
+│   ├── manifest.json                   # Asset revisions and dataset metadata
+│   ├── data/
+│   │   ├── train.jsonl                 # Training tweets and labels
+│   │   ├── validation.jsonl            # Validation tweets and labels
+│   │   └── test.jsonl                  # Held-out tweets and labels
+│   ├── model/                         # GPT-2 weights, config, and tokenizer
+│   └── hf_cache/                      # Hugging Face dataset cache
+├── results/                           # Generated experiment outputs
+│   ├── <method>_w<weight>_seed<seed>/   # Individual step 2 run
+│   │   ├── config.json                # Run settings and metadata
+│   │   ├── history.jsonl              # Training and validation history
+│   │   ├── summary.json               # Final metrics
+│   │   ├── final_model.pt             # Only with --save-model
+│   │   └── tokenizer/                 # Only with --save-model
+│   └── comparison/                    # Full experiment and analysis
+│       ├── pilot/                     # Pilot runs, each with settings/metrics
+│       ├── main/                      # Method/seed runs with settings/metrics
+│       ├── pilot_selection.json       # Selected weight and pilot results
+│       ├── main_summary.csv           # All main-run results
+│       ├── analysis_summary.json       # Aggregate statistics from step 4
+│       └── figures/                   # Plots generated by step 4
+│           ├── convergence.png
+│           ├── tradeoff.png
+│           ├── runtime.png
+│           └── layer_conflicts.png     # Requires gradient diagnostics
+├── estr3114_proposal.pdf               # Original project proposal
+├── estr3114_Project_Resources.pdf      # Project resource document
+├── README.md                          # Setup and experiment documentation
+└── requirements.txt                   # Python dependencies
+```
 
 Run local checks with `python -m pytest -q`. These tests use tiny tensors and
 do not require model downloads. To verify full integration, run the two-step
