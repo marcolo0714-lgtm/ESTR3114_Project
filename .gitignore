@@ -6,3 +6,4 @@ resources/model/
 resources/data/
 resources/hf_cache/
 results/
+tmp/
