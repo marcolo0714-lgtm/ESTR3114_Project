@@ -7,9 +7,11 @@ use the sentiment weight. Joint and PCGrad run at every weight for every seed.
 import argparse
 import csv
 import math
+import json
 from pathlib import Path
 
 from importlib import import_module
+from src.run_paths import run_name
 
 # importlib supports the numbered training script filename.
 train = import_module("2_train")
@@ -46,9 +48,27 @@ def condition(args, method, weight, seed, steps, path, train_limit=0, validation
     )
 
 
-def weight_name(weight):
-    """Keep enough digits to give distinct floating-point weights distinct paths."""
-    return repr(weight)
+def run_or_reuse(config):
+    """Reuse completed matching runs; never overwrite conflicting or partial runs."""
+    path = config.output
+    if path.exists() and any(path.iterdir()):
+        if not all((path / name).is_file() for name in
+                   ("config.json", "summary.json", "history.jsonl")):
+            raise FileExistsError(f"Incomplete run folder: {path}")
+        saved = json.loads((path / "config.json").read_text(encoding="utf-8"))
+        keys = ("method", "seed", "steps", "batch_size", "eval_batch_size", "max_length",
+                "learning_rate", "weight_decay", "warmup_ratio", "eval_every",
+                "diagnostics_every", "train_limit", "validation_limit", "test")
+        if config.method in ("joint", "pcgrad"):
+            keys += ("weight",)
+        if any(saved.get(key) != getattr(config, key) for key in keys):
+            raise FileExistsError(f"Different settings already exist at {path}; use --output")
+        summary = json.loads((path / "summary.json").read_text(encoding="utf-8"))
+        if summary.get("steps") != config.steps or "test" not in summary:
+            raise FileExistsError(f"Incomplete summary at {path}")
+        print(f"Reusing {path.name}", flush=True)
+        return summary
+    return run(config)
 
 
 def main():
@@ -59,28 +79,34 @@ def main():
     args.weights = list(dict.fromkeys(args.weights))
     args.seeds = list(dict.fromkeys(args.seeds))
     root = args.output.resolve()
-    if root.exists() and any(root.iterdir()):
-        raise FileExistsError(f"Output folder is not empty: {root}; choose a new --output")
     root.mkdir(parents=True, exist_ok=True)
 
     summaries = []
     for seed in args.seeds:
         for method in ("token", "sentiment"):
-            path = root / "main" / f"{method}_seed{seed}"
-            summaries.append(run(condition(args, method, 1.0, seed, args.main_steps,
+            path = root / "main" / run_name(1.0, method, args.main_steps, seed)
+            summaries.append(run_or_reuse(condition(args, method, 1.0, seed, args.main_steps,
                                            path, test=True)))
         for weight in args.weights:
             for method in ("joint", "pcgrad"):
-                path = root / "main" / f"{method}_w{weight_name(weight)}_seed{seed}"
-                summaries.append(run(condition(args, method, weight, seed, args.main_steps,
+                path = root / "main" / run_name(weight, method, args.main_steps, seed)
+                summaries.append(run_or_reuse(condition(args, method, weight, seed, args.main_steps,
                                                path, test=True)))
     fields = ["method", "weight", "seed", "steps", "elapsed_seconds"]
     metrics = ["token_loss", "perplexity", "sentiment_loss", "accuracy", "macro_f1"]
+    # Rebuild the table from all completed conditions, including earlier invocations.
+    by_condition = {}
+    for path in sorted((root / "main").glob("*/summary.json")):
+        item = json.loads(path.read_text(encoding="utf-8"))
+        if "test" in item:
+            by_condition[run_name(item['weight'], item['method'], item['steps'], item['seed'])] = item
+    for item in summaries:
+        by_condition[run_name(item['weight'], item['method'], item['steps'], item['seed'])] = item
     with (root / "main_summary.csv").open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields + [f"{split}_{m}" for split in
                                 ("validation", "test") for m in metrics])
         writer.writeheader()
-        for item in summaries:
+        for item in by_condition.values():
             writer.writerow({**{k: item[k] for k in fields},
                              **{f"{split}_{m}": item[split][m] for split in
                                 ("validation", "test") for m in metrics}})

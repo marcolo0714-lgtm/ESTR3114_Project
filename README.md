@@ -60,7 +60,7 @@ python 2_train.py --method pcgrad --weight 0.3 --seed 42 --steps 1000
 
 `--method` accepts `token`, `sentiment`, `joint`, and `pcgrad`. Use the same
 learning rate, schedule, steps, batch size, sequence length, and seed for a
-matched comparison. `--output` sets a separate run folder. `--test` evaluates
+matched comparison. `--output` sets a separate run folder. Nonempty run folders are protected from overwriting. `--test` evaluates
 the held-out split at the end. `--save-model` saves final weights and tokenizer
 and can consume substantial disk space; metrics are always saved. A smaller
 development run, once the resources are prepared:
@@ -72,14 +72,14 @@ python 2_train.py --method pcgrad --steps 2 --eval-every 2 `
 ```
 
 Each run saves `config.json`, `history.jsonl`, and `summary.json` under
-`results/<method>_w<weight>_seed<seed>/` by default. For joint and PCGrad,
+`results/weight<weight>_<method>_step<steps>_seed<seed>/` by default. For joint and PCGrad,
 `--weight` controls the sentiment task's contribution to the update.
 
 ### 3. Run the full weight sweep: `3_run_experiments.py`
 
 ```powershell
 python 3_run_experiments.py --weights 0.1 0.3 1.0 --seeds 42 43 44 `
-  --main-steps 1000 --output results/weight_sweep
+  --main-steps 1000
 ```
 
 Every supplied weight is used for full joint and PCGrad training with every
@@ -96,22 +96,28 @@ Use validation for future weight selection; test scores are for reporting.
 
 Outputs under the chosen experiment folder:
 
-- `main/token_seed42/` and `main/sentiment_seed42/`: controls (weight metadata
+- `main/weight1.0_token_step1000_seed42/` and
+  `main/weight1.0_sentiment_step1000_seed42/`: controls (weight metadata
   is 1.0 and is unused by these single-task updates).
-- `main/joint_w0.1_seed42/`, `main/pcgrad_w0.1_seed42/`, etc.: separate
+- `main/weight0.1_joint_step1000_seed42/`,
+  `main/weight0.1_pcgrad_step1000_seed42/`, etc.: separate
   configuration, history, and summary for each method/weight/seed.
 - `main_summary.csv`: one row per run, including its method, weight, and seed.
 
-Choose an empty output folder to keep experiments separate. The runner refuses
-to overwrite a nonempty destination. Existing `results/comparison/` results are
-preserved. It saves metrics but no model checkpoints. Run step 4 to create
+The default `results/comparison/` folder can hold multiple experiments.
+Each condition uses `weight[value]_[method]_step[number]_seed[number]`.
+Different weights or step budgets get different folders. Completed runs with
+matching training settings are reused, while incomplete runs or incompatible
+settings at the same path raise an error. For example, changing the batch size
+without changing weight, method, steps, or seed requires a separate `--output`.
+`main_summary.csv` includes all completed main runs in that output folder. It saves metrics but no model checkpoints. Run step 4 to create
 figures and summaries; each weight remains separate in the analysis.
 
 For Colab after cloning the updated code:
 
 ```python
-!python 3_run_experiments.py --weights 0.1 0.3 1.0 --seeds 42 43 44 --main-steps 1000 --device cuda --output results/weight_sweep
-!python 4_analyze.py --results results/weight_sweep
+!python 3_run_experiments.py --weights 0.1 0.3 1.0 --seeds 42 43 44 --main-steps 1000 --device cuda
+!python 4_analyze.py --results results/comparison
 ```
 
 ### 4. Analyze results: `4_analyze.py`
@@ -119,7 +125,7 @@ For Colab after cloning the updated code:
 After the full experiment completes, run:
 
 ```powershell
-python 4_analyze.py --results results/weight_sweep
+python 4_analyze.py --results results/comparison
 ```
 
 `--results` selects the experiment folder. The script reads the main run
@@ -143,7 +149,7 @@ python 2_train.py --method pcgrad --weight 0.3 --seed 42 --steps 1000 --save-mod
 Then provide the saved weights and a text:
 
 ```powershell
-python 5_predict.py --checkpoint results/pcgrad_w0.3_seed42/final_model.pt `
+python 5_predict.py --checkpoint results/weight0.3_pcgrad_step1000_seed42/final_model.pt `
   --text "I love this!"
 ```
 
@@ -212,21 +218,21 @@ appear as training and analysis complete; model checkpoints are optional.
 │   ├── model/                         # GPT-2 weights, config, and tokenizer
 │   └── hf_cache/                      # Hugging Face dataset cache
 ├── results/                           # Generated outputs; new sweeps use --output
-│   ├── <method>_w<weight>_seed<seed>/   # Individual step 2 run
+│   ├── weight<weight>_<method>_step<steps>_seed<seed>/   # Individual step 2 run
 │   │   ├── config.json                # Run settings and metadata
 │   │   ├── history.jsonl              # Training and validation history
 │   │   ├── summary.json               # Final metrics
 │   │   ├── final_model.pt             # Only with --save-model
 │   │   └── tokenizer/                 # Only with --save-model
-│   ├── weight_sweep/                  # New --output example
+│   ├── weight_sweep/                  # Optional separate --output example
 │   │   ├── main/                      # Controls and method/weight/seed runs
 │   │   ├── main_summary.csv
 │   │   ├── analysis_summary.json      # Separate groups for each weight
 │   │   └── figures/
-│   └── comparison/                    # Original pilot-based experiment
-│       ├── pilot/                     # Pilot runs, each with settings/metrics
+│   └── comparison/                    # Shared experiment output (includes original runs)
+│       ├── pilot/                     # Historical pilot runs (renamed by condition)
 │       ├── main/                      # Method/seed runs with settings/metrics
-│       ├── pilot_selection.json       # Selected weight and pilot results
+│       ├── pilot_selection.json       # Historical pilot selection
 │       ├── main_summary.csv           # All main-run results
 │       ├── analysis_summary.json       # Aggregate statistics from step 4
 │       └── figures/                   # Plots generated by step 4
@@ -268,7 +274,7 @@ output locations.
   - **Dependencies:** Assets from step 1; `src/data.py`, `src/model.py`,
     `src/gradients.py`, and `src/evaluation.py`; PyTorch, Transformers, NumPy,
     and scikit-learn.
-  - **Output:** `results/<method>_w<weight>_seed<seed>/` containing
+  - **Output:** `results/weight<weight>_<method>_step<steps>_seed<seed>/` containing
     `config.json`, `history.jsonl`, and `summary.json`. `--test` adds test
     metrics; `--save-model` also writes `final_model.pt` and `tokenizer/`.
 - **`3_run_experiments.py`**
@@ -294,6 +300,12 @@ output locations.
     step 1's local model/tokenizer assets; `src/model.py`, PyTorch, and
     Transformers.
   - **Output:** Prints a JSON result to the terminal. Creates no files.
+
+Existing local results have been renamed using their recorded configurations,
+including pilot runs and the two-step smoke run. Original ZIP archives are
+unchanged. The rename map is in `results/folder_renames.json`. Existing
+single-task runs retain their recorded weight 0.3; new controls record 1.0
+(the weight does not affect single-task training).
 
 Steps 2 and 3 accept `--output` to change their destination; step 4 accepts
 `--results` to choose the experiment folder to analyze.

@@ -17,6 +17,7 @@ from src.data import TweetDataset, make_collator
 from src.evaluation import evaluate
 from src.gradients import assign_joint_gradients
 from src.model import JointGPT2, task_losses
+from src.run_paths import run_name
 
 
 ROOT = Path(__file__).resolve().parent
@@ -97,7 +98,11 @@ def run(args):
         return max(0.0, (args.steps - step) / max(1, args.steps - warmup))
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, rate)
 
-    output = args.output or ROOT / "results" / f"{args.method}_w{args.weight:g}_seed{args.seed}"
+    output = args.output or ROOT / "results" / run_name(
+        args.weight, args.method, args.steps, args.seed
+    )
+    if output.exists() and any(output.iterdir()):
+        raise FileExistsError(f"Run folder is not empty: {output}")
     output.mkdir(parents=True, exist_ok=True)
     metadata = vars(args).copy()
     metadata["output"] = str(output)

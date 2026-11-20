@@ -9,7 +9,7 @@ from importlib import import_module
 plot_all = import_module("4_analyze").plot_all
 
 
-@pytest.mark.parametrize("sweep", [False, True])
+@pytest.mark.parametrize("sweep", [False, True, "named"])
 def test_analysis_creates_all_figures(tmp_path, sweep):
     main = tmp_path / "main"
     main.mkdir()
@@ -43,13 +43,22 @@ def test_analysis_creates_all_figures(tmp_path, sweep):
                              "steps": 2, "elapsed_seconds": 1,
                              "validation_token_loss": 2 + index / 10,
                              "validation_macro_f1": 0.5 + index / 10})
+    if sweep == "named":
+        from src.run_paths import run_name
+        renamed = []
+        for method in methods:
+            base, _, weight = method.partition("_w")
+            name = run_name(float(weight or 1), base, 2, 42)
+            (main / f"{method}_seed42").rename(main / name)
+            renamed.append(name.rsplit("_seed", 1)[0])
+        methods = renamed
     plot_all(tmp_path)
     for name in ("convergence", "tradeoff", "layer_conflicts", "runtime"):
         assert (tmp_path / "figures" / f"{name}.png").stat().st_size > 0
     report = json.loads((tmp_path / "analysis_summary.json").read_text(encoding="utf-8"))
     assert set(report) == set(methods)
     for method in methods:
-        if method.startswith("pcgrad"):
+        if "pcgrad" in method:
             assert report[method]["sampled_global_conflict_frequency"] == 1.0
     # Distinct input metrics must not be pooled across weights.
     for index, method in enumerate(methods):

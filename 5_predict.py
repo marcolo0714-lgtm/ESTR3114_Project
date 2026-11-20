@@ -1,6 +1,6 @@
 """Inspect sentiment probabilities and token perplexity from saved final weights.
 
-Example: python 5_predict.py --checkpoint results/pcgrad_w0.3_seed42/final_model.pt --text "I love this!"
+Example: python 5_predict.py --checkpoint results/weight0.3_pcgrad_step1000_seed42/final_model.pt --text "I love this!"
 """
 
 import argparse

@@ -13,6 +13,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from src.run_paths import run_name
 
 
 def read_history(folder):
@@ -38,6 +39,10 @@ def plot_all(root):
 
     def row_condition(row):
         method = row["method"]
+        if "weight" in row and "steps" in row:
+            label = run_name(float(row["weight"]), method, int(row["steps"]), 0).rsplit("_seed", 1)[0]
+            if label in colors:
+                return label
         if method in ("joint", "pcgrad") and "weight" in row:
             label = f"{method}_w{float(row['weight'])!r}"
             if label in colors:
