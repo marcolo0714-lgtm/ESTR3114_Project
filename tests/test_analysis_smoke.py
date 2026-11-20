@@ -67,3 +67,22 @@ def test_conflicting_control_replicates_are_not_silently_pooled(tmp_path):
     save_run(tmp_path, "token", 0.3, 0.4)
     with pytest.raises(ValueError, match="Conflicting repeated run"):
         read_runs(tmp_path)
+
+
+def test_budget_filter_keeps_main_index_and_outputs_separate(tmp_path):
+    for steps in (2, 6):
+        for method in ("token", "sentiment", "joint", "pcgrad"):
+            save_run(tmp_path, method, 3.0 if method in ("joint", "pcgrad") else 1.0,
+                     0.4 if steps == 2 else 0.7, steps=steps)
+    marker = tmp_path / "analysis_summary.json"
+    marker.write_text('{"original": true}')
+    destination = tmp_path / "filtered"
+    plot_all(tmp_path, steps=6, output=destination)
+    report = json.loads((destination / "analysis_summary.json").read_text())
+    assert len(report) == 4
+    assert all(key.endswith("step6") for key in report)
+    assert all(value["test_macro_f1_mean"] == pytest.approx(0.7) for value in report.values())
+    assert marker.read_text() == '{"original": true}'
+    with (tmp_path / "main_summary.csv").open(newline="") as f:
+        assert len(list(csv.DictReader(f))) == 8
+    assert len(list(destination.glob("summary_*.png"))) == 5

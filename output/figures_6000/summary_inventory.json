@@ -1,0 +1,216 @@
+[
+  {
+    "folder": "weight0.1_joint_step1000_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.1_joint_step1000_seed43",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.1_joint_step1000_seed44",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.1_joint_step100_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.1_pcgrad_step1000_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.1_pcgrad_step1000_seed43",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.1_pcgrad_step1000_seed44",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.3_joint_step1000_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.3_joint_step1000_seed43",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.3_joint_step1000_seed44",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.3_joint_step100_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.3_pcgrad_step1000_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.3_pcgrad_step1000_seed43",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.3_pcgrad_step1000_seed44",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight0.3_sentiment_step1000_seed42",
+    "status": "duplicate_control",
+    "canonical_folder": "weight1.0_sentiment_step1000_seed42"
+  },
+  {
+    "folder": "weight0.3_sentiment_step1000_seed43",
+    "status": "duplicate_control",
+    "canonical_folder": "weight1.0_sentiment_step1000_seed43"
+  },
+  {
+    "folder": "weight0.3_sentiment_step1000_seed44",
+    "status": "duplicate_control",
+    "canonical_folder": "weight1.0_sentiment_step1000_seed44"
+  },
+  {
+    "folder": "weight0.3_token_step1000_seed42",
+    "status": "duplicate_control",
+    "canonical_folder": "weight1.0_token_step1000_seed42"
+  },
+  {
+    "folder": "weight0.3_token_step1000_seed43",
+    "status": "duplicate_control",
+    "canonical_folder": "weight1.0_token_step1000_seed43"
+  },
+  {
+    "folder": "weight0.3_token_step1000_seed44",
+    "status": "duplicate_control",
+    "canonical_folder": "weight1.0_token_step1000_seed44"
+  },
+  {
+    "folder": "weight1.0_joint_step1000_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_joint_step1000_seed43",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_joint_step1000_seed44",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_joint_step100_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_pcgrad_step1000_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_pcgrad_step1000_seed43",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_pcgrad_step1000_seed44",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_sentiment_step1000_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_sentiment_step1000_seed43",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_sentiment_step1000_seed44",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_sentiment_step6000_seed42",
+    "status": "included"
+  },
+  {
+    "folder": "weight1.0_sentiment_step6000_seed43",
+    "status": "included"
+  },
+  {
+    "folder": "weight1.0_sentiment_step6000_seed44",
+    "status": "included"
+  },
+  {
+    "folder": "weight1.0_token_step1000_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_token_step1000_seed43",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_token_step1000_seed44",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_token_step100_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight1.0_token_step6000_seed42",
+    "status": "included"
+  },
+  {
+    "folder": "weight1.0_token_step6000_seed43",
+    "status": "included"
+  },
+  {
+    "folder": "weight1.0_token_step6000_seed44",
+    "status": "included"
+  },
+  {
+    "folder": "weight3.0_joint_step1000_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight3.0_joint_step1000_seed43",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight3.0_joint_step1000_seed44",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight3.0_joint_step6000_seed42",
+    "status": "included"
+  },
+  {
+    "folder": "weight3.0_joint_step6000_seed43",
+    "status": "included"
+  },
+  {
+    "folder": "weight3.0_joint_step6000_seed44",
+    "status": "included"
+  },
+  {
+    "folder": "weight3.0_pcgrad_step1000_seed42",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight3.0_pcgrad_step1000_seed43",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight3.0_pcgrad_step1000_seed44",
+    "status": "excluded_step_budget"
+  },
+  {
+    "folder": "weight3.0_pcgrad_step6000_seed42",
+    "status": "included"
+  },
+  {
+    "folder": "weight3.0_pcgrad_step6000_seed43",
+    "status": "included"
+  },
+  {
+    "folder": "weight3.0_pcgrad_step6000_seed44",
+    "status": "included"
+  }
+]

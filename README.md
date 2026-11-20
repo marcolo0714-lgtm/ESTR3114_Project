@@ -149,6 +149,16 @@ Five figures are written directly under the selected folder:
 `summary_inventory.json` identifies included, duplicate and validation-only runs.
 No `main/` or `figures/` subfolder is created. GPU/model loading is not needed.
 
+To generate figures for one training budget without replacing the main figures:
+
+```powershell
+python 4_analyze.py --results results --steps 6000 --output output/figures_6000
+```
+
+The filtered summaries and five figures are saved to `--output`. The main CSV
+continues to index all completed runs. For a single weight and training budget,
+the overview shows individual seeds and paired PCGrad-versus-joint differences.
+
 ### 5. Inspect a checkpoint: `5_predict.py`
 
 To inspect a trained checkpoint, use `--save-model` while training:
@@ -240,7 +250,7 @@ appear as training and analysis complete; model checkpoints are optional.
 │   ├── summary_inventory.json
 │   ├── summary_layout_migration.json
 │   ├── summary_*.png                  # Five combined figures
-│   └── ESTR3114_Combined_Experiment_Summary.pdf
+│   └── ESTR3114_Experiment_Summary.pdf
 ├── output/previous_analysis/          # Preserved superseded output
 ├── estr3114_proposal.pdf               # Original project proposal
 ├── estr3114_Project_Resources.pdf      # Project resource document

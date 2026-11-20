@@ -26,12 +26,21 @@ def sd(values):
     return float(np.std(values, ddof=1)) if len(values) > 1 else 0.0
 
 
-def plot_all(root):
+def plot_all(root, steps=None, output=None):
     root = Path(root)
     runs, preliminary, inventory = read_runs(root)
+    if steps is not None:
+        runs = [run for run in runs if run["config"]["steps"] == steps]
+        preliminary = [run for run in preliminary if run["config"]["steps"] == steps]
+        selected = {run["folder"].name for run in runs + preliminary}
+        inventory = [{**entry, "status": "excluded_step_budget"}
+                     if entry["folder"] not in selected and entry["status"] != "duplicate_control"
+                     else entry for entry in inventory]
     if not runs:
         raise ValueError(f"No completed test runs under {root}")
     write_main_summary(root)
+    destination = Path(output) if output is not None else root
+    destination.mkdir(parents=True, exist_ok=True)
     grouped = defaultdict(list)
     for run in runs:
         run["history"] = read_history(run["folder"])
@@ -52,7 +61,7 @@ def plot_all(root):
         return [r["summary"][split][metric] for r in groups[key]]
 
     def save(fig, name):
-        fig.savefig(root / f"summary_{name}.png", dpi=190, bbox_inches="tight")
+        fig.savefig(destination / f"summary_{name}.png", dpi=190, bbox_inches="tight")
         plt.close(fig)
 
     # 1: Learning curves for every method, weight and training budget.
@@ -86,7 +95,7 @@ def plot_all(root):
         if c["method"] == "joint" and c.get("train_limit", 0) > 0:
             ax.scatter(s["token_loss"], s["macro_f1"], marker="x", color="gray")
             ax.annotate(f"{c['steps']}-step check, w={c['weight']:g}", (s["token_loss"], s["macro_f1"]), fontsize=7, xytext=(7, -5), textcoords="offset points")
-    ax.set(xlabel="Validation token loss (lower is better)", ylabel="Validation macro-F1 (higher is better)", title="Task trade-off across all weights")
+    ax.set(xlabel="Validation token loss (lower is better)", ylabel="Validation macro-F1 (higher is better)", title="Validation task trade-off")
     ax.legend(fontsize=8, loc="upper left", bbox_to_anchor=(1.01, 1))
     ax.grid(alpha=.2)
     fig.tight_layout()
@@ -125,7 +134,7 @@ def plot_all(root):
     else:
         ax.text(.5, .5, "No gradient diagnostics available", ha="center")
         ax.set_axis_off()
-    ax.set_title("Pre-projection layer-wise conflict across all weights")
+    ax.set_title("Pre-projection layer-wise gradient conflict")
     fig.tight_layout(rect=(0, .16, 1, 1))
     save(fig, "layer_conflicts")
 
@@ -134,7 +143,7 @@ def plot_all(root):
     fig, ax = plt.subplots(figsize=(10, 5))
     ax.bar(range(len(keys)), [summary[k]["seconds_per_step_mean"] for k in keys], color=[colors[k] for k in keys])
     ax.set_xticks(range(len(keys)), [label(k) for k in keys], rotation=35, ha="right", fontsize=8)
-    ax.set(ylabel="Recorded training + validation seconds per step", title="Runtime across all weights")
+    ax.set(ylabel="Recorded training + validation seconds per step", title="Recorded runtime by condition")
     ax.grid(axis="y", alpha=.2)
     fig.tight_layout()
     save(fig, "runtime")
@@ -179,13 +188,62 @@ def plot_all(root):
     axes[1, 1].set_xticks(range(len(weighted_keys)), [label(k) for k in weighted_keys], rotation=40, ha="right", fontsize=7)
     axes[1, 1].set(title="Recorded training + validation time", ylabel="Seconds per run")
     axes[1, 1].grid(axis="y", alpha=.2)
+    if len(weights) == 1 and len(budgets) == 1:
+        # A single weight cannot define a weight-response curve. Show the actual
+        # per-seed evidence and paired differences instead of a one-point curve.
+        for ax in axes.flat:
+            ax.clear()
+        seeds = sorted({r["config"]["seed"] for r in runs})
+        method_colors = {"token": "#2879a5", "sentiment": "#e28e2c",
+                         "joint": "#16856e", "pcgrad": "#d25b42"}
+        for method, color in method_colors.items():
+            chosen = sorted((r for r in runs if r["config"]["method"] == method),
+                            key=lambda r: r["config"]["seed"])
+            xs = [r["config"]["seed"] for r in chosen]
+            if method != "token":
+                axes[0, 0].plot(xs, [r["summary"]["test"]["macro_f1"] * 100 for r in chosen],
+                                marker="o", color=color, label=method)
+            axes[0, 1].plot(xs, [r["summary"]["test"]["perplexity"] for r in chosen],
+                            marker="o", color=color, label=method)
+        for ax in (axes[0, 0], axes[0, 1]):
+            ax.set_xticks(seeds)
+            ax.set_xlabel("Random seed")
+            ax.grid(alpha=.2)
+            ax.legend(fontsize=8)
+        axes[0, 0].set(title="Sentiment performance by seed", ylabel="Test macro-F1 (%)")
+        axes[0, 1].set(title="Language modeling by seed", ylabel="Test perplexity")
+        differences, paired_seeds = [], []
+        for seed in seeds:
+            pair = {r["config"]["method"]: r for r in runs if r["config"]["seed"] == seed
+                    and r["config"]["method"] in ("joint", "pcgrad")}
+            if len(pair) == 2:
+                paired_seeds.append(seed)
+                differences.append(100 * (pair["pcgrad"]["summary"]["test"]["macro_f1"] -
+                                          pair["joint"]["summary"]["test"]["macro_f1"]))
+        axes[1, 0].bar(range(len(paired_seeds)), differences, color="#d25b42")
+        axes[1, 0].set_xticks(range(len(paired_seeds)), [str(seed) for seed in paired_seeds])
+        axes[1, 0].axhline(0, color="black", lw=1)
+        axes[1, 0].set(title="Paired sentiment differences", xlabel="Random seed",
+                        ylabel="PCGrad - joint F1 (percentage points)")
+        keys = list(groups)
+        times = [[r["summary"]["elapsed_seconds"] / 60 for r in groups[k]] for k in keys]
+        axes[1, 1].bar(range(len(keys)), [mean(v) for v in times],
+                       yerr=[sd(v) for v in times], capsize=3,
+                       color=[method_colors[groups[k][0]["config"]["method"]] for k in keys])
+        axes[1, 1].set_xticks(range(len(keys)), [label(k) for k in keys], rotation=25, ha="right")
+        axes[1, 1].set(title="Recorded time: mean +/- sample SD", ylabel="Minutes per run")
+        for ax in (axes[1, 0], axes[1, 1]):
+            ax.grid(axis="y", alpha=.2)
     save(fig, "weight_effects")
-    (root / "analysis_summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
-    (root / "summary_inventory.json").write_text(json.dumps(inventory, indent=2) + "\n", encoding="utf-8")
-    print(f"Analyzed {len(runs)} unique completed test runs; wrote five summary figures to {root}")
+    (destination / "analysis_summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    (destination / "summary_inventory.json").write_text(json.dumps(inventory, indent=2) + "\n", encoding="utf-8")
+    print(f"Analyzed {len(runs)} unique completed test runs; wrote five summary figures to {destination}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results", type=Path, default=Path("results"))
-    plot_all(parser.parse_args().results)
+    parser.add_argument("--steps", type=int, help="Include only this completed training budget")
+    parser.add_argument("--output", type=Path, help="Save filtered figures/summaries separately")
+    args = parser.parse_args()
+    plot_all(args.results, steps=args.steps, output=args.output)
