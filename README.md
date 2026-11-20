@@ -75,39 +75,55 @@ Each run saves `config.json`, `history.jsonl`, and `summary.json` under
 `results/<method>_w<weight>_seed<seed>/` by default. For joint and PCGrad,
 `--weight` controls the sentiment task's contribution to the update.
 
-### 3. Run the full experiment: `3_run_experiments.py`
+### 3. Run the full weight sweep: `3_run_experiments.py`
 
 ```powershell
 python 3_run_experiments.py --weights 0.1 0.3 1.0 --seeds 42 43 44 `
-  --pilot-steps 100 --main-steps 1000
+  --main-steps 1000 --output results/weight_sweep
 ```
 
-The pilot compares weighted joint AdamW candidates to a token-only control on
-the **same subset and seed**. It selects the best macro-F1 among candidates
-whose token loss is at most 5% above the control's, falling back to the lowest
-token loss if none qualifies. The selected weight is then held fixed across
-three seeds and all four main conditions. The main runs evaluate the test split
-only after training. `main_summary.csv`, each run's `config.json`, `history.jsonl`,
-and `summary.json`, plus four figures and `analysis_summary.json` provide the
-project's results. Runtime varies substantially by device.
+Every supplied weight is used for full joint and PCGrad training with every
+seed. Token-only and sentiment-only controls run once per seed because their
+updates do not depend on the sentiment weight. Duplicate weights and seeds
+are run once. Weights must be finite and positive.
 
-With these defaults, there are 4 pilot runs and 12 main runs. Training outputs
-are saved under `results/comparison/pilot/` and `results/comparison/main/`, with
-`pilot_selection.json` and `main_summary.csv` at the comparison folder's root.
-Use `--output` to change that folder. This script saves metrics but does not
-save model checkpoints. Run step 4 separately to create the figures and
-analysis summary.
+There is no pilot or automatic weight selection. The old `--pilot-steps`,
+`--pilot-train-limit`, `--pilot-validation-limit`, and `--max-token-loss-gap`
+options have been removed. With three weights and three seeds, this runs
+**24 main conditions**: `(2 controls + 2 methods * 3 weights) * 3 seeds`.
+All main conditions evaluate validation during training and test at the end.
+Use validation for future weight selection; test scores are for reporting.
+
+Outputs under the chosen experiment folder:
+
+- `main/token_seed42/` and `main/sentiment_seed42/`: controls (weight metadata
+  is 1.0 and is unused by these single-task updates).
+- `main/joint_w0.1_seed42/`, `main/pcgrad_w0.1_seed42/`, etc.: separate
+  configuration, history, and summary for each method/weight/seed.
+- `main_summary.csv`: one row per run, including its method, weight, and seed.
+
+Choose an empty output folder to keep experiments separate. The runner refuses
+to overwrite a nonempty destination. Existing `results/comparison/` results are
+preserved. It saves metrics but no model checkpoints. Run step 4 to create
+figures and summaries; each weight remains separate in the analysis.
+
+For Colab after cloning the updated code:
+
+```python
+!python 3_run_experiments.py --weights 0.1 0.3 1.0 --seeds 42 43 44 --main-steps 1000 --device cuda --output results/weight_sweep
+!python 4_analyze.py --results results/weight_sweep
+```
 
 ### 4. Analyze results: `4_analyze.py`
 
 After the full experiment completes, run:
 
 ```powershell
-python 4_analyze.py --results results/comparison
+python 4_analyze.py --results results/weight_sweep
 ```
 
 `--results` selects the experiment folder. The script reads the main run
-histories and `main_summary.csv`, plus optional pilot results, and writes
+histories and `main_summary.csv`, plus optional legacy pilot results, and writes
 `analysis_summary.json` and plots under `figures/`:
 
 - `convergence.png`: validation token loss and macro-F1 over training.
@@ -171,7 +187,7 @@ appear as training and analysis complete; model checkpoints are optional.
 ```
 ├── 1_prepare_assets.py                 # Download local model and data
 ├── 2_train.py                          # Train one condition
-├── 3_run_experiments.py                # Run pilot and full comparison
+├── 3_run_experiments.py                # Run all weights and matched seeds
 ├── 4_analyze.py                        # Plot and aggregate results
 ├── 5_predict.py                        # Inspect a saved checkpoint
 ├── src/                               # Reusable implementation
@@ -183,7 +199,7 @@ appear as training and analysis complete; model checkpoints are optional.
 ├── tests/                             # Small automated checks
 │   ├── test_data_and_losses.py         # Padding and task losses
 │   ├── test_gradients.py               # Gradient combination and PCGrad
-│   ├── test_selection.py               # Pilot weight selection
+│   ├── test_experiment_sweep.py        # Weight/seed coverage and output safety
 │   ├── test_training_smoke.py          # Training-loop integration
 │   └── test_analysis_smoke.py          # Analysis output generation
 ├── resources/                         # Prepared assets and references
@@ -195,14 +211,19 @@ appear as training and analysis complete; model checkpoints are optional.
 │   │   └── test.jsonl                  # Held-out tweets and labels
 │   ├── model/                         # GPT-2 weights, config, and tokenizer
 │   └── hf_cache/                      # Hugging Face dataset cache
-├── results/                           # Generated experiment outputs
+├── results/                           # Generated outputs; new sweeps use --output
 │   ├── <method>_w<weight>_seed<seed>/   # Individual step 2 run
 │   │   ├── config.json                # Run settings and metadata
 │   │   ├── history.jsonl              # Training and validation history
 │   │   ├── summary.json               # Final metrics
 │   │   ├── final_model.pt             # Only with --save-model
 │   │   └── tokenizer/                 # Only with --save-model
-│   └── comparison/                    # Full experiment and analysis
+│   ├── weight_sweep/                  # New --output example
+│   │   ├── main/                      # Controls and method/weight/seed runs
+│   │   ├── main_summary.csv
+│   │   ├── analysis_summary.json      # Separate groups for each weight
+│   │   └── figures/
+│   └── comparison/                    # Original pilot-based experiment
 │       ├── pilot/                     # Pilot runs, each with settings/metrics
 │       ├── main/                      # Method/seed runs with settings/metrics
 │       ├── pilot_selection.json       # Selected weight and pilot results
@@ -220,7 +241,7 @@ appear as training and analysis complete; model checkpoints are optional.
 ```
 
 The root scripts are numbered by workflow: **1** prepare assets, **2** train one
-condition, **3** run the full experiment, **4** analyze results, and **5** inspect
+condition, **3** run the full weight sweep, **4** analyze results, and **5** inspect
 a saved checkpoint. Step 3 calls step 2 internally; step 5 requires a checkpoint
 saved with `--save-model`. The numbers are a guide, not a requirement to run
 every script in sequence.
@@ -251,14 +272,13 @@ output locations.
     `config.json`, `history.jsonl`, and `summary.json`. `--test` adds test
     metrics; `--save-model` also writes `final_model.pt` and `tokenizer/`.
 - **`3_run_experiments.py`**
-  - **Purpose:** Select the sentiment weight using a validation pilot, then
-    compare all four methods across seeds.
+  - **Purpose:** Run joint and PCGrad at every supplied weight and seed,
+    with token-only and sentiment-only controls once per seed.
   - **Dependencies:** Calls `2_train.py` internally and inherits its
     dependencies and prepared assets. No separate step 2 run is needed.
-  - **Output:** `results/comparison/pilot/` and `main/` with per-run
-    configuration, history, and summary files; `pilot_selection.json` and
-    `main_summary.csv`. Defaults: 4 pilot runs and 12 main runs. Does not save
-    model checkpoints.
+  - **Output:** `<output>/main/` with per-run configuration, history, and
+    summary files; `<output>/main_summary.csv`. Defaults: 24 main runs.
+    No pilot, weight selection, or model checkpoints.
 - **`4_analyze.py`**
   - **Purpose:** Plot results and aggregate performance, gradient conflicts,
     and runtime.

@@ -31,8 +31,18 @@ def plot_all(root):
 
     # Curves: all seeds faint, average at each evaluation step bold.
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
-    colors = {"token": "#1f77b4", "sentiment": "#ff7f0e",
-              "joint": "#2ca02c", "pcgrad": "#d62728"}
+    # Keep each weight separate; also accept the original single-weight folders.
+    conditions = sorted({name.split("_seed")[0] for name in histories})
+    palette = plt.get_cmap("tab20")
+    colors = {name: palette(index % 20) for index, name in enumerate(conditions)}
+
+    def row_condition(row):
+        method = row["method"]
+        if method in ("joint", "pcgrad") and "weight" in row:
+            label = f"{method}_w{float(row['weight'])!r}"
+            if label in colors:
+                return label
+        return method
     for method, color in colors.items():
         by_step = defaultdict(list)
         for name, history in histories.items():
@@ -106,7 +116,7 @@ def plot_all(root):
         fig, ax = plt.subplots(figsize=(10, 4.5))
         groups = sorted({g for method in group_values.values() for g in method},
                         key=lambda g: (g != "embeddings", g))
-        methods = [m for m in ("joint", "pcgrad") if m in group_values]
+        methods = [m for m in colors if m in group_values]
         for index, method in enumerate(methods):
             values = [np.mean(group_values[method][g]) if group_values[method][g]
                       else np.nan for g in groups]
@@ -125,7 +135,7 @@ def plot_all(root):
         rows = list(csv.DictReader(stream))
     summary = {}
     for method in colors:
-        selected = [row for row in rows if row["method"] == method]
+        selected = [row for row in rows if row_condition(row) == method]
         if selected:
             summary[method] = {
                 "seconds_per_step_mean": float(np.mean([float(r["elapsed_seconds"]) /
@@ -147,6 +157,7 @@ def plot_all(root):
     ax.bar(methods, [summary[m]["seconds_per_step_mean"] for m in methods],
            color=[colors[m] for m in methods])
     ax.set(ylabel="Mean wall-clock seconds per step", title="Training and evaluation overhead")
+    ax.tick_params(axis="x", labelrotation=45)
     ax.grid(axis="y", alpha=0.25)
     fig.tight_layout()
     fig.savefig(figures / "runtime.png", dpi=170)
