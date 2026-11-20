@@ -5,13 +5,13 @@ use the sentiment weight. Joint and PCGrad run at every weight for every seed.
 """
 
 import argparse
-import csv
 import math
 import json
 from pathlib import Path
 
 from importlib import import_module
 from src.run_paths import run_name
+from src.results import write_main_summary
 
 # importlib supports the numbered training script filename.
 train = import_module("2_train")
@@ -30,7 +30,7 @@ def parse_args():
     parser.add_argument("--eval-every", type=int, default=100)
     parser.add_argument("--diagnostics-every", type=int, default=25)
     parser.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
-    parser.add_argument("--output", type=Path, default=ROOT / "results" / "comparison")
+    parser.add_argument("--output", type=Path, default=ROOT / "results")
     return parser.parse_args()
 
 
@@ -84,32 +84,16 @@ def main():
     summaries = []
     for seed in args.seeds:
         for method in ("token", "sentiment"):
-            path = root / "main" / run_name(1.0, method, args.main_steps, seed)
+            path = root / run_name(1.0, method, args.main_steps, seed)
             summaries.append(run_or_reuse(condition(args, method, 1.0, seed, args.main_steps,
                                            path, test=True)))
+            write_main_summary(root, summaries)
         for weight in args.weights:
             for method in ("joint", "pcgrad"):
-                path = root / "main" / run_name(weight, method, args.main_steps, seed)
+                path = root / run_name(weight, method, args.main_steps, seed)
                 summaries.append(run_or_reuse(condition(args, method, weight, seed, args.main_steps,
                                                path, test=True)))
-    fields = ["method", "weight", "seed", "steps", "elapsed_seconds"]
-    metrics = ["token_loss", "perplexity", "sentiment_loss", "accuracy", "macro_f1"]
-    # Rebuild the table from all completed conditions, including earlier invocations.
-    by_condition = {}
-    for path in sorted((root / "main").glob("*/summary.json")):
-        item = json.loads(path.read_text(encoding="utf-8"))
-        if "test" in item:
-            by_condition[run_name(item['weight'], item['method'], item['steps'], item['seed'])] = item
-    for item in summaries:
-        by_condition[run_name(item['weight'], item['method'], item['steps'], item['seed'])] = item
-    with (root / "main_summary.csv").open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=fields + [f"{split}_{m}" for split in
-                                ("validation", "test") for m in metrics])
-        writer.writeheader()
-        for item in by_condition.values():
-            writer.writerow({**{k: item[k] for k in fields},
-                             **{f"{split}_{m}": item[split][m] for split in
-                                ("validation", "test") for m in metrics}})
+                write_main_summary(root, summaries)
     print(f"Saved {root / 'main_summary.csv'}")
 
 

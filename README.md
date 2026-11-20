@@ -96,28 +96,28 @@ Use validation for future weight selection; test scores are for reporting.
 
 Outputs under the chosen experiment folder:
 
-- `main/weight1.0_token_step1000_seed42/` and
-  `main/weight1.0_sentiment_step1000_seed42/`: controls (weight metadata
+- `weight1.0_token_step1000_seed42/` and
+  `weight1.0_sentiment_step1000_seed42/`: controls (weight metadata
   is 1.0 and is unused by these single-task updates).
-- `main/weight0.1_joint_step1000_seed42/`,
-  `main/weight0.1_pcgrad_step1000_seed42/`, etc.: separate
+- `weight0.1_joint_step1000_seed42/`,
+  `weight0.1_pcgrad_step1000_seed42/`, etc.: separate
   configuration, history, and summary for each method/weight/seed.
 - `main_summary.csv`: one row per run, including its method, weight, and seed.
 
-The default `results/comparison/` folder can hold multiple experiments.
+The default `results/` folder can hold multiple experiments.
 Each condition uses `weight[value]_[method]_step[number]_seed[number]`.
 Different weights or step budgets get different folders. Completed runs with
 matching training settings are reused, while incomplete runs or incompatible
 settings at the same path raise an error. For example, changing the batch size
 without changing weight, method, steps, or seed requires a separate `--output`.
-`main_summary.csv` includes all completed main runs in that output folder. It saves metrics but no model checkpoints. Run step 4 to create
+`main_summary.csv` includes completed test runs in that folder and is updated after each condition. Equivalent single-task controls are counted once per seed. It saves metrics but no model checkpoints. Run step 4 to create
 figures and summaries; each weight remains separate in the analysis.
 
 For Colab after cloning the updated code:
 
 ```python
 !python 3_run_experiments.py --weights 0.1 0.3 1.0 --seeds 42 43 44 --main-steps 1000 --device cuda
-!python 4_analyze.py --results results/comparison
+!python 4_analyze.py --results results
 ```
 
 ### 4. Analyze results: `4_analyze.py`
@@ -125,18 +125,29 @@ For Colab after cloning the updated code:
 After the full experiment completes, run:
 
 ```powershell
-python 4_analyze.py --results results/comparison
+python 4_analyze.py --results results
 ```
 
-`--results` selects the experiment folder. The script reads the main run
-histories and `main_summary.csv`, plus optional legacy pilot results, and writes
-`analysis_summary.json` and plots under `figures/`:
+`--results` selects the flat result folder (default: `results/`). The script
+reads each condition's `config.json`, `history.jsonl`, and `summary.json`.
+It rebuilds `main_summary.csv`, even if a Colab session ended before the sweep
+finished. Only completed runs with test metrics enter the combined main results.
+Validation-only runs are retained; short weight-check points are plotted
+separately. Equivalent single-task controls with identical settings and metrics
+are counted once per seed, preferring the weight-1.0 placeholder. Conflicting
+repeated runs raise an error instead of being silently combined.
 
-- `convergence.png`: validation token loss and macro-F1 over training.
-- `tradeoff.png`: token loss versus sentiment macro-F1 across methods.
-- `runtime.png`: mean wall-clock seconds per training step.
-- `layer_conflicts.png`: per-layer conflict frequency, when gradient
-  diagnostics are available.
+Five figures are written directly under the selected folder:
+
+- `summary_convergence.png`: all weights on shared validation learning curves.
+- `summary_tradeoff.png`: all validation trade-offs, with sample-SD error bars.
+- `summary_layer_conflicts.png`: a line plot of all method/weight layer conflicts.
+- `summary_runtime.png`: recorded training-plus-validation seconds per step.
+- `summary_weight_effects.png`: all weights, paired seed differences and runtime.
+
+`analysis_summary.json` records means, sample SDs and diagnostics;
+`summary_inventory.json` identifies included, duplicate and validation-only runs.
+No `main/` or `figures/` subfolder is created. GPU/model loading is not needed.
 
 ### 5. Inspect a checkpoint: `5_predict.py`
 
@@ -217,29 +228,20 @@ appear as training and analysis complete; model checkpoints are optional.
 │   │   └── test.jsonl                  # Held-out tweets and labels
 │   ├── model/                         # GPT-2 weights, config, and tokenizer
 │   └── hf_cache/                      # Hugging Face dataset cache
-├── results/                           # Generated outputs; new sweeps use --output
-│   ├── weight<weight>_<method>_step<steps>_seed<seed>/   # Individual step 2 run
-│   │   ├── config.json                # Run settings and metadata
-│   │   ├── history.jsonl              # Training and validation history
-│   │   ├── summary.json               # Final metrics
-│   │   ├── final_model.pt             # Only with --save-model
-│   │   └── tokenizer/                 # Only with --save-model
-│   ├── weight_sweep/                  # Optional separate --output example
-│   │   ├── main/                      # Controls and method/weight/seed runs
-│   │   ├── main_summary.csv
-│   │   ├── analysis_summary.json      # Separate groups for each weight
-│   │   └── figures/
-│   └── comparison/                    # Shared experiment output (includes original runs)
-│       ├── pilot/                     # Historical pilot runs (renamed by condition)
-│       ├── main/                      # Method/seed runs with settings/metrics
-│       ├── pilot_selection.json       # Historical pilot selection
-│       ├── main_summary.csv           # All main-run results
-│       ├── analysis_summary.json       # Aggregate statistics from step 4
-│       └── figures/                   # Plots generated by step 4
-│           ├── convergence.png
-│           ├── tradeoff.png
-│           ├── runtime.png
-│           └── layer_conflicts.png     # Requires gradient diagnostics
+├── results/                           # Flat runs, original ZIPs and summaries
+│   ├── *.zip                          # Original downloaded archives
+│   ├── weight<weight>_<method>_step<steps>_seed<seed>/
+│   │   ├── config.json
+│   │   ├── history.jsonl
+│   │   ├── summary.json
+│   │   └── final_model.pt             # Optional checkpoint
+│   ├── main_summary.csv
+│   ├── analysis_summary.json
+│   ├── summary_inventory.json
+│   ├── summary_layout_migration.json
+│   ├── summary_*.png                  # Five combined figures
+│   └── ESTR3114_Combined_Experiment_Summary.pdf
+├── output/previous_analysis/          # Preserved superseded output
 ├── estr3114_proposal.pdf               # Original project proposal
 ├── estr3114_Project_Resources.pdf      # Project resource document
 ├── README.md                          # Setup and experiment documentation
@@ -282,17 +284,16 @@ output locations.
     with token-only and sentiment-only controls once per seed.
   - **Dependencies:** Calls `2_train.py` internally and inherits its
     dependencies and prepared assets. No separate step 2 run is needed.
-  - **Output:** `<output>/main/` with per-run configuration, history, and
+  - **Output:** `<output>/weight<weight>_<method>_step<steps>_seed<seed>/` with configuration, history, and
     summary files; `<output>/main_summary.csv`. Defaults: 24 main runs.
     No pilot, weight selection, or model checkpoints.
 - **`4_analyze.py`**
   - **Purpose:** Plot results and aggregate performance, gradient conflicts,
     and runtime.
-  - **Dependencies:** Step 3's `main/*/history.jsonl` and `main_summary.csv`;
-    optionally `pilot_selection.json`; Matplotlib and NumPy.
-  - **Output:** Under `results/comparison/`, `analysis_summary.json` and
-    `figures/convergence.png`, `tradeoff.png`, and `runtime.png`, plus
-    `layer_conflicts.png` when gradient diagnostics exist.
+  - **Dependencies:** Flat condition folders with settings, histories and summaries;
+    `src/results.py`, Matplotlib and NumPy. No GPU required.
+  - **Output:** `main_summary.csv`, `analysis_summary.json`, `summary_inventory.json`,
+    and five `summary_*.png` figures directly under `results/`.
 - **`5_predict.py`**
   - **Purpose:** Inspect one text's sentiment, sentiment probabilities, token
     loss, and perplexity.
@@ -301,11 +302,11 @@ output locations.
     Transformers.
   - **Output:** Prints a JSON result to the terminal. Creates no files.
 
-Existing local results have been renamed using their recorded configurations,
-including pilot runs and the two-step smoke run. Original ZIP archives are
-unchanged. The rename map is in `results/folder_renames.json`. Existing
-single-task runs retain their recorded weight 0.3; new controls record 1.0
-(the weight does not affect single-task training).
+Local results are consolidated directly under `results/`. Original ZIP files
+are unchanged. `summary_layout_migration.json` records moves and checksums.
+Superseded derived reports/plots and one incomplete colliding run are preserved
+outside results under `output/previous_analysis/`. All complete condition folders
+remain available, including validation-only checks and duplicate raw controls.
 
 Steps 2 and 3 accept `--output` to change their destination; step 4 accepts
 `--results` to choose the experiment folder to analyze.

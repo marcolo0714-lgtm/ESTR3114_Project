@@ -37,6 +37,7 @@ def test_all_weights_and_matched_seeds_run_once(tmp_path, monkeypatch):
             assert sum(c.seed == seed and c.method == method for c in calls) == 1
     assert len({c.output for c in calls}) == len(calls)
     assert calls[0].output.name == "weight1.0_token_step7_seed42"
+    assert all(c.output.parent == output for c in calls)
     assert all(c.steps == 7 and c.test for c in calls)
     with (output / "main_summary.csv").open(newline="") as stream:
         assert len(list(csv.DictReader(stream))) == 12
@@ -74,7 +75,7 @@ def test_repeated_invocations_reuse_controls_and_keep_summary(tmp_path, monkeypa
                    "steps": config.steps, "elapsed_seconds": 1,
                    "validation": metrics, "test": metrics}
         (config.output / "summary.json").write_text(json.dumps(summary))
-        (config.output / "history.jsonl").write_text('{}\n')
+        (config.output / "history.jsonl").write_text(json.dumps({'step': config.steps}) + '\n')
         return summary
 
     monkeypatch.setattr(experiment, "run", fake_run)
