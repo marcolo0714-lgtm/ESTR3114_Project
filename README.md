@@ -5,6 +5,11 @@ Small backbone is trained on TweetEval sentiment with two losses: next-token
 prediction and negative/neutral/positive classification. The comparison covers
 token-only, sentiment-only, ordinary weighted AdamW, and PCGrad with AdamW.
 
+A second, independent experiment in [`another_experiment/`](another_experiment/README.md)
+compares joint training and PCGrad for next-token and next-concept prediction
+using a small ConceptLM-style GPT-2 model. It has its own assets, scripts,
+results, and [Google Colab notebook](another_experiment/ESTR3114_NCP_Colab.ipynb).
+
 ## Setup
 
 Use Python 3.10 or newer and preferably a CUDA GPU with ample memory. GPT-2
