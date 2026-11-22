@@ -1,0 +1,9 @@
+{
+  "note": "Reference defaults, not automatically loaded. CLI arguments are authoritative.",
+  "data": {"tasks": 20, "classes_per_task": 5, "validation_per_class": 50, "split_seed": 123},
+  "model": {"channels": 160, "hidden": 320},
+  "training": {"steps": 10000, "batch_per_task": 8, "eval_batch_size": 128, "learning_rate": 0.01, "momentum": 0.9, "weight_decay": 0.0005, "max_grad_norm": 0, "schedule": "cosine", "eval_every": 100, "diagnostics_every": 100},
+  "task_weighting": "Equal fixed weights 1/20; optional user-supplied positive weights normalized to sum 1",
+  "checkpoint_selection": "Highest mean validation task accuracy, breaking ties with lowest mean validation cross-entropy",
+  "seeds": [42, 43, 44]
+}
