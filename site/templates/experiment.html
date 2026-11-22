@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Experiment 1{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <p class="eyebrow">Experiment 1 · Token prediction and sentiment</p>
+  <h1>Do the two tasks help each other?</h1>
+  <p class="lead">A comparison of single-task training, weighted joint training, and PCGrad on a shared GPT-2 backbone.</p>
+</div>
+<div class="finding"><strong>Main finding.</strong> At 6,000 steps, the three trained sentiment methods reach about 70% test macro-F1. Joint and PCGrad retain much stronger token prediction than sentiment-only. PCGrad's extra classification gain is negligible, while its recorded runtime is about 33% higher than joint.</div>
+<nav class="section-links" aria-label="On this page"><a href="#settings">Settings</a><a href="#methods">Methods</a><a href="#metrics">Metrics</a><a href="#test-results">Results</a><a href="#learning-curves">Graphs</a><a href="#interpretation">Interpretation</a></nav>
+
+<section id="settings"><h2>Experiment settings</h2>
+  <div class="table-scroll"><table><tbody>
+    {% for label, value in report.settings %}<tr><th scope="row">{{ label }}</th><td>{{ value }}</td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+<section id="methods"><h2>Four training methods</h2>
+  <p>The backbone parameters θ are shared. The token head and sentiment head have separate parameters. Let L<sub>T</sub> be next-token loss, L<sub>S</sub> sentiment cross-entropy, g<sub>T</sub> = ∇<sub>θ</sub>L<sub>T</sub>, and g<sub>S</sub> = ∇<sub>θ</sub>L<sub>S</sub>.</p>
+  <div class="table-scroll"><table><thead><tr><th>Method</th><th>Training objective or shared gradient</th><th>Meaning</th></tr></thead><tbody>
+    <tr><th scope="row">Token-only</th><td class="formula">min L<sub>T</sub></td><td>Train the backbone and token head. The sentiment head is untrained.</td></tr>
+    <tr><th scope="row">Sentiment-only</th><td class="formula">min L<sub>S</sub></td><td>Train the backbone and sentiment head. Token-head parameters receive no task gradient.</td></tr>
+    <tr><th scope="row">Joint</th><td class="formula">min (L<sub>T</sub> + λL<sub>S</sub>)<br>g = g<sub>T</sub> + λg<sub>S</sub></td><td>Combine the objectives with a sentiment weight λ.</td></tr>
+    <tr><th scope="row">PCGrad</th><td class="formula">g = g′<sub>T</sub> + λg′<sub>S</sub></td><td>Remove conflicting shared-gradient components before combining. Private heads receive their ordinary task gradients with the same sentiment weight.</td></tr>
+  </tbody></table></div>
+  <p>When g<sub>T</sub> · g<sub>S</sub> &lt; 0, both tasks are projected against the <em>original</em> peer gradient:</p>
+  <div class="equations" aria-label="PCGrad projection formulas">
+    <div>g′<sub>T</sub> = g<sub>T</sub> − <span class="fraction"><span>g<sub>T</sub> · g<sub>S</sub></span><span>‖g<sub>S</sub>‖²</span></span> g<sub>S</sub></div>
+    <div>g′<sub>S</sub> = g<sub>S</sub> − <span class="fraction"><span>g<sub>S</sub> · g<sub>T</sub></span><span>‖g<sub>T</sub>‖²</span></span> g<sub>T</sub></div>
+  </div>
+  <p class="helper">Otherwise the gradients are unchanged. Projection is skipped for zero-norm gradients. AdamW applies the combined gradient after norm clipping.</p>
+</section>
+<section id="metrics"><h2>What the four metrics mean</h2>
+  <div class="table-scroll"><table><thead><tr><th>Metric</th><th>Definition</th><th>Interpretation</th></tr></thead><tbody>
+    <tr><th scope="row">Token loss ↓</th><td class="formula">L<sub>T</sub> = −(1/N) ∑ log p(x<sub>i</sub> | x<sub>&lt;i</sub>)</td><td>Mean negative log probability of each correct next token, including EOS and excluding padding. Lower is better.</td></tr>
+    <tr><th scope="row">Perplexity ↓</th><td class="formula">PPL = exp(L<sub>T</sub>)</td><td>Token loss on an exponential scale. It is derived from token loss, not independent evidence.</td></tr>
+    <tr><th scope="row">Accuracy ↑</th><td class="formula">(1/M) ∑ 1[ŷ<sub>i</sub> = y<sub>i</sub>]</td><td>Fraction of tweets with the correct sentiment label.</td></tr>
+    <tr><th scope="row">Macro-F1 ↑</th><td class="formula">F1<sub>c</sub> = 2TP<sub>c</sub> / (2TP<sub>c</sub> + FP<sub>c</sub> + FN<sub>c</sub>)<br>Macro-F1 = (1/3) ∑ F1<sub>c</sub></td><td>Average F1 across negative, neutral, and positive classes, with equal weight per class. Undefined scores are zero.</td></tr>
+  </tbody></table></div>
+  <p class="helper">N counts valid next-token targets; M counts tweets. TP, FP, and FN are true positives, false positives, and false negatives. Always predicting neutral gives 48.33% test accuracy but only about 21.72% macro-F1.</p>
+</section>
+<section id="test-results"><h2>Final test performance</h2>
+  <p>Mean ± sample standard deviation across seeds 42, 43, and 44. Accuracy and macro-F1 are in percent; their standard deviations are in percentage points. Bold marks the best displayed mean, including rounding ties.</p>
+  {% for condition in report.conditions %}
+  <h3>λ = {{ condition.weight }} · {{ '{:,}'.format(condition.steps) }} steps</h3>
+  <div class="table-scroll"><table class="metrics-table"><thead><tr><th>Method</th><th>Token loss ↓</th><th>Perplexity ↓</th><th>Accuracy ↑</th><th>Macro-F1 ↑</th></tr></thead><tbody>
+    {% for row in condition.rows %}<tr><th scope="row">{{ row.name }}</th>{% for cell in row.cells %}<td>{% if cell.best %}<strong>{{ cell.text }}</strong>{% else %}{{ cell.text }}{% endif %}</td>{% endfor %}</tr>{% endfor %}
+  </tbody></table></div>
+  {% endfor %}
+  <p class="helper">λ applies only to joint and PCGrad. Equivalent single-task controls are counted once per seed. Token-only's sentiment head is untrained.</p>
+  <details><summary>Seed 44 checkpoints used in the demonstration</summary>
+    <p>The interactive predictions use these individual saved checkpoints. The tables above summarize three seeds, rather than the demonstration seed alone.</p>
+    <div class="table-scroll"><table class="metrics-table"><thead><tr><th>Method</th><th>Token loss ↓</th><th>Perplexity ↓</th><th>Accuracy ↑</th><th>Macro-F1 ↑</th></tr></thead><tbody>
+      {% for row in report.demo_rows %}<tr><th scope="row">{{ row.name }}</th>{% for value in row.cells %}<td>{{ value }}</td>{% endfor %}</tr>{% endfor %}
+    </tbody></table></div>
+  </details>
+</section>
+<section id="learning-curves"><h2>Learning curves and diagnostics</h2>
+  <p>All graphs below use only 6,000-step runs at λ = 3.0. Unless a graph explicitly says seed 44, curves and summaries combine seeds 42, 43, and 44. Select an image to open it at full resolution.</p>
+  {% for figure in report.figures %}<figure>
+    <h3>{{ figure.title }}</h3><a href="/static/figures/{{ figure.file }}" target="_blank" rel="noopener"><img src="/static/figures/{{ figure.file }}" alt="{{ figure.alt }}" loading="lazy"></a>
+    <figcaption>{{ figure.caption }}</figcaption>
+  </figure>{% endfor %}
+</section>
+<section id="interpretation"><h2>What the results support</h2>
+  <ul class="findings-list">
+    <li><strong>Training budget mattered.</strong> At λ = 3, joint macro-F1 rises from 53.39% at 1,000 steps to 70.13% at 6,000; PCGrad rises from 52.86% to 70.14%. Variation across the three seeds becomes much smaller.</li>
+    <li><strong>The schedule changed too.</strong> The longer runs started fresh. Warmup increased from 100 to 600 steps, and the learning-rate decay endpoint changed. This comparison changes both budget and schedule.</li>
+    <li><strong>The task weight changes the trade-off.</strong> At 1,000 steps, higher λ improves sentiment while making token prediction worse. Only λ = 3 was evaluated at 6,000 steps.</li>
+    <li><strong>Classification is essentially tied at 6,000 steps.</strong> PCGrad beats joint by only 0.0102 test macro-F1 percentage points on average and loses in one of the three seeds. Sentiment-only actually has higher mean final validation macro-F1.</li>
+    <li><strong>PCGrad has a small token benefit.</strong> Its test perplexity is lower than joint in all three seeds, by 0.5068 on average (about 0.405%). Both multitask methods retain much stronger token prediction than sentiment-only.</li>
+    <li><strong>Extra computation has a cost.</strong> Joint averages 23.75 minutes per run and PCGrad 31.61 minutes, about 33.07% more. Timers include training and validation, excluding setup, final test evaluation, and checkpoint saving.</li>
+    <li><strong>Conflicts are usually weak.</strong> Raw shared gradients conflict in about 40% of diagnostic samples, but mean absolute cosine is only about 0.039. This is consistent with the nearly overlapping joint and PCGrad learning curves.</li>
+  </ul>
+  <h3>Limits of the comparison</h3>
+  <ul class="findings-list">
+    <li>Three seeds and one dataset do not establish statistically significant or universal superiority. Zoomed plots magnify small differences.</li>
+    <li>Aggregate test results use the fixed final step, rather than the best validation checkpoint. The original evaluations did not retain per-example predictions for error analysis.</li>
+    <li>Sentiment-only minimizes L<sub>S</sub>, whereas joint minimizes L<sub>T</sub> + 3L<sub>S</sub>. The comparison changes the auxiliary objective and gradient scale.</li>
+    <li>The demo checkpoints were saved in separate seed-44 reruns. Their own test summaries are displayed above; small numerical differences from the original seed-44 results are possible.</li>
+    <li>Training was based on tweets. Long documents, other languages, and arbitrary sentences can behave differently. Example predictions are illustrations, not a substitute for held-out evaluation.</li>
+  </ul>
+</section>
+<p><a class="return-link" href="/text">Try the text models</a></p>
+{% endblock %}

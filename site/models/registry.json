@@ -1,0 +1,56 @@
+{
+  "models": [
+    {
+      "id": "token",
+      "name": "Token-only",
+      "seed": 44,
+      "steps": 6000,
+      "weight": 1.0,
+      "max_length": 96,
+      "sentiment_trained": false,
+      "checkpoint": "text/token/final_model.pt",
+      "tokenizer": "text/token/tokenizer",
+      "architecture": "text/backbone_config.json",
+      "checkpoint_sha256": "d0688cc2280802160868b78d824e3e45b4fddea455d274fc9ecef5a6897f4612"
+    },
+    {
+      "id": "sentiment",
+      "name": "Sentiment-only",
+      "seed": 44,
+      "steps": 6000,
+      "weight": 1.0,
+      "max_length": 96,
+      "sentiment_trained": true,
+      "checkpoint": "text/sentiment/final_model.pt",
+      "tokenizer": "text/sentiment/tokenizer",
+      "architecture": "text/backbone_config.json",
+      "checkpoint_sha256": "d0663747790ff4601b51b6c03151a881dbb3b3c49b8e4aa3c9bd508480abbaf0"
+    },
+    {
+      "id": "joint",
+      "name": "Joint",
+      "seed": 44,
+      "steps": 6000,
+      "weight": 3.0,
+      "max_length": 96,
+      "sentiment_trained": true,
+      "checkpoint": "text/joint/final_model.pt",
+      "tokenizer": "text/joint/tokenizer",
+      "architecture": "text/backbone_config.json",
+      "checkpoint_sha256": "4a2ca338e5d5f814c34129098c958588f949e545c7c776ea8a1ab802ca55ce58"
+    },
+    {
+      "id": "pcgrad",
+      "name": "PCGrad",
+      "seed": 44,
+      "steps": 6000,
+      "weight": 3.0,
+      "max_length": 96,
+      "sentiment_trained": true,
+      "checkpoint": "text/pcgrad/final_model.pt",
+      "tokenizer": "text/pcgrad/tokenizer",
+      "architecture": "text/backbone_config.json",
+      "checkpoint_sha256": "8f29d9a8494e02f63a67f09b775cc99a659841aa46bcad7adb2a433f8c5afc78"
+    }
+  ]
+}

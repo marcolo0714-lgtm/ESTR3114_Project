@@ -1,0 +1,25 @@
+{
+  "method": "pcgrad",
+  "weight": 3.0,
+  "seed": 44,
+  "steps": 6000,
+  "elapsed_seconds": 1996.643941151,
+  "validation": {
+    "token_loss": 4.237648588106521,
+    "perplexity": 69.2448371229224,
+    "sentiment_loss": 0.618509647488594,
+    "accuracy": 0.7235,
+    "macro_f1": 0.7036229893302529,
+    "examples": 2000,
+    "tokens": 54370
+  },
+  "test": {
+    "token_loss": 4.838647898044726,
+    "perplexity": 126.29846782462346,
+    "sentiment_loss": 0.6502426229211105,
+    "accuracy": 0.7045750569846956,
+    "macro_f1": 0.7028201482508102,
+    "examples": 12284,
+    "tokens": 288652
+  }
+}

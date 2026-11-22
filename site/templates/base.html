@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compare next-token and sentiment predictions from four multitask learning methods.">
+  <title>{% block title %}Model comparison{% endblock %} · ESTR3114</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  {% block scripts %}{% endblock %}
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="/text">ESTR3114 <span>Model comparison</span></a>
+      <nav aria-label="Main navigation">
+        {% for route, label in [('text','Try text models'),('images','Try image models'),('experiment-1','Experiment 1'),('experiment-2','Experiment 2')] %}
+        <a href="/{{ route }}" {% if active == route %}aria-current="page"{% endif %}>{{ label }}</a>
+        {% endfor %}
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="container">{% block content %}{% endblock %}</main>
+  <footer class="container site-footer">ESTR3114 project · Joint training and PCGrad</footer>
+</body>
+</html>

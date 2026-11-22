@@ -1,0 +1,45 @@
+{
+  "method": "pcgrad",
+  "weight": 3.0,
+  "seed": 44,
+  "steps": 6000,
+  "batch_size": 8,
+  "eval_batch_size": 16,
+  "max_length": 96,
+  "learning_rate": 2e-05,
+  "weight_decay": 0.01,
+  "warmup_ratio": 0.1,
+  "eval_every": 100,
+  "diagnostics_every": 25,
+  "train_limit": 0,
+  "validation_limit": 0,
+  "test": true,
+  "device": "cuda",
+  "save_model": true,
+  "device_used": "cuda",
+  "torch_version": "2.14.1+cu130",
+  "numpy_version": "2.4.6",
+  "assets": {
+    "model": "openai-community/gpt2",
+    "model_revision_requested": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+    "model_revision_resolved": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+    "dataset": "cardiffnlp/tweet_eval/sentiment",
+    "dataset_revision_requested": "b3a375baf0f409c77e6bc7aa35102b7b3534f8be",
+    "dataset_revision_resolved": "b3a375baf0f409c77e6bc7aa35102b7b3534f8be",
+    "dataset_fingerprints": {
+      "train": "17601d7b30ad36da",
+      "validation": "96cfe0d503f5182d",
+      "test": "c70d63b8adb64464"
+    },
+    "counts": {
+      "train": 45615,
+      "validation": 2000,
+      "test": 12284
+    },
+    "label_names": [
+      "negative",
+      "neutral",
+      "positive"
+    ]
+  }
+}

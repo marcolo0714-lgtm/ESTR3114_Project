@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Try text models{% endblock %}
+{% block scripts %}<script src="/static/app.js" defer></script>{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <p class="eyebrow">Experiment 1 · GPT-2 and TweetEval</p>
+  <h1>One sentence. Four methods.</h1>
+  <p class="lead">Compare the next token and sentiment predicted by the same architecture, trained with different objectives.</p>
+  <p class="metadata">Seed 44 · 6,000 steps · Sentiment weight λ = 3 for joint and PCGrad</p>
+</div>
+<form id="prediction-form" class="input-panel">
+  <label class="input-label" for="sentence">Your sentence</label>
+  <textarea id="sentence" name="sentence" rows="3" maxlength="12000" placeholder="I really enjoyed this movie, especially the" required aria-describedby="input-help"></textarea>
+  <p class="helper" id="input-help">English works best for this tweet-trained model. At most 95 text tokens are used, followed by EOS. A token can be part of a word.</p>
+  <div class="examples" aria-label="Example sentences">
+    <span>Try an example:</span>
+    <button type="button" class="text-button" data-example="I really enjoyed this movie, especially the">Positive</button>
+    <button type="button" class="text-button" data-example="The service was terrible and I will never">Negative</button>
+    <button type="button" class="text-button" data-example="The meeting is scheduled for tomorrow at">Neutral</button>
+  </div>
+  <fieldset class="method-picker">
+    <legend>Compare methods</legend>
+    {% for key, label in [('token','Token-only'),('sentiment','Sentiment-only'),('joint','Joint'),('pcgrad','PCGrad')] %}
+    <label><input type="checkbox" name="method" value="{{ key }}" checked> {{ label }}</label>
+    {% endfor %}
+  </fieldset>
+  <div class="form-actions">
+    <button id="predict-button" class="primary" type="submit">Predict</button>
+    <button id="clear-button" class="secondary" type="button">Clear</button>
+    <span class="helper" id="model-status" role="status">Checking model availability…</span>
+  </div>
+  <p class="helper">The first prediction also loads the selected models and takes longer. Text is processed by this server and is not stored.</p>
+</form>
+<div id="error" class="error" role="alert" hidden></div>
+<section id="results-section" aria-labelledby="results-heading" aria-busy="false">
+  <div class="section-heading"><h2 id="results-heading">Prediction comparison</h2><span id="result-timing" class="helper"></span></div>
+  <p id="progress" class="helper" role="status" aria-live="polite">Enter a sentence to compare the models.</p>
+  <div id="truncation" class="notice" hidden></div>
+  <details id="processed-input" hidden><summary>Text used by the models</summary><p id="processed-text" class="processed-text"></p></details>
+  <div class="table-scroll" id="results-wrapper" hidden>
+    <table class="prediction-table">
+      <caption class="sr-only">Next-token and sentiment predictions by training method</caption>
+      <thead><tr><th scope="col">Method</th><th scope="col">Top five next tokens</th><th scope="col">Sentiment</th><th scope="col">Inference</th></tr></thead>
+      <tbody id="results-body"></tbody>
+    </table>
+  </div>
+</section>
+<section class="reading-notes">
+  <h2>Reading the predictions</h2>
+  <ul>
+    <li>Next-token probabilities use the full vocabulary. The five displayed probabilities need not add up to 100%.</li>
+    <li>Tokens appear in quotation marks to preserve leading spaces. EOS means the end of the text.</li>
+    <li>Token-only has no trained sentiment classifier. Sentiment-only retains a token head, but that head receives no token-loss training.</li>
+    <li>A single example illustrates behavior; it does not establish which method performs better overall. <a href="/experiment-1">Read the experiment results</a>.</li>
+  </ul>
+</section>
+{% endblock %}

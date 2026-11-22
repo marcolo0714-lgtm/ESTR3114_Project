@@ -1,0 +1,742 @@
+{
+  "settings": [
+    [
+      "Tasks",
+      "Next-token prediction and three-class sentiment: negative, neutral, positive."
+    ],
+    [
+      "Model",
+      "Pretrained GPT-2 Small (12 layers, hidden size 768), with a shared backbone, an untied pretrained token head, and a randomly initialized sentiment head."
+    ],
+    [
+      "Dataset",
+      "TweetEval sentiment: 45,615 training, 2,000 validation, and 12,284 test tweets."
+    ],
+    [
+      "Budgets and seeds",
+      "1,000 and 6,000 optimizer steps; seeds 42, 43, and 44. Batch size 8; evaluation batch size 16."
+    ],
+    [
+      "Sequence length",
+      "Maximum 96 GPT-2 tokens, including EOS: at most 95 text tokens plus one EOS. Longer texts are truncated; padding is excluded from token loss."
+    ],
+    [
+      "Optimizer",
+      "AdamW; learning rate 0.00002; weight decay 0.01; gradient norm clipped at 1."
+    ],
+    [
+      "Schedule",
+      "10% warmup followed by linear decay to zero at the chosen final step. Fresh initialization from the pretrained model for each run."
+    ],
+    [
+      "Weights",
+      "Sentiment weights 0.1, 0.3, 1.0, and 3.0 at 1,000 steps. Only 3.0 at 6,000 steps. Single-task controls ignore the weight."
+    ],
+    [
+      "Evaluation",
+      "Validation every 100 steps; test evaluated at the final step. Gradient diagnostics every 25 steps. Training on CUDA in Google Colab."
+    ],
+    [
+      "Exposure",
+      "1,000 × 8 = 8,000 training examples (~0.175 epochs). 6,000 × 8 = 48,000 (~1.05 epochs)."
+    ],
+    [
+      "Interactive demonstration",
+      "Four saved seed-44 models, each trained for 6,000 steps. The joint and PCGrad models use sentiment weight 3.0."
+    ]
+  ],
+  "conditions": [
+    {
+      "steps": 1000,
+      "weight": "0.1",
+      "rows": [
+        {
+          "name": "Token-only",
+          "cells": [
+            {
+              "mean": 4.7604682087527666,
+              "digits": 4,
+              "text": "4.7605 ± 0.0025",
+              "best": false
+            },
+            {
+              "mean": 116.80084130972966,
+              "digits": 2,
+              "text": "116.80 ± 0.29",
+              "best": false
+            },
+            {
+              "mean": 40.78747422120916,
+              "digits": 2,
+              "text": "40.79% ± 13.07",
+              "best": false
+            },
+            {
+              "mean": 20.26426683803545,
+              "digits": 2,
+              "text": "20.26% ± 2.53",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "Sentiment-only",
+          "cells": [
+            {
+              "mean": 6.017924534309164,
+              "digits": 4,
+              "text": "6.0179 ± 0.3903",
+              "best": false
+            },
+            {
+              "mean": 433.2159267618499,
+              "digits": 2,
+              "text": "433.22 ± 180.54",
+              "best": false
+            },
+            {
+              "mean": 60.561163573211765,
+              "digits": 2,
+              "text": "60.56% ± 8.95",
+              "best": true
+            },
+            {
+              "mean": 55.33064866876784,
+              "digits": 2,
+              "text": "55.33% ± 14.87",
+              "best": true
+            }
+          ]
+        },
+        {
+          "name": "Joint",
+          "cells": [
+            {
+              "mean": 4.758101426917819,
+              "digits": 4,
+              "text": "4.7581 ± 0.0026",
+              "best": true
+            },
+            {
+              "mean": 116.52474885836442,
+              "digits": 2,
+              "text": "116.52 ± 0.30",
+              "best": true
+            },
+            {
+              "mean": 45.74785629002496,
+              "digits": 2,
+              "text": "45.75% ± 3.86",
+              "best": false
+            },
+            {
+              "mean": 32.33508719299424,
+              "digits": 2,
+              "text": "32.34% ± 1.61",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "cells": [
+            {
+              "mean": 4.758103480932715,
+              "digits": 4,
+              "text": "4.7581 ± 0.0024",
+              "best": true
+            },
+            {
+              "mean": 116.52495548593186,
+              "digits": 2,
+              "text": "116.52 ± 0.28",
+              "best": true
+            },
+            {
+              "mean": 46.22815586671008,
+              "digits": 2,
+              "text": "46.23% ± 3.66",
+              "best": false
+            },
+            {
+              "mean": 32.334571884318,
+              "digits": 2,
+              "text": "32.33% ± 1.08",
+              "best": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "steps": 1000,
+      "weight": "0.3",
+      "rows": [
+        {
+          "name": "Token-only",
+          "cells": [
+            {
+              "mean": 4.7604682087527666,
+              "digits": 4,
+              "text": "4.7605 ± 0.0025",
+              "best": true
+            },
+            {
+              "mean": 116.80084130972966,
+              "digits": 2,
+              "text": "116.80 ± 0.29",
+              "best": true
+            },
+            {
+              "mean": 40.78747422120916,
+              "digits": 2,
+              "text": "40.79% ± 13.07",
+              "best": false
+            },
+            {
+              "mean": 20.26426683803545,
+              "digits": 2,
+              "text": "20.26% ± 2.53",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "Sentiment-only",
+          "cells": [
+            {
+              "mean": 6.017924534309164,
+              "digits": 4,
+              "text": "6.0179 ± 0.3903",
+              "best": false
+            },
+            {
+              "mean": 433.2159267618499,
+              "digits": 2,
+              "text": "433.22 ± 180.54",
+              "best": false
+            },
+            {
+              "mean": 60.561163573211765,
+              "digits": 2,
+              "text": "60.56% ± 8.95",
+              "best": true
+            },
+            {
+              "mean": 55.33064866876784,
+              "digits": 2,
+              "text": "55.33% ± 14.87",
+              "best": true
+            }
+          ]
+        },
+        {
+          "name": "Joint",
+          "cells": [
+            {
+              "mean": 4.763502915182667,
+              "digits": 4,
+              "text": "4.7635 ± 0.0015",
+              "best": false
+            },
+            {
+              "mean": 117.1556769478833,
+              "digits": 2,
+              "text": "117.16 ± 0.17",
+              "best": false
+            },
+            {
+              "mean": 49.31347009660263,
+              "digits": 2,
+              "text": "49.31% ± 2.48",
+              "best": false
+            },
+            {
+              "mean": 36.020062116559906,
+              "digits": 2,
+              "text": "36.02% ± 1.86",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "cells": [
+            {
+              "mean": 4.763619749032924,
+              "digits": 4,
+              "text": "4.7636 ± 0.0014",
+              "best": false
+            },
+            {
+              "mean": 117.16935423325975,
+              "digits": 2,
+              "text": "117.17 ± 0.16",
+              "best": false
+            },
+            {
+              "mean": 49.44914794312385,
+              "digits": 2,
+              "text": "49.45% ± 2.55",
+              "best": false
+            },
+            {
+              "mean": 36.11118435123457,
+              "digits": 2,
+              "text": "36.11% ± 1.89",
+              "best": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "steps": 1000,
+      "weight": "1.0",
+      "rows": [
+        {
+          "name": "Token-only",
+          "cells": [
+            {
+              "mean": 4.7604682087527666,
+              "digits": 4,
+              "text": "4.7605 ± 0.0025",
+              "best": true
+            },
+            {
+              "mean": 116.80084130972966,
+              "digits": 2,
+              "text": "116.80 ± 0.29",
+              "best": true
+            },
+            {
+              "mean": 40.78747422120916,
+              "digits": 2,
+              "text": "40.79% ± 13.07",
+              "best": false
+            },
+            {
+              "mean": 20.26426683803545,
+              "digits": 2,
+              "text": "20.26% ± 2.53",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "Sentiment-only",
+          "cells": [
+            {
+              "mean": 6.017924534309164,
+              "digits": 4,
+              "text": "6.0179 ± 0.3903",
+              "best": false
+            },
+            {
+              "mean": 433.2159267618499,
+              "digits": 2,
+              "text": "433.22 ± 180.54",
+              "best": false
+            },
+            {
+              "mean": 60.561163573211765,
+              "digits": 2,
+              "text": "60.56% ± 8.95",
+              "best": true
+            },
+            {
+              "mean": 55.33064866876784,
+              "digits": 2,
+              "text": "55.33% ± 14.87",
+              "best": true
+            }
+          ]
+        },
+        {
+          "name": "Joint",
+          "cells": [
+            {
+              "mean": 4.7811020257840395,
+              "digits": 4,
+              "text": "4.7811 ± 0.0070",
+              "best": false
+            },
+            {
+              "mean": 119.23764668999672,
+              "digits": 2,
+              "text": "119.24 ± 0.84",
+              "best": false
+            },
+            {
+              "mean": 52.884511017041135,
+              "digits": 2,
+              "text": "52.88% ± 4.13",
+              "best": false
+            },
+            {
+              "mean": 41.275812815607715,
+              "digits": 2,
+              "text": "41.28% ± 5.88",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "cells": [
+            {
+              "mean": 4.7804252609322635,
+              "digits": 4,
+              "text": "4.7804 ± 0.0075",
+              "best": false
+            },
+            {
+              "mean": 119.15724506038686,
+              "digits": 2,
+              "text": "119.16 ± 0.89",
+              "best": false
+            },
+            {
+              "mean": 52.952349940301744,
+              "digits": 2,
+              "text": "52.95% ± 4.14",
+              "best": false
+            },
+            {
+              "mean": 41.463987977395654,
+              "digits": 2,
+              "text": "41.46% ± 6.12",
+              "best": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "steps": 1000,
+      "weight": "3.0",
+      "rows": [
+        {
+          "name": "Token-only",
+          "cells": [
+            {
+              "mean": 4.7604682087527666,
+              "digits": 4,
+              "text": "4.7605 ± 0.0025",
+              "best": true
+            },
+            {
+              "mean": 116.80084130972966,
+              "digits": 2,
+              "text": "116.80 ± 0.29",
+              "best": true
+            },
+            {
+              "mean": 40.78747422120916,
+              "digits": 2,
+              "text": "40.79% ± 13.07",
+              "best": false
+            },
+            {
+              "mean": 20.26426683803545,
+              "digits": 2,
+              "text": "20.26% ± 2.53",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "Sentiment-only",
+          "cells": [
+            {
+              "mean": 6.017924534309164,
+              "digits": 4,
+              "text": "6.0179 ± 0.3903",
+              "best": false
+            },
+            {
+              "mean": 433.2159267618499,
+              "digits": 2,
+              "text": "433.22 ± 180.54",
+              "best": false
+            },
+            {
+              "mean": 60.561163573211765,
+              "digits": 2,
+              "text": "60.56% ± 8.95",
+              "best": true
+            },
+            {
+              "mean": 55.33064866876784,
+              "digits": 2,
+              "text": "55.33% ± 14.87",
+              "best": true
+            }
+          ]
+        },
+        {
+          "name": "Joint",
+          "cells": [
+            {
+              "mean": 4.829329503599652,
+              "digits": 4,
+              "text": "4.8293 ± 0.0120",
+              "best": false
+            },
+            {
+              "mean": 125.13303006666575,
+              "digits": 2,
+              "text": "125.13 ± 1.50",
+              "best": false
+            },
+            {
+              "mean": 59.549006838163464,
+              "digits": 2,
+              "text": "59.55% ± 8.44",
+              "best": false
+            },
+            {
+              "mean": 53.38782170799361,
+              "digits": 2,
+              "text": "53.39% ± 14.23",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "cells": [
+            {
+              "mean": 4.824896563215566,
+              "digits": 4,
+              "text": "4.8249 ± 0.0119",
+              "best": false
+            },
+            {
+              "mean": 124.57946247866501,
+              "digits": 2,
+              "text": "124.58 ± 1.48",
+              "best": false
+            },
+            {
+              "mean": 59.23152067730381,
+              "digits": 2,
+              "text": "59.23% ± 8.23",
+              "best": false
+            },
+            {
+              "mean": 52.862363874955356,
+              "digits": 2,
+              "text": "52.86% ± 13.86",
+              "best": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "steps": 6000,
+      "weight": "3.0",
+      "rows": [
+        {
+          "name": "Token-only",
+          "cells": [
+            {
+              "mean": 4.741354732498362,
+              "digits": 4,
+              "text": "4.7414 ± 0.0010",
+              "best": true
+            },
+            {
+              "mean": 114.58937564715511,
+              "digits": 2,
+              "text": "114.59 ± 0.12",
+              "best": true
+            },
+            {
+              "mean": 38.657332030826005,
+              "digits": 2,
+              "text": "38.66% ± 16.76",
+              "best": false
+            },
+            {
+              "mean": 18.083796490179854,
+              "digits": 2,
+              "text": "18.08% ± 6.30",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "Sentiment-only",
+          "cells": [
+            {
+              "mean": 5.943346398520194,
+              "digits": 4,
+              "text": "5.9433 ± 0.0979",
+              "best": false
+            },
+            {
+              "mean": 382.43264876373905,
+              "digits": 2,
+              "text": "382.43 ± 37.67",
+              "best": false
+            },
+            {
+              "mean": 70.11017041137522,
+              "digits": 2,
+              "text": "70.11% ± 0.46",
+              "best": false
+            },
+            {
+              "mean": 70.03326138238054,
+              "digits": 2,
+              "text": "70.03% ± 0.35",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "Joint",
+          "cells": [
+            {
+              "mean": 4.8298825197982955,
+              "digits": 4,
+              "text": "4.8299 ± 0.0134",
+              "best": false
+            },
+            {
+              "mean": 125.20378646744616,
+              "digits": 2,
+              "text": "125.20 ± 1.68",
+              "best": false
+            },
+            {
+              "mean": 70.19971779007923,
+              "digits": 2,
+              "text": "70.20% ± 0.21",
+              "best": false
+            },
+            {
+              "mean": 70.13261597545872,
+              "digits": 2,
+              "text": "70.13% ± 0.13",
+              "best": false
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "cells": [
+            {
+              "mean": 4.825834754924218,
+              "digits": 4,
+              "text": "4.8258 ± 0.0125",
+              "best": false
+            },
+            {
+              "mean": 124.6969857958713,
+              "digits": 2,
+              "text": "124.70 ± 1.56",
+              "best": false
+            },
+            {
+              "mean": 70.21328557473136,
+              "digits": 2,
+              "text": "70.21% ± 0.25",
+              "best": true
+            },
+            {
+              "mean": 70.14283082772828,
+              "digits": 2,
+              "text": "70.14% ± 0.19",
+              "best": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "demo_rows": [
+    {
+      "name": "Token-only",
+      "cells": [
+        "4.7402",
+        "114.45",
+        "19.31%",
+        "10.81%"
+      ]
+    },
+    {
+      "name": "Sentiment-only",
+      "cells": [
+        "5.9328",
+        "377.20",
+        "70.64%",
+        "70.43%"
+      ]
+    },
+    {
+      "name": "Joint",
+      "cells": [
+        "4.8439",
+        "126.96",
+        "70.42%",
+        "70.22%"
+      ]
+    },
+    {
+      "name": "PCGrad",
+      "cells": [
+        "4.8386",
+        "126.30",
+        "70.46%",
+        "70.28%"
+      ]
+    }
+  ],
+  "figures": [
+    {
+      "file": "summary_convergence.png",
+      "title": "Validation learning curves",
+      "alt": "Validation token loss and macro-F1 across 6,000 steps for the four methods.",
+      "caption": "Thin lines are individual seeds; bold lines are seed means. The orange PCGrad curve largely covers the blue joint curve because they nearly coincide."
+    },
+    {
+      "file": "summary_convergence_zoomed.png",
+      "title": "Joint and PCGrad on enlarged scales",
+      "alt": "Zoomed mean validation curves and PCGrad-minus-joint differences.",
+      "caption": "Top: steps 4,000–6,000 on tight vertical scales. Bottom: PCGrad minus joint over the full run. Values are not shifted. Zoom magnifies small differences."
+    },
+    {
+      "file": "summary_convergence_zoomed_seed44.png",
+      "title": "Seed 44: joint and PCGrad",
+      "alt": "Seed-44 validation curves on enlarged scales and paired differences.",
+      "caption": "Only the original seed-44 evaluation runs are shown here; no averaging across seeds. These curves are distinct from the separately saved demo reruns."
+    },
+    {
+      "file": "summary_tradeoff.png",
+      "title": "Validation trade-off between the tasks",
+      "alt": "Final validation token loss versus sentiment macro-F1 for all four methods.",
+      "caption": "Lower token loss and higher macro-F1 are preferred. Points show seeds; error bars show sample standard deviation."
+    },
+    {
+      "file": "summary_layer_conflicts.png",
+      "title": "Gradient conflict across layers",
+      "alt": "Line plot of raw gradient-conflict frequencies across GPT-2 layers.",
+      "caption": "Solid: joint. Dashed: PCGrad. Each method has 240 sampled states per seed, 720 total. These frequencies are measured before projection."
+    },
+    {
+      "file": "summary_runtime.png",
+      "title": "Recorded runtime",
+      "alt": "Recorded training-plus-validation seconds per step for the four methods.",
+      "caption": "Training and validation time, averaged across three seeds. Setup, final test evaluation, and saving checkpoints are excluded."
+    },
+    {
+      "file": "summary_weight_effects.png",
+      "title": "Per-seed test performance and compute cost",
+      "alt": "Per-seed test macro-F1, perplexity, paired sentiment differences, and runtime.",
+      "caption": "The overview uses the single evaluated 6,000-step weight, λ = 3.0. Token-only sentiment predictions are omitted from the classification panel because that head is untrained."
+    }
+  ]
+}
