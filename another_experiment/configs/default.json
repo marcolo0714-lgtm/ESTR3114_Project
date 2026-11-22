@@ -1,8 +1,0 @@
-{
-  "description": "Documented defaults; CLI arguments are authoritative. This file is a reference, not an automatically loaded override.",
-  "preparation": {"model": "openai-community/gpt2", "dataset": "Salesforce/wikitext", "dataset_config": "wikitext-2-raw-v1", "sequence_length": 256},
-  "model": {"encoder_layers": 1, "concept_layers": 2, "chunk_size": 4, "codebook_size": 64, "segments": 12},
-  "training": {"steps": 6000, "batch_size": 8, "learning_rate": 0.00002, "weight_decay": 0.01, "warmup_ratio": 0.1, "eval_every": 100, "diagnostics_every": 25},
-  "sweep": {"weights": [0.3, 1.0, 3.0], "betas": [0.1], "seeds": [42, 43, 44]},
-  "quantizer_policy": "Detached encoder targets and detached codebooks in task predictions; codebooks learn through VQ only. No encoder commitment penalty."
-}
