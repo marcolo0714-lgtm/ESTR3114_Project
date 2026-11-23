@@ -1,0 +1,148 @@
+/* Compact prediction results. Each desktop item has its probability below it. */
+.prediction-table th:first-child { width: 14%; }
+.prediction-table th:nth-child(2) { width: 47%; }
+.prediction-table th:nth-child(3) { width: 28%; }
+.prediction-table th:last-child { width: 11%; }
+.prediction-table th, .prediction-table td { padding: 12px 10px; }
+.prediction-table tbody th { min-width: 0; }
+.token-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+.token-list li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2px;
+  margin: 0;
+  min-width: 0;
+}
+.token-list code { max-width: 100%; }
+.token-list.wrap-predictions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.sentiment-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.sentiment-list .probability-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2px;
+  margin: 0;
+  min-width: 0;
+  max-width: none;
+}
+.predicted-sentiment { font-weight: 700; }
+.sentiment-list.wrap-predictions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.prediction-table .untrained { margin: 0; }
+.prediction-table td::before { display: none; }
+
+/* Permanent report navigation; no JavaScript or collapse control is needed. */
+.report-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 30;
+  width: 248px;
+  padding: 24px 20px;
+  overflow-y: auto;
+  background: white;
+  border-right: 1px solid var(--line);
+}
+.sidebar-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+.sidebar-heading h2 { margin: 0; font-size: 18px; }
+.report-sidebar nav { display: flex; flex-direction: column; gap: 0; padding-top: 14px; }
+.report-sidebar nav a {
+  padding: 6px 0;
+  line-height: 1.5;
+  font-size: 15px;
+  font-weight: 600;
+}
+.report-sidebar nav .subsection-link { padding: 4px 0 4px 12px; font-size: 14px; font-weight: 400; }
+[id^="results-"] { scroll-margin-top: 80px; }
+section[id] { scroll-margin-top: 80px; }
+.report-page .header-inner { max-width: none; margin-left: 0; margin-right: 0; }
+.report-page main [id] { scroll-margin-top: 24px; }
+@media (min-width: 1024px) { body.report-page { padding-left: 248px; } }
+@media (max-width: 1023px) {
+  .report-sidebar {
+    position: sticky;
+    top: 0;
+    width: auto;
+    max-height: 35vh;
+    padding: 12px 0;
+    margin-top: 16px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sidebar-heading { padding-bottom: 8px; }
+  .report-page main [id] { scroll-margin-top: calc(35vh + 20px); }
+}
+
+/* Widen the report when there is room for two complete result tables. */
+body.report-page main.container { max-width: 1760px; }
+.results-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px 24px;
+  margin: 24px 0;
+}
+.result-card { min-width: 0; }
+.result-card h3 { margin-top: 0; }
+.result-card .metrics-table { min-width: 510px; font-size: 12px; }
+.result-card .metrics-table tbody th { min-width: 105px; }
+.result-card .metrics-table th, .result-card .metrics-table td { padding: 10px 8px; }
+.result-card .table-scroll { margin-bottom: 12px; }
+#test-results { container-type: inline-size; }
+@container (min-width: 1054px) {
+  .results-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.metric-definitions { table-layout: fixed; min-width: 900px; }
+.metric-name-column { width: 16%; }
+.metric-definition-column { width: 46%; }
+.metric-interpretation-column { width: 38%; }
+.formula-line { display: block; white-space: nowrap; }
+.inline-formula, .example-calculation { font-family: "Cambria Math", Cambria, Georgia, serif; font-size: 18px; }
+.example-calculation { padding: 4px 0 8px 24px; }
+.example-calculation p { margin: 8px 0; }
+.worked-example { margin-top: 28px; }
+.worked-example li { margin: 8px 0; }
+.vector-figure { max-width: 1100px; margin-top: 18px; }
+.vector-figure img { width: 100%; }
+
+@media (max-width: 760px) {
+  /* Keep the comparison columns together; scroll just the table on phones. */
+  .prediction-table { min-width: 580px; }
+  .prediction-table th:first-child { width: 16%; }
+  .prediction-table th:nth-child(2) { width: 43%; }
+  .prediction-table th:nth-child(3) { width: 28%; }
+  .prediction-table th:last-child { width: 13%; }
+  .prediction-table th, .prediction-table td { padding: 12px 8px; }
+  .token-list, .sentiment-list { display: flex; flex-direction: column; gap: 3px; }
+  .token-list li, .sentiment-list .probability-row {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  .token-list code { max-width: calc(100% - 70px); overflow-wrap: anywhere; }
+  .token-list span, .probability-row span:last-child { flex: 0 0 auto; }
+  .prediction-table .helper { margin: 0; }
+  .prediction-table .untrained { margin-top: 3px; }
+}

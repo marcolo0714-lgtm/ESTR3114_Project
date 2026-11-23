@@ -13,6 +13,33 @@ const truncation = document.querySelector('#truncation');
 const processed = document.querySelector('#processed-input');
 let busy = false;
 const unavailable = new Set();
+const desktopPredictions = window.matchMedia('(min-width: 761px)');
+const measuringCanvas = document.createElement('canvas').getContext('2d');
+
+function fitPredictionGroup(group) {
+  if (!desktopPredictions.matches || !group.clientWidth) {
+    group.classList.remove('wrap-predictions');
+    return;
+  }
+  // Measure the labels at their natural width, rather than splitting a token
+  // into tiny fragments to force all five predictions onto a single row.
+  const items = [...group.children];
+  const widths = items.map(item => Math.max(...[...item.children].map(label => {
+    const style = getComputedStyle(label);
+    measuringCanvas.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    return measuringCanvas.measureText(label.textContent).width;
+  })));
+  const gap = parseFloat(getComputedStyle(group).columnGap) || 0;
+  const fullRowWidth = Math.max(...widths) * items.length + gap * (items.length - 1);
+  group.classList.toggle('wrap-predictions', fullRowWidth > group.clientWidth);
+}
+const predictionLayout = new ResizeObserver(entries => {
+  // Reflow outside the observer delivery cycle when the number of rows changes.
+  for (const entry of entries) requestAnimationFrame(() => fitPredictionGroup(entry.target));
+});
+desktopPredictions.addEventListener('change', () => {
+  for (const group of results.querySelectorAll('.token-list, .sentiment-list')) fitPredictionGroup(group);
+});
 
 function element(tag, text, className) {
   const node = document.createElement(tag);
@@ -23,6 +50,7 @@ function element(tag, text, className) {
 function percentage(value) { return `${(value * 100).toFixed(2)}%`; }
 function showError(message) { error.textContent = message; error.hidden = false; }
 function resetResults() {
+  predictionLayout.disconnect();
   results.replaceChildren(); wrapper.hidden = true; error.hidden = true;
   truncation.hidden = true; processed.hidden = true; timing.textContent = '';
 }
@@ -30,31 +58,40 @@ function renderResult(result) {
   const row = element('tr');
   const name = element('th', result.name); name.scope = 'row'; row.append(name);
   const tokenCell = element('td');
+  tokenCell.dataset.label = 'Top five next tokens';
   const list = element('ol', undefined, 'token-list');
   for (const token of result.tokens) {
     const item = element('li');
-    item.append(element('code', token.is_eos ? 'EOS (end of text)' : JSON.stringify(token.text)),
+    item.append(element('code', token.is_eos ? 'EOS' : JSON.stringify(token.text)),
                 element('span', percentage(token.probability)));
     list.append(item);
   }
   tokenCell.append(list); row.append(tokenCell);
   const sentimentCell = element('td');
+  sentimentCell.dataset.label = 'Sentiment';
   if (result.sentiment) {
-    sentimentCell.append(element('p', result.sentiment.label, 'sentiment-label'));
+    const sentiments = element('ul', undefined, 'sentiment-list');
     for (const [label, probability] of Object.entries(result.sentiment.probabilities)) {
-      const line = element('div', undefined, 'probability-row');
+      const line = element('li', undefined, 'probability-row');
+      if (label === result.sentiment.label) {
+        line.classList.add('predicted-sentiment');
+        line.setAttribute('aria-label', `${label}, predicted sentiment`);
+      }
       line.append(element('span', label[0].toUpperCase() + label.slice(1)), element('span', percentage(probability)));
-      sentimentCell.append(line);
+      sentiments.append(line);
     }
+    sentimentCell.append(sentiments);
   } else {
     sentimentCell.append(element('p', 'Untrained head', 'untrained'),
                          element('p', 'No sentiment supervision.', 'helper'));
   }
   row.append(sentimentCell);
   const runtime = element('td');
+  runtime.dataset.label = 'Inference';
   runtime.append(element('div', `${result.inference_ms.toFixed(0)} ms`, 'inference-time'));
   if (result.first_load) runtime.append(element('div', `+ ${(result.loading_ms/1000).toFixed(1)} s first load`, 'helper'));
   row.append(runtime); results.append(row);
+  for (const group of row.querySelectorAll('.token-list, .sentiment-list')) predictionLayout.observe(group);
 }
 
 for (const example of document.querySelectorAll('[data-example]')) {

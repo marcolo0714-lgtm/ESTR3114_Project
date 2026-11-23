@@ -1,13 +1,38 @@
 {% extends 'base.html' %}
 {% block title %}Experiment 1{% endblock %}
+{% block body_class %}report-page{% endblock %}
 {% block content %}
+<aside id="report-sidebar" class="report-sidebar" aria-labelledby="sidebar-title">
+  <div class="sidebar-heading"><h2 id="sidebar-title">Experiment 1</h2></div>
+  <nav aria-label="Experiment 1 sections">
+    <a href="#settings">Settings</a>
+    <a href="#methods">Four methods</a>
+    <a class="subsection-link" href="#pcgrad-projection">PCGrad projection</a>
+    <a class="subsection-link" href="#vector-example">A simple 2D example</a>
+    <a href="#metrics">Metric definitions</a>
+    <a class="subsection-link" href="#metric-token-loss">Token loss</a>
+    <a class="subsection-link" href="#metric-perplexity">Perplexity</a>
+    <a class="subsection-link" href="#metric-accuracy">Accuracy</a>
+    <a class="subsection-link" href="#metric-macro-f1">Macro-F1</a>
+    <a href="#test-results">Test results</a>
+    {% for condition in report.conditions %}
+    <a class="subsection-link" href="#results-{{ condition.steps }}-{{ condition.weight | replace('.', '-') }}">λ = {{ condition.weight }} · {{ '{:,}'.format(condition.steps) }} steps</a>
+    {% endfor %}
+    <a class="subsection-link" href="#demo-seed44">Seed 44 demonstration</a>
+    <a href="#learning-curves">Learning curves and graphs</a>
+    {% for figure in report.figures %}
+    <a class="subsection-link" href="#graph-{{ loop.index }}">{{ figure.title }}</a>
+    {% endfor %}
+    <a href="#interpretation">Findings and limitations</a>
+    <a class="subsection-link" href="#comparison-limits">Limits of the comparison</a>
+  </nav>
+</aside>
 <div class="page-heading">
   <p class="eyebrow">Experiment 1 · Token prediction and sentiment</p>
   <h1>Do the two tasks help each other?</h1>
   <p class="lead">A comparison of single-task training, weighted joint training, and PCGrad on a shared GPT-2 backbone.</p>
 </div>
 <div class="finding"><strong>Main finding.</strong> At 6,000 steps, the three trained sentiment methods reach about 70% test macro-F1. Joint and PCGrad retain much stronger token prediction than sentiment-only. PCGrad's extra classification gain is negligible, while its recorded runtime is about 33% higher than joint.</div>
-<nav class="section-links" aria-label="On this page"><a href="#settings">Settings</a><a href="#methods">Methods</a><a href="#metrics">Metrics</a><a href="#test-results">Results</a><a href="#learning-curves">Graphs</a><a href="#interpretation">Interpretation</a></nav>
 
 <section id="settings"><h2>Experiment settings</h2>
   <div class="table-scroll"><table><tbody>
@@ -22,41 +47,68 @@
     <tr><th scope="row">Joint</th><td class="formula">min (L<sub>T</sub> + λL<sub>S</sub>)<br>g = g<sub>T</sub> + λg<sub>S</sub></td><td>Combine the objectives with a sentiment weight λ.</td></tr>
     <tr><th scope="row">PCGrad</th><td class="formula">g = g′<sub>T</sub> + λg′<sub>S</sub></td><td>Remove conflicting shared-gradient components before combining. Private heads receive their ordinary task gradients with the same sentiment weight.</td></tr>
   </tbody></table></div>
+  <h3 id="pcgrad-projection">PCGrad projection</h3>
   <p>When g<sub>T</sub> · g<sub>S</sub> &lt; 0, both tasks are projected against the <em>original</em> peer gradient:</p>
   <div class="equations" aria-label="PCGrad projection formulas">
     <div>g′<sub>T</sub> = g<sub>T</sub> − <span class="fraction"><span>g<sub>T</sub> · g<sub>S</sub></span><span>‖g<sub>S</sub>‖²</span></span> g<sub>S</sub></div>
     <div>g′<sub>S</sub> = g<sub>S</sub> − <span class="fraction"><span>g<sub>S</sub> · g<sub>T</sub></span><span>‖g<sub>T</sub>‖²</span></span> g<sub>T</sub></div>
   </div>
   <p class="helper">Otherwise the gradients are unchanged. Projection is skipped for zero-norm gradients. AdamW applies the combined gradient after norm clipping.</p>
+  <div class="worked-example" id="vector-example">
+    <h3>A simple 2D example</h3>
+    <p>Suppose the two shared task gradients are <span class="inline-formula">g<sub>T</sub> = (2, 0)</span> and <span class="inline-formula">g<sub>S</sub> = (−1, 1)</span>. Use <strong>λ = 1</strong> to keep the arithmetic simple. Their dot product is <span class="inline-formula">2(−1) + 0(1) = −2 &lt; 0</span>, so they conflict.</p>
+    <ul>
+      <li><strong>Token-only:</strong> use <span class="inline-formula">g<sub>T</sub> = (2, 0)</span>.</li>
+      <li><strong>Sentiment-only:</strong> use <span class="inline-formula">g<sub>S</sub> = (−1, 1)</span>.</li>
+      <li><strong>Joint:</strong> add them directly: <span class="inline-formula">g<sub>joint</sub> = (2, 0) + (−1, 1) = (1, 1)</span>.</li>
+      <li><strong>PCGrad:</strong> project both gradients against the original peer, then add them:</li>
+    </ul>
+    <div class="example-calculation">
+      <p>‖g<sub>T</sub>‖² = 4, &nbsp; ‖g<sub>S</sub>‖² = 2</p>
+      <p>g′<sub>T</sub> = g<sub>T</sub> − (−2 / 2) g<sub>S</sub> = (2, 0) + (−1, 1) = <strong>(1, 1)</strong></p>
+      <p>g′<sub>S</sub> = g<sub>S</sub> − (−2 / 4) g<sub>T</sub> = (−1, 1) + (1, 0) = <strong>(0, 1)</strong></p>
+      <p>g<sub>PCGrad</sub> = g′<sub>T</sub> + g′<sub>S</sub> = <strong>(1, 2)</strong></p>
+    </div>
+    <figure class="vector-figure">
+      <img src="/static/figures/pcgrad_2d_example.svg" alt="Two equal-scale vector diagrams. Joint adds the original gradients (2,0) and (-1,1) to give (1,1). PCGrad projects them to (1,1) and (0,1), then adds them to give (1,2)." loading="lazy">
+      <figcaption>Blue: token gradient. Orange: sentiment gradient. Purple: combined gradient. Dashed lines show vector addition. Both panels use the same scale. These are gradient directions; a basic gradient-descent update moves in the opposite direction.</figcaption>
+    </figure>
+    <p class="helper">This illustrates shared-gradient surgery before clipping and AdamW; it is not a measured training step. With λ = 3 instead, the same example gives g<sub>joint</sub> = (−1, 3) and g<sub>PCGrad</sub> = (1, 4). Private task heads keep their ordinary weighted task gradients.</p>
+  </div>
 </section>
 <section id="metrics"><h2>What the four metrics mean</h2>
-  <div class="table-scroll"><table><thead><tr><th>Metric</th><th>Definition</th><th>Interpretation</th></tr></thead><tbody>
-    <tr><th scope="row">Token loss ↓</th><td class="formula">L<sub>T</sub> = −(1/N) ∑ log p(x<sub>i</sub> | x<sub>&lt;i</sub>)</td><td>Mean negative log probability of each correct next token, including EOS and excluding padding. Lower is better.</td></tr>
-    <tr><th scope="row">Perplexity ↓</th><td class="formula">PPL = exp(L<sub>T</sub>)</td><td>Token loss on an exponential scale. It is derived from token loss, not independent evidence.</td></tr>
-    <tr><th scope="row">Accuracy ↑</th><td class="formula">(1/M) ∑ 1[ŷ<sub>i</sub> = y<sub>i</sub>]</td><td>Fraction of tweets with the correct sentiment label.</td></tr>
-    <tr><th scope="row">Macro-F1 ↑</th><td class="formula">F1<sub>c</sub> = 2TP<sub>c</sub> / (2TP<sub>c</sub> + FP<sub>c</sub> + FN<sub>c</sub>)<br>Macro-F1 = (1/3) ∑ F1<sub>c</sub></td><td>Average F1 across negative, neutral, and positive classes, with equal weight per class. Undefined scores are zero.</td></tr>
+  <div class="table-scroll"><table class="metric-definitions"><colgroup><col class="metric-name-column"><col class="metric-definition-column"><col class="metric-interpretation-column"></colgroup><thead><tr><th>Metric</th><th>Definition</th><th>Interpretation</th></tr></thead><tbody>
+    <tr id="metric-token-loss"><th scope="row">Token loss ↓</th><td class="formula">L<sub>T</sub> = −(1/N) ∑ log p(x<sub>i</sub> | x<sub>&lt;i</sub>)</td><td>Mean negative log probability of each correct next token, including EOS and excluding padding. Lower is better.</td></tr>
+    <tr id="metric-perplexity"><th scope="row">Perplexity ↓</th><td class="formula">PPL = exp(L<sub>T</sub>)</td><td>Token loss on an exponential scale. It is derived from token loss, not independent evidence.</td></tr>
+    <tr id="metric-accuracy"><th scope="row">Accuracy ↑</th><td class="formula">(1/M) ∑ 1[ŷ<sub>i</sub> = y<sub>i</sub>]</td><td>Fraction of tweets with the correct sentiment label.</td></tr>
+    <tr id="metric-macro-f1"><th scope="row">Macro-F1 ↑</th><td class="formula"><span class="formula-line">F1<sub>c</sub> = 2TP<sub>c</sub> / (2TP<sub>c</sub> + FP<sub>c</sub> + FN<sub>c</sub>)</span><span class="formula-line">Macro-F1 = (1/3) ∑ F1<sub>c</sub></span></td><td>Average F1 across negative, neutral, and positive classes, with equal weight per class. Undefined scores are zero.</td></tr>
   </tbody></table></div>
   <p class="helper">N counts valid next-token targets; M counts tweets. TP, FP, and FN are true positives, false positives, and false negatives. Always predicting neutral gives 48.33% test accuracy but only about 21.72% macro-F1.</p>
 </section>
 <section id="test-results"><h2>Final test performance</h2>
   <p>Mean ± sample standard deviation across seeds 42, 43, and 44. Accuracy and macro-F1 are in percent; their standard deviations are in percentage points. Bold marks the best displayed mean, including rounding ties.</p>
+  <div class="results-grid">
   {% for condition in report.conditions %}
-  <h3>λ = {{ condition.weight }} · {{ '{:,}'.format(condition.steps) }} steps</h3>
+  <article class="result-card">
+  <h3 id="results-{{ condition.steps }}-{{ condition.weight | replace('.', '-') }}">λ = {{ condition.weight }} · {{ '{:,}'.format(condition.steps) }} steps</h3>
   <div class="table-scroll"><table class="metrics-table"><thead><tr><th>Method</th><th>Token loss ↓</th><th>Perplexity ↓</th><th>Accuracy ↑</th><th>Macro-F1 ↑</th></tr></thead><tbody>
     {% for row in condition.rows %}<tr><th scope="row">{{ row.name }}</th>{% for cell in row.cells %}<td>{% if cell.best %}<strong>{{ cell.text }}</strong>{% else %}{{ cell.text }}{% endif %}</td>{% endfor %}</tr>{% endfor %}
   </tbody></table></div>
+  </article>
   {% endfor %}
-  <p class="helper">λ applies only to joint and PCGrad. Equivalent single-task controls are counted once per seed. Token-only's sentiment head is untrained.</p>
-  <details><summary>Seed 44 checkpoints used in the demonstration</summary>
-    <p>The interactive predictions use these individual saved checkpoints. The tables above summarize three seeds, rather than the demonstration seed alone.</p>
+  <article class="result-card demo-result" aria-labelledby="demo-seed44">
+    <h3 id="demo-seed44">Seed 44 checkpoints used in the demonstration</h3>
     <div class="table-scroll"><table class="metrics-table"><thead><tr><th>Method</th><th>Token loss ↓</th><th>Perplexity ↓</th><th>Accuracy ↑</th><th>Macro-F1 ↑</th></tr></thead><tbody>
       {% for row in report.demo_rows %}<tr><th scope="row">{{ row.name }}</th>{% for value in row.cells %}<td>{{ value }}</td>{% endfor %}</tr>{% endfor %}
     </tbody></table></div>
-  </details>
+    <p class="helper">Individual seed-44 checkpoint scores at 6,000 steps, with λ = 3 for joint and PCGrad. These are not three-seed averages; no standard deviation is shown.</p>
+  </article>
+  </div>
+  <p class="helper">λ applies only to joint and PCGrad. Equivalent single-task controls are counted once per seed. Token-only's sentiment head is untrained.</p>
 </section>
 <section id="learning-curves"><h2>Learning curves and diagnostics</h2>
   <p>All graphs below use only 6,000-step runs at λ = 3.0. Unless a graph explicitly says seed 44, curves and summaries combine seeds 42, 43, and 44. Select an image to open it at full resolution.</p>
-  {% for figure in report.figures %}<figure>
+  {% for figure in report.figures %}<figure id="graph-{{ loop.index }}">
     <h3>{{ figure.title }}</h3><a href="/static/figures/{{ figure.file }}" target="_blank" rel="noopener"><img src="/static/figures/{{ figure.file }}" alt="{{ figure.alt }}" loading="lazy"></a>
     <figcaption>{{ figure.caption }}</figcaption>
   </figure>{% endfor %}
@@ -71,7 +123,7 @@
     <li><strong>Extra computation has a cost.</strong> Joint averages 23.75 minutes per run and PCGrad 31.61 minutes, about 33.07% more. Timers include training and validation, excluding setup, final test evaluation, and checkpoint saving.</li>
     <li><strong>Conflicts are usually weak.</strong> Raw shared gradients conflict in about 40% of diagnostic samples, but mean absolute cosine is only about 0.039. This is consistent with the nearly overlapping joint and PCGrad learning curves.</li>
   </ul>
-  <h3>Limits of the comparison</h3>
+  <h3 id="comparison-limits">Limits of the comparison</h3>
   <ul class="findings-list">
     <li>Three seeds and one dataset do not establish statistically significant or universal superiority. Zoomed plots magnify small differences.</li>
     <li>Aggregate test results use the fixed final step, rather than the best validation checkpoint. The original evaluations did not retain per-example predictions for error analysis.</li>

@@ -6,9 +6,10 @@
   <meta name="description" content="Compare next-token and sentiment predictions from four multitask learning methods.">
   <title>{% block title %}Model comparison{% endblock %} · ESTR3114</title>
   <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/layout.css">
   {% block scripts %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="header-inner">
