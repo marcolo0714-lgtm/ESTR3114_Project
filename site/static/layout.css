@@ -87,7 +87,9 @@ select:focus-visible { outline: 3px solid #82b8e0; outline-offset: 3px; }
 .prediction-table .untrained { margin: 0; }
 .prediction-table td::before { display: none; }
 
-/* Permanent report navigation; no JavaScript or collapse control is needed. */
+/* Permanent desktop navigation; a compact toggle opens the mobile menu. */
+.mobile-sections-toggle { display: none; }
+.report-page .skip:focus { z-index: 50; }
 .report-sidebar {
   position: fixed;
   top: 0;
@@ -123,18 +125,43 @@ section[id] { scroll-margin-top: 80px; }
 .report-page main [id] { scroll-margin-top: 24px; }
 @media (min-width: 1024px) { body.report-page { padding-left: 248px; } }
 @media (max-width: 1023px) {
+  body.report-page { padding-top: 62px; }
+  .mobile-sections-toggle {
+    display: inline-flex;
+    align-items: center;
+    position: fixed;
+    top: 10px;
+    left: 18px;
+    z-index: 45;
+    min-height: 42px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: white;
+    color: var(--accent);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+  }
   .report-sidebar {
-    position: sticky;
-    top: 0;
+    display: none;
+    position: fixed;
+    top: 62px;
+    left: 0;
+    right: 0;
+    bottom: auto;
     width: auto;
-    max-height: 35vh;
-    padding: 12px 0;
-    margin-top: 16px;
+    max-height: calc(100vh - 78px);
+    max-height: calc(100dvh - 78px);
+    padding: 14px 18px 20px;
+    margin: 0;
     border-right: 0;
     border-bottom: 1px solid var(--line);
+    overscroll-behavior: contain;
   }
+  .sections-open .report-sidebar { display: block; }
   .sidebar-heading { padding-bottom: 8px; }
-  .report-page main [id] { scroll-margin-top: calc(35vh + 20px); }
+  .report-page main [id] { scroll-margin-top: 76px; }
 }
 
 /* Widen the report when there is room for two complete result tables. */

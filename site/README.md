@@ -18,6 +18,10 @@ A standalone, local Python website with four pages:
 Experiment 2 has one matched seed and validation scores only. No held-out test
 evaluation or estimate of variation across seeds is available.
 
+Both experiment reports keep a persistent sidebar on desktop. On smaller
+screens, a top-left **Show sections** button opens the navigation only when
+needed. Selecting a section, pressing Escape, or clicking outside closes it.
+
 ## Run on this computer
 
 From the project root in PowerShell:
@@ -32,9 +36,6 @@ the selected checkpoints; subsequent predictions reuse them. Models run
 sequentially to keep CPU and memory usage predictable. Selecting fewer methods
 reduces loading time and memory. All four float32 checkpoints occupy about
 2.6 GB on disk; allow additional RAM for the application and PyTorch.
-
-You can also double-click `start_site.cmd` on Windows to start the server using
-the prepared environment, then open the address above in your browser.
 
 Optional arguments:
 

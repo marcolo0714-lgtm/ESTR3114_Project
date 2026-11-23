@@ -103,7 +103,13 @@ with sync_playwright() as p:
         page.set_viewport_size(dict(width=width,height=height))
         page.goto('http://local.test/experiment-2')
         assert page.get_by_role('navigation',name='Main navigation').locator('[aria-current]').count()==1
-        assert page.locator('.report-sidebar').is_visible()
+        if width < 1024:
+            assert not page.locator('.report-sidebar').is_visible()
+            page.get_by_role('button',name='Show sections',exact=True).click()
+            assert page.locator('.report-sidebar').is_visible()
+            page.get_by_role('button',name='Hide sections',exact=True).click()
+        else:
+            assert page.locator('.report-sidebar').is_visible()
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
         page.screenshot(path=str(out/f'report-{label}.png'))
         page.locator('#three-gradient-example img').scroll_into_view_if_needed()

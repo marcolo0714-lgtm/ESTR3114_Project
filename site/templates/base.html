@@ -7,10 +7,14 @@
   <title>{% block title %}Model comparison{% endblock %} · ESTR3114</title>
   <link rel="stylesheet" href="/static/styles.css">
   <link rel="stylesheet" href="/static/layout.css">
+  {% if active in ('experiment-1', 'experiment-2') %}<script src="/static/sections.js" defer></script>{% endif %}
   {% block scripts %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
   <a class="skip" href="#main">Skip to content</a>
+  {% if active in ('experiment-1', 'experiment-2') %}
+  <button type="button" id="report-sections-toggle" class="mobile-sections-toggle" aria-controls="report-sidebar" aria-expanded="false">Show sections</button>
+  {% endif %}
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="/text">ESTR3114 <span>Model comparison</span></a>
