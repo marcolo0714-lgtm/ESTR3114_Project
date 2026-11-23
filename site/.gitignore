@@ -6,3 +6,5 @@ models/text/*/final_model.pt
 *.log
 .qa/
 models/text/*/*.importing
+models/images/*/*.pt
+models/images/*/*.importing

@@ -1,0 +1,4714 @@
+{
+  "tasks": [
+    {
+      "id": 0,
+      "name": "aquatic_mammals",
+      "fine_ids": [
+        4,
+        30,
+        55,
+        72,
+        95
+      ],
+      "class_names": [
+        "beaver",
+        "dolphin",
+        "otter",
+        "seal",
+        "whale"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "fish",
+      "fine_ids": [
+        1,
+        32,
+        67,
+        73,
+        91
+      ],
+      "class_names": [
+        "aquarium_fish",
+        "flatfish",
+        "ray",
+        "shark",
+        "trout"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "flowers",
+      "fine_ids": [
+        54,
+        62,
+        70,
+        82,
+        92
+      ],
+      "class_names": [
+        "orchid",
+        "poppy",
+        "rose",
+        "sunflower",
+        "tulip"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "food_containers",
+      "fine_ids": [
+        9,
+        10,
+        16,
+        28,
+        61
+      ],
+      "class_names": [
+        "bottle",
+        "bowl",
+        "can",
+        "cup",
+        "plate"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "fruit_and_vegetables",
+      "fine_ids": [
+        0,
+        51,
+        53,
+        57,
+        83
+      ],
+      "class_names": [
+        "apple",
+        "mushroom",
+        "orange",
+        "pear",
+        "sweet_pepper"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "household_electrical_devices",
+      "fine_ids": [
+        22,
+        39,
+        40,
+        86,
+        87
+      ],
+      "class_names": [
+        "clock",
+        "keyboard",
+        "lamp",
+        "telephone",
+        "television"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "household_furniture",
+      "fine_ids": [
+        5,
+        20,
+        25,
+        84,
+        94
+      ],
+      "class_names": [
+        "bed",
+        "chair",
+        "couch",
+        "table",
+        "wardrobe"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "insects",
+      "fine_ids": [
+        6,
+        7,
+        14,
+        18,
+        24
+      ],
+      "class_names": [
+        "bee",
+        "beetle",
+        "butterfly",
+        "caterpillar",
+        "cockroach"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "large_carnivores",
+      "fine_ids": [
+        3,
+        42,
+        43,
+        88,
+        97
+      ],
+      "class_names": [
+        "bear",
+        "leopard",
+        "lion",
+        "tiger",
+        "wolf"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "large_man-made_outdoor_things",
+      "fine_ids": [
+        12,
+        17,
+        37,
+        68,
+        76
+      ],
+      "class_names": [
+        "bridge",
+        "castle",
+        "house",
+        "road",
+        "skyscraper"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "large_natural_outdoor_scenes",
+      "fine_ids": [
+        23,
+        33,
+        49,
+        60,
+        71
+      ],
+      "class_names": [
+        "cloud",
+        "forest",
+        "mountain",
+        "plain",
+        "sea"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "large_omnivores_and_herbivores",
+      "fine_ids": [
+        15,
+        19,
+        21,
+        31,
+        38
+      ],
+      "class_names": [
+        "camel",
+        "cattle",
+        "chimpanzee",
+        "elephant",
+        "kangaroo"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "medium_mammals",
+      "fine_ids": [
+        34,
+        63,
+        64,
+        66,
+        75
+      ],
+      "class_names": [
+        "fox",
+        "porcupine",
+        "possum",
+        "raccoon",
+        "skunk"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "non-insect_invertebrates",
+      "fine_ids": [
+        26,
+        45,
+        77,
+        79,
+        99
+      ],
+      "class_names": [
+        "crab",
+        "lobster",
+        "snail",
+        "spider",
+        "worm"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "people",
+      "fine_ids": [
+        2,
+        11,
+        35,
+        46,
+        98
+      ],
+      "class_names": [
+        "baby",
+        "boy",
+        "girl",
+        "man",
+        "woman"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "reptiles",
+      "fine_ids": [
+        27,
+        29,
+        44,
+        78,
+        93
+      ],
+      "class_names": [
+        "crocodile",
+        "dinosaur",
+        "lizard",
+        "snake",
+        "turtle"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "small_mammals",
+      "fine_ids": [
+        36,
+        50,
+        65,
+        74,
+        80
+      ],
+      "class_names": [
+        "hamster",
+        "mouse",
+        "rabbit",
+        "shrew",
+        "squirrel"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "trees",
+      "fine_ids": [
+        47,
+        52,
+        56,
+        59,
+        96
+      ],
+      "class_names": [
+        "maple_tree",
+        "oak_tree",
+        "palm_tree",
+        "pine_tree",
+        "willow_tree"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "vehicles_1",
+      "fine_ids": [
+        8,
+        13,
+        48,
+        58,
+        90
+      ],
+      "class_names": [
+        "bicycle",
+        "bus",
+        "motorcycle",
+        "pickup_truck",
+        "train"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "vehicles_2",
+      "fine_ids": [
+        41,
+        69,
+        81,
+        85,
+        89
+      ],
+      "class_names": [
+        "lawn_mower",
+        "rocket",
+        "streetcar",
+        "tank",
+        "tractor"
+      ]
+    }
+  ],
+  "seed": 42,
+  "training_steps": 10000,
+  "settings": [
+    [
+      "Tasks and input",
+      "20 supplied superclasses; 5 fine classes per task; 32 x 32 RGB images."
+    ],
+    [
+      "Data split",
+      "45,000 training / 5,000 validation / 10,000 held-out test images. Split seed 123; 50 validation images per fine class."
+    ],
+    [
+      "Shared network",
+      "Three convolution/ReLU/max-pool blocks (160 channels, 3 x 3 filters), followed by two 320-unit fully connected/ReLU layers. Twenty private five-class linear heads."
+    ],
+    [
+      "Initialization",
+      "Training from scratch; no pretraining, dropout or batch normalization."
+    ],
+    [
+      "Preprocessing",
+      "Training: four-pixel padding, random crop, horizontal flips. All splits: normalization using training-only channel statistics."
+    ],
+    [
+      "Updates and seeds",
+      "10,000 optimizer steps; seed 42 only. 8 images per task, 160 per update; about 35.56 training epochs."
+    ],
+    [
+      "Optimizer and schedule",
+      "SGD; initial learning rate 0.01; momentum 0.9; weight decay 0.0005. Cosine decay over 10,000 steps; clipping disabled."
+    ],
+    [
+      "Task weights",
+      "Equal fixed weights, 1/20 per task, for both methods."
+    ],
+    [
+      "Matching",
+      "Identical initialization, sampling and augmentation within the seed; all 10,000 batch hashes match. Separate projection RNG."
+    ],
+    [
+      "Evaluation",
+      "Every 100 steps; evaluation batch size 128. Best checkpoint: highest mean validation accuracy, breaking ties with lower loss."
+    ],
+    [
+      "Hardware and precision",
+      "Tesla T4; float32; deterministic PyTorch operations enabled."
+    ],
+    [
+      "Study scope",
+      "Completed single-seed comparison. Test evaluation was not performed."
+    ]
+  ],
+  "results": {
+    "validation_final": [
+      {
+        "id": "joint",
+        "name": "Joint",
+        "step": 10000,
+        "accuracy": "67.12",
+        "f1": "66.95",
+        "loss": "0.8772",
+        "worst": "38.80"
+      },
+      {
+        "id": "pcgrad",
+        "name": "PCGrad",
+        "step": 10000,
+        "accuracy": "69.12",
+        "f1": "69.05",
+        "loss": "0.8689",
+        "worst": "40.40"
+      }
+    ],
+    "validation_best": [
+      {
+        "id": "joint",
+        "name": "Joint",
+        "step": 9500,
+        "accuracy": "67.34",
+        "f1": "67.18",
+        "loss": "0.8760",
+        "worst": "39.20"
+      },
+      {
+        "id": "pcgrad",
+        "name": "PCGrad",
+        "step": 9200,
+        "accuracy": "69.38",
+        "f1": "69.34",
+        "loss": "0.8692",
+        "worst": "40.80"
+      }
+    ]
+  },
+  "runtime": [
+    {
+      "name": "Joint",
+      "minutes": "9.54",
+      "train_minutes": "8.70",
+      "per_step": "0.0572",
+      "memory": "913.9",
+      "raw": "48.71",
+      "post": "48.71",
+      "cosine": "0.0709",
+      "relative": "0.00"
+    },
+    {
+      "name": "PCGrad",
+      "minutes": "92.06",
+      "train_minutes": "91.24",
+      "per_step": "0.5524",
+      "memory": "913.9",
+      "raw": "47.68",
+      "post": "0.53",
+      "cosine": "0.0677",
+      "relative": "50.05"
+    }
+  ],
+  "task_rows": [
+    {
+      "name": "aquatic mammals",
+      "joint": "56.8",
+      "pcgrad": "58.4",
+      "delta": "+1.6"
+    },
+    {
+      "name": "fish",
+      "joint": "67.6",
+      "pcgrad": "68.8",
+      "delta": "+1.2"
+    },
+    {
+      "name": "flowers",
+      "joint": "61.6",
+      "pcgrad": "63.2",
+      "delta": "+1.6"
+    },
+    {
+      "name": "food containers",
+      "joint": "67.2",
+      "pcgrad": "69.6",
+      "delta": "+2.4"
+    },
+    {
+      "name": "fruit and vegetables",
+      "joint": "78.0",
+      "pcgrad": "79.2",
+      "delta": "+1.2"
+    },
+    {
+      "name": "household electrical devices",
+      "joint": "71.2",
+      "pcgrad": "73.6",
+      "delta": "+2.4"
+    },
+    {
+      "name": "household furniture",
+      "joint": "64.0",
+      "pcgrad": "66.4",
+      "delta": "+2.4"
+    },
+    {
+      "name": "insects",
+      "joint": "59.6",
+      "pcgrad": "60.8",
+      "delta": "+1.2"
+    },
+    {
+      "name": "large carnivores",
+      "joint": "78.0",
+      "pcgrad": "80.0",
+      "delta": "+2.0"
+    },
+    {
+      "name": "large man-made outdoor things",
+      "joint": "75.6",
+      "pcgrad": "81.2",
+      "delta": "+5.6"
+    },
+    {
+      "name": "large natural outdoor scenes",
+      "joint": "80.8",
+      "pcgrad": "82.0",
+      "delta": "+1.2"
+    },
+    {
+      "name": "large omnivores and herbivores",
+      "joint": "64.0",
+      "pcgrad": "67.6",
+      "delta": "+3.6"
+    },
+    {
+      "name": "medium mammals",
+      "joint": "69.6",
+      "pcgrad": "73.2",
+      "delta": "+3.6"
+    },
+    {
+      "name": "non-insect invertebrates",
+      "joint": "71.2",
+      "pcgrad": "73.2",
+      "delta": "+2.0"
+    },
+    {
+      "name": "people",
+      "joint": "38.8",
+      "pcgrad": "40.4",
+      "delta": "+1.6"
+    },
+    {
+      "name": "reptiles",
+      "joint": "62.0",
+      "pcgrad": "65.6",
+      "delta": "+3.6"
+    },
+    {
+      "name": "small mammals",
+      "joint": "57.6",
+      "pcgrad": "60.8",
+      "delta": "+3.2"
+    },
+    {
+      "name": "trees",
+      "joint": "64.0",
+      "pcgrad": "64.0",
+      "delta": "+0.0"
+    },
+    {
+      "name": "vehicles 1",
+      "joint": "72.8",
+      "pcgrad": "74.0",
+      "delta": "+1.2"
+    },
+    {
+      "name": "vehicles 2",
+      "joint": "82.0",
+      "pcgrad": "80.4",
+      "delta": "-1.6"
+    }
+  ],
+  "figures": [
+    {
+      "id": "learning",
+      "title": "Learning curves, time and paired accuracy gap",
+      "file": "comparison_10000_seed42.png",
+      "caption": "Seed 42 only. Stars mark best-validation accuracy checkpoints. Elapsed times are recorded before the corresponding validation evaluation; timing includes prior validation and checkpoint I/O."
+    },
+    {
+      "id": "tasks",
+      "title": "Accuracy differences across the twenty tasks",
+      "file": "task_differences_10000_seed42.png",
+      "caption": "Final-step validation accuracy: PCGrad minus joint. Positive values favor PCGrad. Each task has 250 validation images."
+    },
+    {
+      "id": "joint-cosines",
+      "title": "Joint: mean raw task-gradient cosines",
+      "file": "gradient_cosines_joint_6bd2e268b095.png",
+      "caption": "Mean pre-projection shared-gradient cosine over 100 diagnostic samples. Task IDs follow the numbered superclass list below."
+    },
+    {
+      "id": "pcgrad-cosines",
+      "title": "PCGrad: mean raw task-gradient cosines",
+      "file": "gradient_cosines_pcgrad_6bd2e268b095.png",
+      "caption": "These are raw gradients along the PCGrad trajectory, before surgery. They are not post-projection cosines."
+    }
+  ],
+  "confusions": [
+    {
+      "id": 0,
+      "name": "aquatic mammals",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "beaver",
+            "dolphin",
+            "otter",
+            "seal",
+            "whale"
+          ],
+          "matrix": [
+            {
+              "label": "beaver",
+              "counts": [
+                34,
+                1,
+                7,
+                7,
+                1
+              ]
+            },
+            {
+              "label": "dolphin",
+              "counts": [
+                0,
+                31,
+                3,
+                4,
+                12
+              ]
+            },
+            {
+              "label": "otter",
+              "counts": [
+                9,
+                3,
+                18,
+                19,
+                1
+              ]
+            },
+            {
+              "label": "seal",
+              "counts": [
+                6,
+                8,
+                7,
+                23,
+                6
+              ]
+            },
+            {
+              "label": "whale",
+              "counts": [
+                0,
+                5,
+                5,
+                4,
+                36
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "beaver",
+              "precision": "69.4",
+              "recall": "68.0",
+              "f1": "68.7",
+              "support": 50
+            },
+            {
+              "label": "dolphin",
+              "precision": "64.6",
+              "recall": "62.0",
+              "f1": "63.3",
+              "support": 50
+            },
+            {
+              "label": "otter",
+              "precision": "45.0",
+              "recall": "36.0",
+              "f1": "40.0",
+              "support": 50
+            },
+            {
+              "label": "seal",
+              "precision": "40.4",
+              "recall": "46.0",
+              "f1": "43.0",
+              "support": 50
+            },
+            {
+              "label": "whale",
+              "precision": "64.3",
+              "recall": "72.0",
+              "f1": "67.9",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "beaver",
+            "dolphin",
+            "otter",
+            "seal",
+            "whale"
+          ],
+          "matrix": [
+            {
+              "label": "beaver",
+              "counts": [
+                37,
+                0,
+                6,
+                5,
+                2
+              ]
+            },
+            {
+              "label": "dolphin",
+              "counts": [
+                1,
+                32,
+                2,
+                5,
+                10
+              ]
+            },
+            {
+              "label": "otter",
+              "counts": [
+                9,
+                1,
+                20,
+                17,
+                3
+              ]
+            },
+            {
+              "label": "seal",
+              "counts": [
+                3,
+                7,
+                9,
+                25,
+                6
+              ]
+            },
+            {
+              "label": "whale",
+              "counts": [
+                0,
+                9,
+                6,
+                3,
+                32
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "beaver",
+              "precision": "74.0",
+              "recall": "74.0",
+              "f1": "74.0",
+              "support": 50
+            },
+            {
+              "label": "dolphin",
+              "precision": "65.3",
+              "recall": "64.0",
+              "f1": "64.6",
+              "support": 50
+            },
+            {
+              "label": "otter",
+              "precision": "46.5",
+              "recall": "40.0",
+              "f1": "43.0",
+              "support": 50
+            },
+            {
+              "label": "seal",
+              "precision": "45.5",
+              "recall": "50.0",
+              "f1": "47.6",
+              "support": 50
+            },
+            {
+              "label": "whale",
+              "precision": "60.4",
+              "recall": "64.0",
+              "f1": "62.1",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "fish",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "aquarium_fish",
+            "flatfish",
+            "ray",
+            "shark",
+            "trout"
+          ],
+          "matrix": [
+            {
+              "label": "aquarium fish",
+              "counts": [
+                41,
+                4,
+                2,
+                3,
+                0
+              ]
+            },
+            {
+              "label": "flatfish",
+              "counts": [
+                3,
+                33,
+                6,
+                2,
+                6
+              ]
+            },
+            {
+              "label": "ray",
+              "counts": [
+                0,
+                12,
+                27,
+                8,
+                3
+              ]
+            },
+            {
+              "label": "shark",
+              "counts": [
+                2,
+                3,
+                5,
+                33,
+                7
+              ]
+            },
+            {
+              "label": "trout",
+              "counts": [
+                4,
+                5,
+                4,
+                2,
+                35
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "aquarium fish",
+              "precision": "82.0",
+              "recall": "82.0",
+              "f1": "82.0",
+              "support": 50
+            },
+            {
+              "label": "flatfish",
+              "precision": "57.9",
+              "recall": "66.0",
+              "f1": "61.7",
+              "support": 50
+            },
+            {
+              "label": "ray",
+              "precision": "61.4",
+              "recall": "54.0",
+              "f1": "57.4",
+              "support": 50
+            },
+            {
+              "label": "shark",
+              "precision": "68.8",
+              "recall": "66.0",
+              "f1": "67.3",
+              "support": 50
+            },
+            {
+              "label": "trout",
+              "precision": "68.6",
+              "recall": "70.0",
+              "f1": "69.3",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "aquarium_fish",
+            "flatfish",
+            "ray",
+            "shark",
+            "trout"
+          ],
+          "matrix": [
+            {
+              "label": "aquarium fish",
+              "counts": [
+                41,
+                4,
+                2,
+                1,
+                2
+              ]
+            },
+            {
+              "label": "flatfish",
+              "counts": [
+                4,
+                30,
+                10,
+                1,
+                5
+              ]
+            },
+            {
+              "label": "ray",
+              "counts": [
+                1,
+                9,
+                31,
+                6,
+                3
+              ]
+            },
+            {
+              "label": "shark",
+              "counts": [
+                2,
+                3,
+                3,
+                34,
+                8
+              ]
+            },
+            {
+              "label": "trout",
+              "counts": [
+                4,
+                4,
+                4,
+                2,
+                36
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "aquarium fish",
+              "precision": "78.8",
+              "recall": "82.0",
+              "f1": "80.4",
+              "support": 50
+            },
+            {
+              "label": "flatfish",
+              "precision": "60.0",
+              "recall": "60.0",
+              "f1": "60.0",
+              "support": 50
+            },
+            {
+              "label": "ray",
+              "precision": "62.0",
+              "recall": "62.0",
+              "f1": "62.0",
+              "support": 50
+            },
+            {
+              "label": "shark",
+              "precision": "77.3",
+              "recall": "68.0",
+              "f1": "72.3",
+              "support": 50
+            },
+            {
+              "label": "trout",
+              "precision": "66.7",
+              "recall": "72.0",
+              "f1": "69.2",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "flowers",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "orchid",
+            "poppy",
+            "rose",
+            "sunflower",
+            "tulip"
+          ],
+          "matrix": [
+            {
+              "label": "orchid",
+              "counts": [
+                37,
+                3,
+                3,
+                4,
+                3
+              ]
+            },
+            {
+              "label": "poppy",
+              "counts": [
+                4,
+                29,
+                6,
+                2,
+                9
+              ]
+            },
+            {
+              "label": "rose",
+              "counts": [
+                5,
+                7,
+                26,
+                4,
+                8
+              ]
+            },
+            {
+              "label": "sunflower",
+              "counts": [
+                1,
+                4,
+                0,
+                44,
+                1
+              ]
+            },
+            {
+              "label": "tulip",
+              "counts": [
+                4,
+                15,
+                9,
+                4,
+                18
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "orchid",
+              "precision": "72.5",
+              "recall": "74.0",
+              "f1": "73.3",
+              "support": 50
+            },
+            {
+              "label": "poppy",
+              "precision": "50.0",
+              "recall": "58.0",
+              "f1": "53.7",
+              "support": 50
+            },
+            {
+              "label": "rose",
+              "precision": "59.1",
+              "recall": "52.0",
+              "f1": "55.3",
+              "support": 50
+            },
+            {
+              "label": "sunflower",
+              "precision": "75.9",
+              "recall": "88.0",
+              "f1": "81.5",
+              "support": 50
+            },
+            {
+              "label": "tulip",
+              "precision": "46.2",
+              "recall": "36.0",
+              "f1": "40.4",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "orchid",
+            "poppy",
+            "rose",
+            "sunflower",
+            "tulip"
+          ],
+          "matrix": [
+            {
+              "label": "orchid",
+              "counts": [
+                35,
+                5,
+                3,
+                3,
+                4
+              ]
+            },
+            {
+              "label": "poppy",
+              "counts": [
+                3,
+                30,
+                9,
+                2,
+                6
+              ]
+            },
+            {
+              "label": "rose",
+              "counts": [
+                3,
+                9,
+                28,
+                2,
+                8
+              ]
+            },
+            {
+              "label": "sunflower",
+              "counts": [
+                1,
+                2,
+                1,
+                43,
+                3
+              ]
+            },
+            {
+              "label": "tulip",
+              "counts": [
+                4,
+                11,
+                7,
+                6,
+                22
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "orchid",
+              "precision": "76.1",
+              "recall": "70.0",
+              "f1": "72.9",
+              "support": 50
+            },
+            {
+              "label": "poppy",
+              "precision": "52.6",
+              "recall": "60.0",
+              "f1": "56.1",
+              "support": 50
+            },
+            {
+              "label": "rose",
+              "precision": "58.3",
+              "recall": "56.0",
+              "f1": "57.1",
+              "support": 50
+            },
+            {
+              "label": "sunflower",
+              "precision": "76.8",
+              "recall": "86.0",
+              "f1": "81.1",
+              "support": 50
+            },
+            {
+              "label": "tulip",
+              "precision": "51.2",
+              "recall": "44.0",
+              "f1": "47.3",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "food containers",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "bottle",
+            "bowl",
+            "can",
+            "cup",
+            "plate"
+          ],
+          "matrix": [
+            {
+              "label": "bottle",
+              "counts": [
+                42,
+                1,
+                3,
+                3,
+                1
+              ]
+            },
+            {
+              "label": "bowl",
+              "counts": [
+                4,
+                28,
+                8,
+                6,
+                4
+              ]
+            },
+            {
+              "label": "can",
+              "counts": [
+                8,
+                9,
+                27,
+                5,
+                1
+              ]
+            },
+            {
+              "label": "cup",
+              "counts": [
+                3,
+                5,
+                3,
+                36,
+                3
+              ]
+            },
+            {
+              "label": "plate",
+              "counts": [
+                3,
+                10,
+                1,
+                1,
+                35
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bottle",
+              "precision": "70.0",
+              "recall": "84.0",
+              "f1": "76.4",
+              "support": 50
+            },
+            {
+              "label": "bowl",
+              "precision": "52.8",
+              "recall": "56.0",
+              "f1": "54.4",
+              "support": 50
+            },
+            {
+              "label": "can",
+              "precision": "64.3",
+              "recall": "54.0",
+              "f1": "58.7",
+              "support": 50
+            },
+            {
+              "label": "cup",
+              "precision": "70.6",
+              "recall": "72.0",
+              "f1": "71.3",
+              "support": 50
+            },
+            {
+              "label": "plate",
+              "precision": "79.5",
+              "recall": "70.0",
+              "f1": "74.5",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "bottle",
+            "bowl",
+            "can",
+            "cup",
+            "plate"
+          ],
+          "matrix": [
+            {
+              "label": "bottle",
+              "counts": [
+                42,
+                2,
+                4,
+                1,
+                1
+              ]
+            },
+            {
+              "label": "bowl",
+              "counts": [
+                4,
+                28,
+                3,
+                6,
+                9
+              ]
+            },
+            {
+              "label": "can",
+              "counts": [
+                8,
+                9,
+                30,
+                2,
+                1
+              ]
+            },
+            {
+              "label": "cup",
+              "counts": [
+                3,
+                5,
+                4,
+                38,
+                0
+              ]
+            },
+            {
+              "label": "plate",
+              "counts": [
+                2,
+                9,
+                2,
+                1,
+                36
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bottle",
+              "precision": "71.2",
+              "recall": "84.0",
+              "f1": "77.1",
+              "support": 50
+            },
+            {
+              "label": "bowl",
+              "precision": "52.8",
+              "recall": "56.0",
+              "f1": "54.4",
+              "support": 50
+            },
+            {
+              "label": "can",
+              "precision": "69.8",
+              "recall": "60.0",
+              "f1": "64.5",
+              "support": 50
+            },
+            {
+              "label": "cup",
+              "precision": "79.2",
+              "recall": "76.0",
+              "f1": "77.6",
+              "support": 50
+            },
+            {
+              "label": "plate",
+              "precision": "76.6",
+              "recall": "72.0",
+              "f1": "74.2",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "fruit and vegetables",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "apple",
+            "mushroom",
+            "orange",
+            "pear",
+            "sweet_pepper"
+          ],
+          "matrix": [
+            {
+              "label": "apple",
+              "counts": [
+                38,
+                2,
+                1,
+                3,
+                6
+              ]
+            },
+            {
+              "label": "mushroom",
+              "counts": [
+                0,
+                45,
+                1,
+                4,
+                0
+              ]
+            },
+            {
+              "label": "orange",
+              "counts": [
+                1,
+                0,
+                43,
+                1,
+                5
+              ]
+            },
+            {
+              "label": "pear",
+              "counts": [
+                4,
+                6,
+                6,
+                31,
+                3
+              ]
+            },
+            {
+              "label": "sweet pepper",
+              "counts": [
+                1,
+                1,
+                5,
+                5,
+                38
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "apple",
+              "precision": "86.4",
+              "recall": "76.0",
+              "f1": "80.9",
+              "support": 50
+            },
+            {
+              "label": "mushroom",
+              "precision": "83.3",
+              "recall": "90.0",
+              "f1": "86.5",
+              "support": 50
+            },
+            {
+              "label": "orange",
+              "precision": "76.8",
+              "recall": "86.0",
+              "f1": "81.1",
+              "support": 50
+            },
+            {
+              "label": "pear",
+              "precision": "70.5",
+              "recall": "62.0",
+              "f1": "66.0",
+              "support": 50
+            },
+            {
+              "label": "sweet pepper",
+              "precision": "73.1",
+              "recall": "76.0",
+              "f1": "74.5",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "apple",
+            "mushroom",
+            "orange",
+            "pear",
+            "sweet_pepper"
+          ],
+          "matrix": [
+            {
+              "label": "apple",
+              "counts": [
+                37,
+                2,
+                1,
+                3,
+                7
+              ]
+            },
+            {
+              "label": "mushroom",
+              "counts": [
+                0,
+                46,
+                0,
+                4,
+                0
+              ]
+            },
+            {
+              "label": "orange",
+              "counts": [
+                3,
+                0,
+                44,
+                0,
+                3
+              ]
+            },
+            {
+              "label": "pear",
+              "counts": [
+                3,
+                7,
+                5,
+                34,
+                1
+              ]
+            },
+            {
+              "label": "sweet pepper",
+              "counts": [
+                1,
+                0,
+                6,
+                6,
+                37
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "apple",
+              "precision": "84.1",
+              "recall": "74.0",
+              "f1": "78.7",
+              "support": 50
+            },
+            {
+              "label": "mushroom",
+              "precision": "83.6",
+              "recall": "92.0",
+              "f1": "87.6",
+              "support": 50
+            },
+            {
+              "label": "orange",
+              "precision": "78.6",
+              "recall": "88.0",
+              "f1": "83.0",
+              "support": 50
+            },
+            {
+              "label": "pear",
+              "precision": "72.3",
+              "recall": "68.0",
+              "f1": "70.1",
+              "support": 50
+            },
+            {
+              "label": "sweet pepper",
+              "precision": "77.1",
+              "recall": "74.0",
+              "f1": "75.5",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "household electrical devices",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "clock",
+            "keyboard",
+            "lamp",
+            "telephone",
+            "television"
+          ],
+          "matrix": [
+            {
+              "label": "clock",
+              "counts": [
+                31,
+                5,
+                5,
+                4,
+                5
+              ]
+            },
+            {
+              "label": "keyboard",
+              "counts": [
+                2,
+                42,
+                3,
+                2,
+                1
+              ]
+            },
+            {
+              "label": "lamp",
+              "counts": [
+                1,
+                3,
+                40,
+                4,
+                2
+              ]
+            },
+            {
+              "label": "telephone",
+              "counts": [
+                3,
+                5,
+                3,
+                33,
+                6
+              ]
+            },
+            {
+              "label": "television",
+              "counts": [
+                4,
+                4,
+                4,
+                6,
+                32
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "clock",
+              "precision": "75.6",
+              "recall": "62.0",
+              "f1": "68.1",
+              "support": 50
+            },
+            {
+              "label": "keyboard",
+              "precision": "71.2",
+              "recall": "84.0",
+              "f1": "77.1",
+              "support": 50
+            },
+            {
+              "label": "lamp",
+              "precision": "72.7",
+              "recall": "80.0",
+              "f1": "76.2",
+              "support": 50
+            },
+            {
+              "label": "telephone",
+              "precision": "67.3",
+              "recall": "66.0",
+              "f1": "66.7",
+              "support": 50
+            },
+            {
+              "label": "television",
+              "precision": "69.6",
+              "recall": "64.0",
+              "f1": "66.7",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "clock",
+            "keyboard",
+            "lamp",
+            "telephone",
+            "television"
+          ],
+          "matrix": [
+            {
+              "label": "clock",
+              "counts": [
+                34,
+                5,
+                4,
+                4,
+                3
+              ]
+            },
+            {
+              "label": "keyboard",
+              "counts": [
+                4,
+                40,
+                3,
+                2,
+                1
+              ]
+            },
+            {
+              "label": "lamp",
+              "counts": [
+                2,
+                1,
+                41,
+                3,
+                3
+              ]
+            },
+            {
+              "label": "telephone",
+              "counts": [
+                5,
+                3,
+                4,
+                36,
+                2
+              ]
+            },
+            {
+              "label": "television",
+              "counts": [
+                4,
+                3,
+                6,
+                4,
+                33
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "clock",
+              "precision": "69.4",
+              "recall": "68.0",
+              "f1": "68.7",
+              "support": 50
+            },
+            {
+              "label": "keyboard",
+              "precision": "76.9",
+              "recall": "80.0",
+              "f1": "78.4",
+              "support": 50
+            },
+            {
+              "label": "lamp",
+              "precision": "70.7",
+              "recall": "82.0",
+              "f1": "75.9",
+              "support": 50
+            },
+            {
+              "label": "telephone",
+              "precision": "73.5",
+              "recall": "72.0",
+              "f1": "72.7",
+              "support": 50
+            },
+            {
+              "label": "television",
+              "precision": "78.6",
+              "recall": "66.0",
+              "f1": "71.7",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "household furniture",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "bed",
+            "chair",
+            "couch",
+            "table",
+            "wardrobe"
+          ],
+          "matrix": [
+            {
+              "label": "bed",
+              "counts": [
+                29,
+                2,
+                10,
+                7,
+                2
+              ]
+            },
+            {
+              "label": "chair",
+              "counts": [
+                4,
+                37,
+                4,
+                4,
+                1
+              ]
+            },
+            {
+              "label": "couch",
+              "counts": [
+                12,
+                2,
+                25,
+                10,
+                1
+              ]
+            },
+            {
+              "label": "table",
+              "counts": [
+                6,
+                6,
+                7,
+                29,
+                2
+              ]
+            },
+            {
+              "label": "wardrobe",
+              "counts": [
+                4,
+                0,
+                3,
+                3,
+                40
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bed",
+              "precision": "52.7",
+              "recall": "58.0",
+              "f1": "55.2",
+              "support": 50
+            },
+            {
+              "label": "chair",
+              "precision": "78.7",
+              "recall": "74.0",
+              "f1": "76.3",
+              "support": 50
+            },
+            {
+              "label": "couch",
+              "precision": "51.0",
+              "recall": "50.0",
+              "f1": "50.5",
+              "support": 50
+            },
+            {
+              "label": "table",
+              "precision": "54.7",
+              "recall": "58.0",
+              "f1": "56.3",
+              "support": 50
+            },
+            {
+              "label": "wardrobe",
+              "precision": "87.0",
+              "recall": "80.0",
+              "f1": "83.3",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "bed",
+            "chair",
+            "couch",
+            "table",
+            "wardrobe"
+          ],
+          "matrix": [
+            {
+              "label": "bed",
+              "counts": [
+                31,
+                1,
+                10,
+                6,
+                2
+              ]
+            },
+            {
+              "label": "chair",
+              "counts": [
+                7,
+                38,
+                1,
+                3,
+                1
+              ]
+            },
+            {
+              "label": "couch",
+              "counts": [
+                8,
+                3,
+                31,
+                6,
+                2
+              ]
+            },
+            {
+              "label": "table",
+              "counts": [
+                7,
+                8,
+                7,
+                25,
+                3
+              ]
+            },
+            {
+              "label": "wardrobe",
+              "counts": [
+                2,
+                0,
+                3,
+                4,
+                41
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bed",
+              "precision": "56.4",
+              "recall": "62.0",
+              "f1": "59.0",
+              "support": 50
+            },
+            {
+              "label": "chair",
+              "precision": "76.0",
+              "recall": "76.0",
+              "f1": "76.0",
+              "support": 50
+            },
+            {
+              "label": "couch",
+              "precision": "59.6",
+              "recall": "62.0",
+              "f1": "60.8",
+              "support": 50
+            },
+            {
+              "label": "table",
+              "precision": "56.8",
+              "recall": "50.0",
+              "f1": "53.2",
+              "support": 50
+            },
+            {
+              "label": "wardrobe",
+              "precision": "83.7",
+              "recall": "82.0",
+              "f1": "82.8",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "insects",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "bee",
+            "beetle",
+            "butterfly",
+            "caterpillar",
+            "cockroach"
+          ],
+          "matrix": [
+            {
+              "label": "bee",
+              "counts": [
+                36,
+                4,
+                5,
+                4,
+                1
+              ]
+            },
+            {
+              "label": "beetle",
+              "counts": [
+                6,
+                21,
+                6,
+                7,
+                10
+              ]
+            },
+            {
+              "label": "butterfly",
+              "counts": [
+                9,
+                7,
+                24,
+                5,
+                5
+              ]
+            },
+            {
+              "label": "caterpillar",
+              "counts": [
+                6,
+                6,
+                9,
+                27,
+                2
+              ]
+            },
+            {
+              "label": "cockroach",
+              "counts": [
+                4,
+                2,
+                2,
+                1,
+                41
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bee",
+              "precision": "59.0",
+              "recall": "72.0",
+              "f1": "64.9",
+              "support": 50
+            },
+            {
+              "label": "beetle",
+              "precision": "52.5",
+              "recall": "42.0",
+              "f1": "46.7",
+              "support": 50
+            },
+            {
+              "label": "butterfly",
+              "precision": "52.2",
+              "recall": "48.0",
+              "f1": "50.0",
+              "support": 50
+            },
+            {
+              "label": "caterpillar",
+              "precision": "61.4",
+              "recall": "54.0",
+              "f1": "57.4",
+              "support": 50
+            },
+            {
+              "label": "cockroach",
+              "precision": "69.5",
+              "recall": "82.0",
+              "f1": "75.2",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "bee",
+            "beetle",
+            "butterfly",
+            "caterpillar",
+            "cockroach"
+          ],
+          "matrix": [
+            {
+              "label": "bee",
+              "counts": [
+                38,
+                4,
+                5,
+                2,
+                1
+              ]
+            },
+            {
+              "label": "beetle",
+              "counts": [
+                4,
+                25,
+                6,
+                8,
+                7
+              ]
+            },
+            {
+              "label": "butterfly",
+              "counts": [
+                9,
+                10,
+                21,
+                8,
+                2
+              ]
+            },
+            {
+              "label": "caterpillar",
+              "counts": [
+                6,
+                8,
+                9,
+                27,
+                0
+              ]
+            },
+            {
+              "label": "cockroach",
+              "counts": [
+                5,
+                2,
+                1,
+                1,
+                41
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bee",
+              "precision": "61.3",
+              "recall": "76.0",
+              "f1": "67.9",
+              "support": 50
+            },
+            {
+              "label": "beetle",
+              "precision": "51.0",
+              "recall": "50.0",
+              "f1": "50.5",
+              "support": 50
+            },
+            {
+              "label": "butterfly",
+              "precision": "50.0",
+              "recall": "42.0",
+              "f1": "45.7",
+              "support": 50
+            },
+            {
+              "label": "caterpillar",
+              "precision": "58.7",
+              "recall": "54.0",
+              "f1": "56.3",
+              "support": 50
+            },
+            {
+              "label": "cockroach",
+              "precision": "80.4",
+              "recall": "82.0",
+              "f1": "81.2",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "large carnivores",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "bear",
+            "leopard",
+            "lion",
+            "tiger",
+            "wolf"
+          ],
+          "matrix": [
+            {
+              "label": "bear",
+              "counts": [
+                43,
+                1,
+                3,
+                2,
+                1
+              ]
+            },
+            {
+              "label": "leopard",
+              "counts": [
+                2,
+                31,
+                7,
+                6,
+                4
+              ]
+            },
+            {
+              "label": "lion",
+              "counts": [
+                4,
+                1,
+                42,
+                1,
+                2
+              ]
+            },
+            {
+              "label": "tiger",
+              "counts": [
+                1,
+                5,
+                0,
+                39,
+                5
+              ]
+            },
+            {
+              "label": "wolf",
+              "counts": [
+                4,
+                4,
+                0,
+                2,
+                40
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bear",
+              "precision": "79.6",
+              "recall": "86.0",
+              "f1": "82.7",
+              "support": 50
+            },
+            {
+              "label": "leopard",
+              "precision": "73.8",
+              "recall": "62.0",
+              "f1": "67.4",
+              "support": 50
+            },
+            {
+              "label": "lion",
+              "precision": "80.8",
+              "recall": "84.0",
+              "f1": "82.4",
+              "support": 50
+            },
+            {
+              "label": "tiger",
+              "precision": "78.0",
+              "recall": "78.0",
+              "f1": "78.0",
+              "support": 50
+            },
+            {
+              "label": "wolf",
+              "precision": "76.9",
+              "recall": "80.0",
+              "f1": "78.4",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "bear",
+            "leopard",
+            "lion",
+            "tiger",
+            "wolf"
+          ],
+          "matrix": [
+            {
+              "label": "bear",
+              "counts": [
+                44,
+                1,
+                3,
+                1,
+                1
+              ]
+            },
+            {
+              "label": "leopard",
+              "counts": [
+                2,
+                37,
+                5,
+                3,
+                3
+              ]
+            },
+            {
+              "label": "lion",
+              "counts": [
+                2,
+                4,
+                41,
+                1,
+                2
+              ]
+            },
+            {
+              "label": "tiger",
+              "counts": [
+                1,
+                4,
+                4,
+                38,
+                3
+              ]
+            },
+            {
+              "label": "wolf",
+              "counts": [
+                4,
+                3,
+                1,
+                2,
+                40
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bear",
+              "precision": "83.0",
+              "recall": "88.0",
+              "f1": "85.4",
+              "support": 50
+            },
+            {
+              "label": "leopard",
+              "precision": "75.5",
+              "recall": "74.0",
+              "f1": "74.7",
+              "support": 50
+            },
+            {
+              "label": "lion",
+              "precision": "75.9",
+              "recall": "82.0",
+              "f1": "78.8",
+              "support": 50
+            },
+            {
+              "label": "tiger",
+              "precision": "84.4",
+              "recall": "76.0",
+              "f1": "80.0",
+              "support": 50
+            },
+            {
+              "label": "wolf",
+              "precision": "81.6",
+              "recall": "80.0",
+              "f1": "80.8",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "large man-made outdoor things",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "bridge",
+            "castle",
+            "house",
+            "road",
+            "skyscraper"
+          ],
+          "matrix": [
+            {
+              "label": "bridge",
+              "counts": [
+                32,
+                4,
+                9,
+                4,
+                1
+              ]
+            },
+            {
+              "label": "castle",
+              "counts": [
+                2,
+                41,
+                4,
+                1,
+                2
+              ]
+            },
+            {
+              "label": "house",
+              "counts": [
+                3,
+                8,
+                33,
+                3,
+                3
+              ]
+            },
+            {
+              "label": "road",
+              "counts": [
+                3,
+                0,
+                1,
+                43,
+                3
+              ]
+            },
+            {
+              "label": "skyscraper",
+              "counts": [
+                4,
+                6,
+                0,
+                0,
+                40
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bridge",
+              "precision": "72.7",
+              "recall": "64.0",
+              "f1": "68.1",
+              "support": 50
+            },
+            {
+              "label": "castle",
+              "precision": "69.5",
+              "recall": "82.0",
+              "f1": "75.2",
+              "support": 50
+            },
+            {
+              "label": "house",
+              "precision": "70.2",
+              "recall": "66.0",
+              "f1": "68.0",
+              "support": 50
+            },
+            {
+              "label": "road",
+              "precision": "84.3",
+              "recall": "86.0",
+              "f1": "85.1",
+              "support": 50
+            },
+            {
+              "label": "skyscraper",
+              "precision": "81.6",
+              "recall": "80.0",
+              "f1": "80.8",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "bridge",
+            "castle",
+            "house",
+            "road",
+            "skyscraper"
+          ],
+          "matrix": [
+            {
+              "label": "bridge",
+              "counts": [
+                36,
+                5,
+                6,
+                2,
+                1
+              ]
+            },
+            {
+              "label": "castle",
+              "counts": [
+                1,
+                42,
+                4,
+                1,
+                2
+              ]
+            },
+            {
+              "label": "house",
+              "counts": [
+                3,
+                7,
+                35,
+                2,
+                3
+              ]
+            },
+            {
+              "label": "road",
+              "counts": [
+                2,
+                0,
+                0,
+                46,
+                2
+              ]
+            },
+            {
+              "label": "skyscraper",
+              "counts": [
+                1,
+                5,
+                0,
+                0,
+                44
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bridge",
+              "precision": "83.7",
+              "recall": "72.0",
+              "f1": "77.4",
+              "support": 50
+            },
+            {
+              "label": "castle",
+              "precision": "71.2",
+              "recall": "84.0",
+              "f1": "77.1",
+              "support": 50
+            },
+            {
+              "label": "house",
+              "precision": "77.8",
+              "recall": "70.0",
+              "f1": "73.7",
+              "support": 50
+            },
+            {
+              "label": "road",
+              "precision": "90.2",
+              "recall": "92.0",
+              "f1": "91.1",
+              "support": 50
+            },
+            {
+              "label": "skyscraper",
+              "precision": "84.6",
+              "recall": "88.0",
+              "f1": "86.3",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "large natural outdoor scenes",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "cloud",
+            "forest",
+            "mountain",
+            "plain",
+            "sea"
+          ],
+          "matrix": [
+            {
+              "label": "cloud",
+              "counts": [
+                33,
+                1,
+                7,
+                2,
+                7
+              ]
+            },
+            {
+              "label": "forest",
+              "counts": [
+                1,
+                46,
+                0,
+                2,
+                1
+              ]
+            },
+            {
+              "label": "mountain",
+              "counts": [
+                1,
+                0,
+                39,
+                3,
+                7
+              ]
+            },
+            {
+              "label": "plain",
+              "counts": [
+                0,
+                0,
+                0,
+                47,
+                3
+              ]
+            },
+            {
+              "label": "sea",
+              "counts": [
+                6,
+                0,
+                4,
+                3,
+                37
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "cloud",
+              "precision": "80.5",
+              "recall": "66.0",
+              "f1": "72.5",
+              "support": 50
+            },
+            {
+              "label": "forest",
+              "precision": "97.9",
+              "recall": "92.0",
+              "f1": "94.8",
+              "support": 50
+            },
+            {
+              "label": "mountain",
+              "precision": "78.0",
+              "recall": "78.0",
+              "f1": "78.0",
+              "support": 50
+            },
+            {
+              "label": "plain",
+              "precision": "82.5",
+              "recall": "94.0",
+              "f1": "87.9",
+              "support": 50
+            },
+            {
+              "label": "sea",
+              "precision": "67.3",
+              "recall": "74.0",
+              "f1": "70.5",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "cloud",
+            "forest",
+            "mountain",
+            "plain",
+            "sea"
+          ],
+          "matrix": [
+            {
+              "label": "cloud",
+              "counts": [
+                37,
+                1,
+                5,
+                1,
+                6
+              ]
+            },
+            {
+              "label": "forest",
+              "counts": [
+                2,
+                47,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "label": "mountain",
+              "counts": [
+                2,
+                2,
+                39,
+                3,
+                4
+              ]
+            },
+            {
+              "label": "plain",
+              "counts": [
+                0,
+                0,
+                0,
+                47,
+                3
+              ]
+            },
+            {
+              "label": "sea",
+              "counts": [
+                7,
+                0,
+                4,
+                4,
+                35
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "cloud",
+              "precision": "77.1",
+              "recall": "74.0",
+              "f1": "75.5",
+              "support": 50
+            },
+            {
+              "label": "forest",
+              "precision": "94.0",
+              "recall": "94.0",
+              "f1": "94.0",
+              "support": 50
+            },
+            {
+              "label": "mountain",
+              "precision": "81.2",
+              "recall": "78.0",
+              "f1": "79.6",
+              "support": 50
+            },
+            {
+              "label": "plain",
+              "precision": "83.9",
+              "recall": "94.0",
+              "f1": "88.7",
+              "support": 50
+            },
+            {
+              "label": "sea",
+              "precision": "72.9",
+              "recall": "70.0",
+              "f1": "71.4",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "large omnivores and herbivores",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "camel",
+            "cattle",
+            "chimpanzee",
+            "elephant",
+            "kangaroo"
+          ],
+          "matrix": [
+            {
+              "label": "camel",
+              "counts": [
+                32,
+                7,
+                3,
+                3,
+                5
+              ]
+            },
+            {
+              "label": "cattle",
+              "counts": [
+                4,
+                34,
+                4,
+                5,
+                3
+              ]
+            },
+            {
+              "label": "chimpanzee",
+              "counts": [
+                3,
+                4,
+                39,
+                3,
+                1
+              ]
+            },
+            {
+              "label": "elephant",
+              "counts": [
+                5,
+                7,
+                6,
+                25,
+                7
+              ]
+            },
+            {
+              "label": "kangaroo",
+              "counts": [
+                8,
+                8,
+                0,
+                4,
+                30
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "camel",
+              "precision": "61.5",
+              "recall": "64.0",
+              "f1": "62.7",
+              "support": 50
+            },
+            {
+              "label": "cattle",
+              "precision": "56.7",
+              "recall": "68.0",
+              "f1": "61.8",
+              "support": 50
+            },
+            {
+              "label": "chimpanzee",
+              "precision": "75.0",
+              "recall": "78.0",
+              "f1": "76.5",
+              "support": 50
+            },
+            {
+              "label": "elephant",
+              "precision": "62.5",
+              "recall": "50.0",
+              "f1": "55.6",
+              "support": 50
+            },
+            {
+              "label": "kangaroo",
+              "precision": "65.2",
+              "recall": "60.0",
+              "f1": "62.5",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "camel",
+            "cattle",
+            "chimpanzee",
+            "elephant",
+            "kangaroo"
+          ],
+          "matrix": [
+            {
+              "label": "camel",
+              "counts": [
+                31,
+                8,
+                2,
+                3,
+                6
+              ]
+            },
+            {
+              "label": "cattle",
+              "counts": [
+                2,
+                40,
+                2,
+                3,
+                3
+              ]
+            },
+            {
+              "label": "chimpanzee",
+              "counts": [
+                4,
+                3,
+                39,
+                1,
+                3
+              ]
+            },
+            {
+              "label": "elephant",
+              "counts": [
+                2,
+                7,
+                6,
+                29,
+                6
+              ]
+            },
+            {
+              "label": "kangaroo",
+              "counts": [
+                7,
+                9,
+                0,
+                4,
+                30
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "camel",
+              "precision": "67.4",
+              "recall": "62.0",
+              "f1": "64.6",
+              "support": 50
+            },
+            {
+              "label": "cattle",
+              "precision": "59.7",
+              "recall": "80.0",
+              "f1": "68.4",
+              "support": 50
+            },
+            {
+              "label": "chimpanzee",
+              "precision": "79.6",
+              "recall": "78.0",
+              "f1": "78.8",
+              "support": 50
+            },
+            {
+              "label": "elephant",
+              "precision": "72.5",
+              "recall": "58.0",
+              "f1": "64.4",
+              "support": 50
+            },
+            {
+              "label": "kangaroo",
+              "precision": "62.5",
+              "recall": "60.0",
+              "f1": "61.2",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "medium mammals",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "fox",
+            "porcupine",
+            "possum",
+            "raccoon",
+            "skunk"
+          ],
+          "matrix": [
+            {
+              "label": "fox",
+              "counts": [
+                39,
+                3,
+                2,
+                6,
+                0
+              ]
+            },
+            {
+              "label": "porcupine",
+              "counts": [
+                4,
+                34,
+                5,
+                7,
+                0
+              ]
+            },
+            {
+              "label": "possum",
+              "counts": [
+                6,
+                2,
+                28,
+                10,
+                4
+              ]
+            },
+            {
+              "label": "raccoon",
+              "counts": [
+                5,
+                5,
+                7,
+                28,
+                5
+              ]
+            },
+            {
+              "label": "skunk",
+              "counts": [
+                1,
+                0,
+                3,
+                1,
+                45
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "fox",
+              "precision": "70.9",
+              "recall": "78.0",
+              "f1": "74.3",
+              "support": 50
+            },
+            {
+              "label": "porcupine",
+              "precision": "77.3",
+              "recall": "68.0",
+              "f1": "72.3",
+              "support": 50
+            },
+            {
+              "label": "possum",
+              "precision": "62.2",
+              "recall": "56.0",
+              "f1": "58.9",
+              "support": 50
+            },
+            {
+              "label": "raccoon",
+              "precision": "53.8",
+              "recall": "56.0",
+              "f1": "54.9",
+              "support": 50
+            },
+            {
+              "label": "skunk",
+              "precision": "83.3",
+              "recall": "90.0",
+              "f1": "86.5",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "fox",
+            "porcupine",
+            "possum",
+            "raccoon",
+            "skunk"
+          ],
+          "matrix": [
+            {
+              "label": "fox",
+              "counts": [
+                40,
+                2,
+                4,
+                4,
+                0
+              ]
+            },
+            {
+              "label": "porcupine",
+              "counts": [
+                1,
+                36,
+                7,
+                6,
+                0
+              ]
+            },
+            {
+              "label": "possum",
+              "counts": [
+                7,
+                1,
+                28,
+                9,
+                5
+              ]
+            },
+            {
+              "label": "raccoon",
+              "counts": [
+                3,
+                2,
+                7,
+                35,
+                3
+              ]
+            },
+            {
+              "label": "skunk",
+              "counts": [
+                1,
+                1,
+                3,
+                1,
+                44
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "fox",
+              "precision": "76.9",
+              "recall": "80.0",
+              "f1": "78.4",
+              "support": 50
+            },
+            {
+              "label": "porcupine",
+              "precision": "85.7",
+              "recall": "72.0",
+              "f1": "78.3",
+              "support": 50
+            },
+            {
+              "label": "possum",
+              "precision": "57.1",
+              "recall": "56.0",
+              "f1": "56.6",
+              "support": 50
+            },
+            {
+              "label": "raccoon",
+              "precision": "63.6",
+              "recall": "70.0",
+              "f1": "66.7",
+              "support": 50
+            },
+            {
+              "label": "skunk",
+              "precision": "84.6",
+              "recall": "88.0",
+              "f1": "86.3",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "non-insect invertebrates",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "crab",
+            "lobster",
+            "snail",
+            "spider",
+            "worm"
+          ],
+          "matrix": [
+            {
+              "label": "crab",
+              "counts": [
+                34,
+                7,
+                4,
+                3,
+                2
+              ]
+            },
+            {
+              "label": "lobster",
+              "counts": [
+                10,
+                33,
+                1,
+                3,
+                3
+              ]
+            },
+            {
+              "label": "snail",
+              "counts": [
+                2,
+                4,
+                32,
+                9,
+                3
+              ]
+            },
+            {
+              "label": "spider",
+              "counts": [
+                2,
+                4,
+                3,
+                39,
+                2
+              ]
+            },
+            {
+              "label": "worm",
+              "counts": [
+                0,
+                6,
+                0,
+                4,
+                40
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "crab",
+              "precision": "70.8",
+              "recall": "68.0",
+              "f1": "69.4",
+              "support": 50
+            },
+            {
+              "label": "lobster",
+              "precision": "61.1",
+              "recall": "66.0",
+              "f1": "63.5",
+              "support": 50
+            },
+            {
+              "label": "snail",
+              "precision": "80.0",
+              "recall": "64.0",
+              "f1": "71.1",
+              "support": 50
+            },
+            {
+              "label": "spider",
+              "precision": "67.2",
+              "recall": "78.0",
+              "f1": "72.2",
+              "support": 50
+            },
+            {
+              "label": "worm",
+              "precision": "80.0",
+              "recall": "80.0",
+              "f1": "80.0",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "crab",
+            "lobster",
+            "snail",
+            "spider",
+            "worm"
+          ],
+          "matrix": [
+            {
+              "label": "crab",
+              "counts": [
+                34,
+                6,
+                2,
+                6,
+                2
+              ]
+            },
+            {
+              "label": "lobster",
+              "counts": [
+                11,
+                36,
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "label": "snail",
+              "counts": [
+                2,
+                4,
+                33,
+                9,
+                2
+              ]
+            },
+            {
+              "label": "spider",
+              "counts": [
+                3,
+                2,
+                5,
+                40,
+                0
+              ]
+            },
+            {
+              "label": "worm",
+              "counts": [
+                1,
+                6,
+                0,
+                3,
+                40
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "crab",
+              "precision": "66.7",
+              "recall": "68.0",
+              "f1": "67.3",
+              "support": 50
+            },
+            {
+              "label": "lobster",
+              "precision": "66.7",
+              "recall": "72.0",
+              "f1": "69.2",
+              "support": 50
+            },
+            {
+              "label": "snail",
+              "precision": "80.5",
+              "recall": "66.0",
+              "f1": "72.5",
+              "support": 50
+            },
+            {
+              "label": "spider",
+              "precision": "67.8",
+              "recall": "80.0",
+              "f1": "73.4",
+              "support": 50
+            },
+            {
+              "label": "worm",
+              "precision": "88.9",
+              "recall": "80.0",
+              "f1": "84.2",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "people",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "baby",
+            "boy",
+            "girl",
+            "man",
+            "woman"
+          ],
+          "matrix": [
+            {
+              "label": "baby",
+              "counts": [
+                24,
+                4,
+                11,
+                5,
+                6
+              ]
+            },
+            {
+              "label": "boy",
+              "counts": [
+                11,
+                18,
+                9,
+                9,
+                3
+              ]
+            },
+            {
+              "label": "girl",
+              "counts": [
+                10,
+                6,
+                14,
+                10,
+                10
+              ]
+            },
+            {
+              "label": "man",
+              "counts": [
+                8,
+                6,
+                7,
+                20,
+                9
+              ]
+            },
+            {
+              "label": "woman",
+              "counts": [
+                3,
+                8,
+                8,
+                10,
+                21
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "baby",
+              "precision": "42.9",
+              "recall": "48.0",
+              "f1": "45.3",
+              "support": 50
+            },
+            {
+              "label": "boy",
+              "precision": "42.9",
+              "recall": "36.0",
+              "f1": "39.1",
+              "support": 50
+            },
+            {
+              "label": "girl",
+              "precision": "28.6",
+              "recall": "28.0",
+              "f1": "28.3",
+              "support": 50
+            },
+            {
+              "label": "man",
+              "precision": "37.0",
+              "recall": "40.0",
+              "f1": "38.5",
+              "support": 50
+            },
+            {
+              "label": "woman",
+              "precision": "42.9",
+              "recall": "42.0",
+              "f1": "42.4",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "baby",
+            "boy",
+            "girl",
+            "man",
+            "woman"
+          ],
+          "matrix": [
+            {
+              "label": "baby",
+              "counts": [
+                25,
+                5,
+                10,
+                4,
+                6
+              ]
+            },
+            {
+              "label": "boy",
+              "counts": [
+                11,
+                18,
+                10,
+                5,
+                6
+              ]
+            },
+            {
+              "label": "girl",
+              "counts": [
+                9,
+                4,
+                21,
+                6,
+                10
+              ]
+            },
+            {
+              "label": "man",
+              "counts": [
+                11,
+                7,
+                3,
+                19,
+                10
+              ]
+            },
+            {
+              "label": "woman",
+              "counts": [
+                5,
+                6,
+                8,
+                13,
+                18
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "baby",
+              "precision": "41.0",
+              "recall": "50.0",
+              "f1": "45.0",
+              "support": 50
+            },
+            {
+              "label": "boy",
+              "precision": "45.0",
+              "recall": "36.0",
+              "f1": "40.0",
+              "support": 50
+            },
+            {
+              "label": "girl",
+              "precision": "40.4",
+              "recall": "42.0",
+              "f1": "41.2",
+              "support": 50
+            },
+            {
+              "label": "man",
+              "precision": "40.4",
+              "recall": "38.0",
+              "f1": "39.2",
+              "support": 50
+            },
+            {
+              "label": "woman",
+              "precision": "36.0",
+              "recall": "36.0",
+              "f1": "36.0",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "reptiles",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "crocodile",
+            "dinosaur",
+            "lizard",
+            "snake",
+            "turtle"
+          ],
+          "matrix": [
+            {
+              "label": "crocodile",
+              "counts": [
+                25,
+                4,
+                6,
+                6,
+                9
+              ]
+            },
+            {
+              "label": "dinosaur",
+              "counts": [
+                2,
+                37,
+                6,
+                2,
+                3
+              ]
+            },
+            {
+              "label": "lizard",
+              "counts": [
+                4,
+                9,
+                27,
+                7,
+                3
+              ]
+            },
+            {
+              "label": "snake",
+              "counts": [
+                3,
+                8,
+                9,
+                29,
+                1
+              ]
+            },
+            {
+              "label": "turtle",
+              "counts": [
+                2,
+                5,
+                3,
+                3,
+                37
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "crocodile",
+              "precision": "69.4",
+              "recall": "50.0",
+              "f1": "58.1",
+              "support": 50
+            },
+            {
+              "label": "dinosaur",
+              "precision": "58.7",
+              "recall": "74.0",
+              "f1": "65.5",
+              "support": 50
+            },
+            {
+              "label": "lizard",
+              "precision": "52.9",
+              "recall": "54.0",
+              "f1": "53.5",
+              "support": 50
+            },
+            {
+              "label": "snake",
+              "precision": "61.7",
+              "recall": "58.0",
+              "f1": "59.8",
+              "support": 50
+            },
+            {
+              "label": "turtle",
+              "precision": "69.8",
+              "recall": "74.0",
+              "f1": "71.8",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "crocodile",
+            "dinosaur",
+            "lizard",
+            "snake",
+            "turtle"
+          ],
+          "matrix": [
+            {
+              "label": "crocodile",
+              "counts": [
+                28,
+                4,
+                7,
+                6,
+                5
+              ]
+            },
+            {
+              "label": "dinosaur",
+              "counts": [
+                3,
+                35,
+                5,
+                2,
+                5
+              ]
+            },
+            {
+              "label": "lizard",
+              "counts": [
+                5,
+                7,
+                29,
+                9,
+                0
+              ]
+            },
+            {
+              "label": "snake",
+              "counts": [
+                1,
+                6,
+                8,
+                33,
+                2
+              ]
+            },
+            {
+              "label": "turtle",
+              "counts": [
+                3,
+                3,
+                4,
+                1,
+                39
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "crocodile",
+              "precision": "70.0",
+              "recall": "56.0",
+              "f1": "62.2",
+              "support": 50
+            },
+            {
+              "label": "dinosaur",
+              "precision": "63.6",
+              "recall": "70.0",
+              "f1": "66.7",
+              "support": 50
+            },
+            {
+              "label": "lizard",
+              "precision": "54.7",
+              "recall": "58.0",
+              "f1": "56.3",
+              "support": 50
+            },
+            {
+              "label": "snake",
+              "precision": "64.7",
+              "recall": "66.0",
+              "f1": "65.3",
+              "support": 50
+            },
+            {
+              "label": "turtle",
+              "precision": "76.5",
+              "recall": "78.0",
+              "f1": "77.2",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "small mammals",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "hamster",
+            "mouse",
+            "rabbit",
+            "shrew",
+            "squirrel"
+          ],
+          "matrix": [
+            {
+              "label": "hamster",
+              "counts": [
+                35,
+                7,
+                5,
+                1,
+                2
+              ]
+            },
+            {
+              "label": "mouse",
+              "counts": [
+                7,
+                18,
+                6,
+                16,
+                3
+              ]
+            },
+            {
+              "label": "rabbit",
+              "counts": [
+                5,
+                5,
+                29,
+                2,
+                9
+              ]
+            },
+            {
+              "label": "shrew",
+              "counts": [
+                1,
+                12,
+                6,
+                27,
+                4
+              ]
+            },
+            {
+              "label": "squirrel",
+              "counts": [
+                3,
+                2,
+                3,
+                7,
+                35
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "hamster",
+              "precision": "68.6",
+              "recall": "70.0",
+              "f1": "69.3",
+              "support": 50
+            },
+            {
+              "label": "mouse",
+              "precision": "40.9",
+              "recall": "36.0",
+              "f1": "38.3",
+              "support": 50
+            },
+            {
+              "label": "rabbit",
+              "precision": "59.2",
+              "recall": "58.0",
+              "f1": "58.6",
+              "support": 50
+            },
+            {
+              "label": "shrew",
+              "precision": "50.9",
+              "recall": "54.0",
+              "f1": "52.4",
+              "support": 50
+            },
+            {
+              "label": "squirrel",
+              "precision": "66.0",
+              "recall": "70.0",
+              "f1": "68.0",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "hamster",
+            "mouse",
+            "rabbit",
+            "shrew",
+            "squirrel"
+          ],
+          "matrix": [
+            {
+              "label": "hamster",
+              "counts": [
+                33,
+                8,
+                7,
+                0,
+                2
+              ]
+            },
+            {
+              "label": "mouse",
+              "counts": [
+                7,
+                25,
+                5,
+                11,
+                2
+              ]
+            },
+            {
+              "label": "rabbit",
+              "counts": [
+                4,
+                3,
+                30,
+                3,
+                10
+              ]
+            },
+            {
+              "label": "shrew",
+              "counts": [
+                0,
+                10,
+                5,
+                31,
+                4
+              ]
+            },
+            {
+              "label": "squirrel",
+              "counts": [
+                2,
+                6,
+                3,
+                6,
+                33
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "hamster",
+              "precision": "71.7",
+              "recall": "66.0",
+              "f1": "68.8",
+              "support": 50
+            },
+            {
+              "label": "mouse",
+              "precision": "48.1",
+              "recall": "50.0",
+              "f1": "49.0",
+              "support": 50
+            },
+            {
+              "label": "rabbit",
+              "precision": "60.0",
+              "recall": "60.0",
+              "f1": "60.0",
+              "support": 50
+            },
+            {
+              "label": "shrew",
+              "precision": "60.8",
+              "recall": "62.0",
+              "f1": "61.4",
+              "support": 50
+            },
+            {
+              "label": "squirrel",
+              "precision": "64.7",
+              "recall": "66.0",
+              "f1": "65.3",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "trees",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "maple_tree",
+            "oak_tree",
+            "palm_tree",
+            "pine_tree",
+            "willow_tree"
+          ],
+          "matrix": [
+            {
+              "label": "maple tree",
+              "counts": [
+                29,
+                8,
+                3,
+                3,
+                7
+              ]
+            },
+            {
+              "label": "oak tree",
+              "counts": [
+                3,
+                39,
+                1,
+                5,
+                2
+              ]
+            },
+            {
+              "label": "palm tree",
+              "counts": [
+                0,
+                3,
+                35,
+                10,
+                2
+              ]
+            },
+            {
+              "label": "pine tree",
+              "counts": [
+                5,
+                9,
+                5,
+                26,
+                5
+              ]
+            },
+            {
+              "label": "willow tree",
+              "counts": [
+                6,
+                5,
+                2,
+                6,
+                31
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "maple tree",
+              "precision": "67.4",
+              "recall": "58.0",
+              "f1": "62.4",
+              "support": 50
+            },
+            {
+              "label": "oak tree",
+              "precision": "60.9",
+              "recall": "78.0",
+              "f1": "68.4",
+              "support": 50
+            },
+            {
+              "label": "palm tree",
+              "precision": "76.1",
+              "recall": "70.0",
+              "f1": "72.9",
+              "support": 50
+            },
+            {
+              "label": "pine tree",
+              "precision": "52.0",
+              "recall": "52.0",
+              "f1": "52.0",
+              "support": 50
+            },
+            {
+              "label": "willow tree",
+              "precision": "66.0",
+              "recall": "62.0",
+              "f1": "63.9",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "maple_tree",
+            "oak_tree",
+            "palm_tree",
+            "pine_tree",
+            "willow_tree"
+          ],
+          "matrix": [
+            {
+              "label": "maple tree",
+              "counts": [
+                30,
+                8,
+                2,
+                5,
+                5
+              ]
+            },
+            {
+              "label": "oak tree",
+              "counts": [
+                4,
+                35,
+                3,
+                5,
+                3
+              ]
+            },
+            {
+              "label": "palm tree",
+              "counts": [
+                1,
+                0,
+                33,
+                9,
+                7
+              ]
+            },
+            {
+              "label": "pine tree",
+              "counts": [
+                8,
+                3,
+                6,
+                29,
+                4
+              ]
+            },
+            {
+              "label": "willow tree",
+              "counts": [
+                5,
+                5,
+                2,
+                5,
+                33
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "maple tree",
+              "precision": "62.5",
+              "recall": "60.0",
+              "f1": "61.2",
+              "support": 50
+            },
+            {
+              "label": "oak tree",
+              "precision": "68.6",
+              "recall": "70.0",
+              "f1": "69.3",
+              "support": 50
+            },
+            {
+              "label": "palm tree",
+              "precision": "71.7",
+              "recall": "66.0",
+              "f1": "68.8",
+              "support": 50
+            },
+            {
+              "label": "pine tree",
+              "precision": "54.7",
+              "recall": "58.0",
+              "f1": "56.3",
+              "support": 50
+            },
+            {
+              "label": "willow tree",
+              "precision": "63.5",
+              "recall": "66.0",
+              "f1": "64.7",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "vehicles 1",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "bicycle",
+            "bus",
+            "motorcycle",
+            "pickup_truck",
+            "train"
+          ],
+          "matrix": [
+            {
+              "label": "bicycle",
+              "counts": [
+                39,
+                2,
+                7,
+                0,
+                2
+              ]
+            },
+            {
+              "label": "bus",
+              "counts": [
+                0,
+                36,
+                0,
+                4,
+                10
+              ]
+            },
+            {
+              "label": "motorcycle",
+              "counts": [
+                5,
+                0,
+                41,
+                4,
+                0
+              ]
+            },
+            {
+              "label": "pickup truck",
+              "counts": [
+                0,
+                10,
+                2,
+                33,
+                5
+              ]
+            },
+            {
+              "label": "train",
+              "counts": [
+                1,
+                9,
+                3,
+                4,
+                33
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bicycle",
+              "precision": "86.7",
+              "recall": "78.0",
+              "f1": "82.1",
+              "support": 50
+            },
+            {
+              "label": "bus",
+              "precision": "63.2",
+              "recall": "72.0",
+              "f1": "67.3",
+              "support": 50
+            },
+            {
+              "label": "motorcycle",
+              "precision": "77.4",
+              "recall": "82.0",
+              "f1": "79.6",
+              "support": 50
+            },
+            {
+              "label": "pickup truck",
+              "precision": "73.3",
+              "recall": "66.0",
+              "f1": "69.5",
+              "support": 50
+            },
+            {
+              "label": "train",
+              "precision": "66.0",
+              "recall": "66.0",
+              "f1": "66.0",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "bicycle",
+            "bus",
+            "motorcycle",
+            "pickup_truck",
+            "train"
+          ],
+          "matrix": [
+            {
+              "label": "bicycle",
+              "counts": [
+                41,
+                2,
+                4,
+                0,
+                3
+              ]
+            },
+            {
+              "label": "bus",
+              "counts": [
+                0,
+                35,
+                0,
+                8,
+                7
+              ]
+            },
+            {
+              "label": "motorcycle",
+              "counts": [
+                6,
+                0,
+                42,
+                2,
+                0
+              ]
+            },
+            {
+              "label": "pickup truck",
+              "counts": [
+                0,
+                12,
+                1,
+                33,
+                4
+              ]
+            },
+            {
+              "label": "train",
+              "counts": [
+                2,
+                8,
+                3,
+                3,
+                34
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "bicycle",
+              "precision": "83.7",
+              "recall": "82.0",
+              "f1": "82.8",
+              "support": 50
+            },
+            {
+              "label": "bus",
+              "precision": "61.4",
+              "recall": "70.0",
+              "f1": "65.4",
+              "support": 50
+            },
+            {
+              "label": "motorcycle",
+              "precision": "84.0",
+              "recall": "84.0",
+              "f1": "84.0",
+              "support": 50
+            },
+            {
+              "label": "pickup truck",
+              "precision": "71.7",
+              "recall": "66.0",
+              "f1": "68.8",
+              "support": 50
+            },
+            {
+              "label": "train",
+              "precision": "70.8",
+              "recall": "68.0",
+              "f1": "69.4",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "vehicles 2",
+      "methods": [
+        {
+          "name": "Joint",
+          "labels": [
+            "lawn_mower",
+            "rocket",
+            "streetcar",
+            "tank",
+            "tractor"
+          ],
+          "matrix": [
+            {
+              "label": "lawn mower",
+              "counts": [
+                42,
+                0,
+                6,
+                0,
+                2
+              ]
+            },
+            {
+              "label": "rocket",
+              "counts": [
+                2,
+                46,
+                1,
+                1,
+                0
+              ]
+            },
+            {
+              "label": "streetcar",
+              "counts": [
+                1,
+                0,
+                35,
+                9,
+                5
+              ]
+            },
+            {
+              "label": "tank",
+              "counts": [
+                1,
+                1,
+                2,
+                45,
+                1
+              ]
+            },
+            {
+              "label": "tractor",
+              "counts": [
+                2,
+                0,
+                9,
+                2,
+                37
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "lawn mower",
+              "precision": "87.5",
+              "recall": "84.0",
+              "f1": "85.7",
+              "support": 50
+            },
+            {
+              "label": "rocket",
+              "precision": "97.9",
+              "recall": "92.0",
+              "f1": "94.8",
+              "support": 50
+            },
+            {
+              "label": "streetcar",
+              "precision": "66.0",
+              "recall": "70.0",
+              "f1": "68.0",
+              "support": 50
+            },
+            {
+              "label": "tank",
+              "precision": "78.9",
+              "recall": "90.0",
+              "f1": "84.1",
+              "support": 50
+            },
+            {
+              "label": "tractor",
+              "precision": "82.2",
+              "recall": "74.0",
+              "f1": "77.9",
+              "support": 50
+            }
+          ]
+        },
+        {
+          "name": "PCGrad",
+          "labels": [
+            "lawn_mower",
+            "rocket",
+            "streetcar",
+            "tank",
+            "tractor"
+          ],
+          "matrix": [
+            {
+              "label": "lawn mower",
+              "counts": [
+                43,
+                0,
+                4,
+                0,
+                3
+              ]
+            },
+            {
+              "label": "rocket",
+              "counts": [
+                2,
+                46,
+                0,
+                2,
+                0
+              ]
+            },
+            {
+              "label": "streetcar",
+              "counts": [
+                2,
+                2,
+                37,
+                5,
+                4
+              ]
+            },
+            {
+              "label": "tank",
+              "counts": [
+                3,
+                1,
+                4,
+                41,
+                1
+              ]
+            },
+            {
+              "label": "tractor",
+              "counts": [
+                4,
+                1,
+                10,
+                1,
+                34
+              ]
+            }
+          ],
+          "classes": [
+            {
+              "label": "lawn mower",
+              "precision": "79.6",
+              "recall": "86.0",
+              "f1": "82.7",
+              "support": 50
+            },
+            {
+              "label": "rocket",
+              "precision": "92.0",
+              "recall": "92.0",
+              "f1": "92.0",
+              "support": 50
+            },
+            {
+              "label": "streetcar",
+              "precision": "67.3",
+              "recall": "74.0",
+              "f1": "70.5",
+              "support": 50
+            },
+            {
+              "label": "tank",
+              "precision": "83.7",
+              "recall": "82.0",
+              "f1": "82.8",
+              "support": 50
+            },
+            {
+              "label": "tractor",
+              "precision": "81.0",
+              "recall": "68.0",
+              "f1": "73.9",
+              "support": 50
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "runtime_ratio": "9.65",
+  "gain": "2.00"
+}

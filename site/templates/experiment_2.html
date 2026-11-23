@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}Experiment 2{% endblock %}
+{% block body_class %}report-page{% endblock %}
+{% block content %}
+<aside class="report-sidebar" aria-labelledby="sidebar-title">
+  <div class="sidebar-heading"><h2 id="sidebar-title">Experiment 2</h2></div>
+  <nav aria-label="Experiment 2 sections">
+    <a href="#task-definition">Twenty tasks</a>
+    <a class="subsection-link" href="#superclasses">Superclass list</a>
+    <a href="#settings">Settings and architecture</a>
+    <a href="#methods">Two training methods</a>
+    <a class="subsection-link" href="#projection">PCGrad projection</a>
+    <a href="#metrics">Metric definitions</a>
+    <a href="#validation-results">Validation performance</a>
+    <a class="subsection-link" href="#final-state">Final checkpoints</a>
+    <a class="subsection-link" href="#best-state">Best checkpoints</a>
+    <a href="#task-results">Per-task accuracy</a>
+    <a href="#errors">Class metrics and confusions</a>
+    <a href="#runtime">Runtime</a>
+    <a href="#diagnostics">Gradient diagnostics</a>
+    <a href="#graphs">Learning curves and graphs</a>
+    {% for figure in report.figures %}<a class="subsection-link" href="#graph-{{ figure.id }}">{{ figure.title }}</a>{% endfor %}
+    <a href="#interpretation">Findings and limitations</a>
+  </nav>
+</aside>
+<div class="page-heading">
+  <p class="eyebrow">Experiment 2 · CIFAR-100 multitask classification</p>
+  <h1>Can gradient surgery help twenty tasks share a CNN?</h1>
+  <p class="lead">Ordinary joint training and PCGrad, using identical inputs, initialization, model architecture and optimizer settings.</p>
+  <p class="metadata">Completed comparison · Seed 42 only · 10,000 steps · Validation results</p>
+</div>
+<div class="finding"><strong>Main finding.</strong> At the final step, PCGrad reaches 69.12% validation accuracy versus 67.12% for joint training, a {{ report.gain }} percentage-point gain. It improves 18 of 20 tasks but takes {{ report.runtime_ratio }} times as long in the recorded implementation.</div>
+<div class="notice"><strong>Scope of the evidence.</strong> These are conditional five-class validation results from one seed. The held-out test set has not been evaluated. No variability across seeds or statistical significance is claimed.</div>
+
+<section id="task-definition"><h2>What are the twenty tasks?</h2>
+  <p>CIFAR-100 contains 100 fine classes grouped into twenty superclasses. Each superclass becomes a separate five-class task. An image in the fish task must be classified as one of the five fish classes.</p>
+  <p><strong>The correct superclass is supplied.</strong> The model uses the corresponding private classification head. This is not ordinary 100-class recognition, and the model does not infer which superclass an uploaded image belongs to. Random uniform guessing within a task gives 20% expected accuracy.</p>
+  <details id="superclasses"><summary>The twenty superclasses and their five classes</summary>
+    <div class="table-scroll"><table><thead><tr><th>ID</th><th>Superclass</th><th>Fine classes</th></tr></thead><tbody>
+      {% for task in report.tasks %}<tr><td>{{ task.id }}</td><th scope="row">{{ task.name | replace('_',' ') }}</th><td>{% for name in task.class_names %}{{ name | replace('_',' ') }}{% if not loop.last %}, {% endif %}{% endfor %}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </details>
+</section>
+<section id="settings"><h2>Settings and architecture</h2>
+  <div class="table-scroll"><table><tbody>{% for label,value in report.settings %}<tr><th scope="row">{{ label }}</th><td>{{ value }}</td></tr>{% endfor %}</tbody></table></div>
+  <p>The CNN learns a common representation for all tasks. Each task has a separate final classifier; its labels and head are never mixed with those of another task. The training split contains 2,250 images per task, validation 250, and test 500.</p>
+</section>
+<section id="methods"><h2>Two training methods</h2>
+  <p>Let L<sub>t</sub> be the mean cross-entropy loss on task t's eight images. Let g<sub>t</sub> be its gradient with respect to the shared CNN parameters. All task weights are w<sub>t</sub> = 1/20.</p>
+  <div class="table-scroll"><table><thead><tr><th>Method</th><th>Shared update direction</th><th>Meaning</th></tr></thead><tbody>
+    <tr><th scope="row">Joint</th><td class="formula">g = (g<sub>1</sub> + … + g<sub>20</sub>) / 20</td><td>Differentiate the equally weighted sum of task losses. Conflicting components can cancel.</td></tr>
+    <tr><th scope="row">PCGrad</th><td class="formula">g = (h<sub>1</sub> + … + h<sub>20</sub>) / 20</td><td>Modify conflicting shared gradients, then combine them using the same weights.</td></tr>
+  </tbody></table></div>
+  <h3 id="projection">PCGrad projection</h3>
+  <p>For each task i, initialize h<sub>i</sub> = g<sub>i</sub>. Visit the other nineteen tasks in a random order. When the current h<sub>i</sub> has a negative dot product with the <em>original</em> peer gradient g<sub>j</sub>, apply:</p>
+  <div class="equations"><div>h<sub>i</sub> ← h<sub>i</sub> − <span class="fraction"><span>h<sub>i</sub> · g<sub>j</sub></span><span>‖g<sub>j</sub>‖²</span></span> g<sub>j</sub></div></div>
+  <p>This removes the component opposing that peer. Nonconflicting components are left unchanged. A later projection may reintroduce conflict with an earlier peer, so final pairwise cosines need not all be nonnegative. The implementation uses a Gram matrix to perform the sequential projections.</p>
+  <p>Only the shared gradients are projected. Each private head retains its ordinary task gradient weighted by 1/20. The resulting gradients are passed to the same SGD optimizer with momentum and weight decay.</p>
+</section>
+<section id="metrics"><h2>What the metrics mean</h2>
+  <div class="table-scroll"><table><thead><tr><th>Metric</th><th>Definition and interpretation</th></tr></thead><tbody>
+    <tr><th scope="row">Accuracy ↑</th><td>Correct predictions divided by images, computed within each task and then averaged equally across twenty tasks. Every validation task has the same number of images.</td></tr>
+    <tr><th scope="row">Macro-F1 ↑</th><td>For each class, F1 = 2TP / (2TP + FP + FN). Average the five class F1 scores within each task, then average across tasks. Undefined scores use zero.</td></tr>
+    <tr><th scope="row">Cross-entropy ↓</th><td>Mean negative log probability assigned to the correct class, averaged across tasks. It considers probability quality, not only which class ranks first.</td></tr>
+    <tr><th scope="row">Worst-task accuracy ↑</th><td>The lowest accuracy among the twenty tasks. This checks whether gains in the average also benefit the weakest task.</td></tr>
+  </tbody></table></div>
+  <p class="helper">Percentages below are scores. A difference between two percentage scores is measured in percentage points. One training seed cannot supply a sample standard deviation across seeds.</p>
+</section>
+<section id="validation-results"><h2>Validation performance</h2>
+  <p>All tables use the same 5,000-image validation set. Final and best-validation checkpoint scores are shown separately. No seed standard deviation or significance annotation is shown.</p>
+  <div class="image-report-tables">
+    {% for key,title,anchor in [('validation_final','Final checkpoints','final-state'),('validation_best','Best-validation checkpoints','best-state')] %}
+    <article><h3 id="{{ anchor }}">{{ title }}</h3>
+      <div class="table-scroll"><table class="metrics-table"><thead><tr><th>Method</th><th>Accuracy ↑</th><th>Macro-F1 ↑</th><th>Loss ↓</th></tr></thead><tbody>
+        {% for row in report.results[key] %}<tr><th scope="row">{{ row.name }}<br><span class="helper">Step {{ '{:,}'.format(row.step) }}</span></th><td>{{ row.accuracy }}%</td><td>{{ row.f1 }}%</td><td>{{ row.loss }}</td></tr>{% endfor %}
+      </tbody></table></div>
+      <p class="helper">{% if key == 'validation_final' %}Both models at step 10,000. Worst-task accuracy: Joint 38.80%, PCGrad 40.40%.{% else %}Each method's separately selected best checkpoint. Worst-task accuracy: Joint 39.20%, PCGrad 40.80%. Selection uses validation accuracy; these scores are not independent test estimates.{% endif %}</p>
+    </article>
+    {% endfor %}
+  </div>
+  <p>The final gain of 2.00 points corresponds to 100 additional correct predictions among 5,000 validation images. At the separately selected best checkpoints, the accuracy gain is 2.04 points.</p>
+</section>
+<section id="task-results"><h2>Per-task accuracy at the final step</h2>
+  <p>PCGrad improves 18 tasks, ties trees, and worsens vehicles 2 by 1.6 points. People remains the weakest task for both methods. These twenty tasks share a trained backbone; they are not twenty independent repetitions of the experiment.</p>
+  <div class="table-scroll"><table class="image-task-table"><thead><tr><th>Task</th><th>Joint (%)</th><th>PCGrad (%)</th><th>Difference (points)</th></tr></thead><tbody>
+    {% for row in report.task_rows %}<tr><th scope="row">{{ row.name }}</th><td>{{ row.joint }}</td><td>{{ row.pcgrad }}</td><td>{{ row.delta }}</td></tr>{% endfor %}
+  </tbody></table></div>
+</section>
+<section id="errors" class="image-confusions"><h2>Class metrics and confusion matrices</h2>
+  <p>Expand a task to inspect the <strong>final-checkpoint validation</strong> errors. Every fine class has 50 validation images. Confusion matrix rows are true classes and columns are predicted classes; diagonal cells are correct predictions. Precision, recall and F1 are percentages.</p>
+  {% for task in report.confusions %}<details><summary>{{ task.name }}</summary><div class="image-report-tables">
+    {% for method in task.methods %}<article><h3>{{ method.name }}</h3>
+      <div class="table-scroll"><table><thead><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th></tr></thead><tbody>
+        {% for c in method.classes %}<tr><th scope="row">{{ c.label }}</th><td>{{ c.precision }}</td><td>{{ c.recall }}</td><td>{{ c.f1 }}</td><td>{{ c.support }}</td></tr>{% endfor %}
+      </tbody></table></div>
+      <div class="table-scroll"><table class="matrix-table"><caption class="sr-only">{{ method.name }} confusion matrix for {{ task.name }}; rows are true labels</caption><thead><tr><th>True / predicted</th>{% for label in method.labels %}<th>{{ label | replace('_',' ') }}</th>{% endfor %}</tr></thead><tbody>
+        {% for row in method.matrix %}<tr><th scope="row">{{ row.label }}</th>{% for count in row.counts %}<td>{{ count }}</td>{% endfor %}</tr>{% endfor %}
+      </tbody></table></div>
+    </article>{% endfor %}
+  </div></details>{% endfor %}
+</section>
+<section id="runtime"><h2>Runtime and memory</h2>
+  <div class="table-scroll"><table><thead><tr><th>Method</th><th>Total minutes</th><th>Training-only minutes</th><th>Seconds / step</th><th>Peak CUDA allocation (MiB)</th></tr></thead><tbody>
+    {% for row in report.runtime %}<tr><th scope="row">{{ row.name }}</th><td>{{ row.minutes }}</td><td>{{ row.train_minutes }}</td><td>{{ row.per_step }}</td><td>{{ row.memory }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  <p>Recorded total time includes training, validation, logging and checkpoint writing, excluding asset loading. PCGrad costs {{ report.runtime_ratio }} times the total time and approximately 10.49 times training-only time. This is the measured cost of this implementation and workload, not a fixed overhead for PCGrad.</p>
+  <p>Joint usually obtains its combined gradient in one backward pass. PCGrad extracts twenty task gradients separately and checks nineteen peers for each task. In this implementation, task gradients traverse the shared graph for a combined 160-image batch, which creates repeated computation.</p>
+  <p>At roughly the time joint finishes (9.54 minutes, 67.12% accuracy), PCGrad's most recent validation check is at step 1,000 (47.26%, recorded at about 9.21 minutes before its evaluation). This is a descriptive time comparison under these schedules, not a separately tuned fixed-time benchmark. PCGrad is stronger per update, but joint reaches useful accuracy much sooner.</p>
+</section>
+<section id="diagnostics"><h2>Gradient diagnostics</h2>
+  <div class="table-scroll"><table><thead><tr><th>Method</th><th>Raw conflicting pairs (%)</th><th>After projection (%)</th><th>Mean absolute raw cosine</th><th>Relative update change (%)</th></tr></thead><tbody>
+    {% for row in report.runtime %}<tr><th scope="row">{{ row.name }}</th><td>{{ row.raw }}</td><td>{{ row.post }}</td><td>{{ row.cosine }}</td><td>{{ row.relative }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  <p class="helper">Averages over 100 sampled diagnostic steps. Conflicting pairs have negative shared-gradient cosine. Joint does not project; its before/after values are identical. Relative update change is ‖g<sub>projected</sub> − g<sub>raw</sub>‖ / ‖g<sub>raw</sub>‖ for the combined shared gradient.</p>
+  <p>PCGrad greatly reduces sampled conflict, but this alone does not prove the cause of its accuracy gain. Projection changes gradient direction and magnitude, and both methods follow different parameter trajectories. Equal learning rates do not imply equal update norms.</p>
+</section>
+<section id="graphs"><h2>Learning curves and graphs</h2>
+  <p>All figures below use only the 10,000-step seed-42 comparison. Select a figure to open its full resolution.</p>
+  {% for figure in report.figures %}<figure id="graph-{{ figure.id }}"><h3>{{ figure.title }}</h3>
+    <a href="/static/figures/cifar/{{ figure.file }}" target="_blank" rel="noopener"><img src="/static/figures/cifar/{{ figure.file }}" alt="{{ figure.title }} for the seed-42 CIFAR-100 experiment" loading="lazy"></a>
+    <figcaption>{{ figure.caption }}</figcaption>
+  </figure>{% endfor %}
+</section>
+<section id="interpretation"><h2>What the results support</h2><ul class="findings-list">
+  <li><strong>A persistent validation advantage.</strong> PCGrad leads at every recorded evaluation and gains 2.00 final accuracy points. At step 6,000, it reaches 67.14%, approximately joint's final accuracy after 10,000 updates.</li>
+  <li><strong>Broad, but not universal, task gains.</strong> Eighteen final task accuracies improve. At the separately selected best checkpoints, seventeen improve, one ties and two worsen.</li>
+  <li><strong>Diminishing late returns.</strong> The best-accuracy steps are 9,500 for joint and 9,200 for PCGrad. PCGrad's lowest validation cross-entropy occurs earlier, at 6,100; its loss then rises slightly even while accuracy can improve.</li>
+  <li><strong>A substantial compute trade-off.</strong> Better accuracy at equal updates does not imply better performance at equal elapsed time.</li>
+  <li><strong>One seed, validation only.</strong> This completed study does not establish repeatability across seeds, statistical significance or held-out test performance. No seed SD or test score is reported.</li>
+  <li><strong>Checkpoint selection is visible.</strong> The image demo defaults to each method's best-validation checkpoint and also offers the final states. Best-validation scores have been used for selection.</li>
+  <li><strong>An adaptation of the benchmark.</strong> This is a shared-CNN comparison, without routing networks or independent-per-task baselines. It is not an exact reproduction of the original PCGrad paper's full evaluation.</li>
+</ul>
+<p class="helper">The dataset split, class mapping, code/data hashes, summaries and compact monitoring evidence are bundled with this site. Demo predictions use these saved weights; no training is performed by the website.</p>
+</section>
+<p><a class="return-link" href="/images">Try the image models</a></p>
+{% endblock %}

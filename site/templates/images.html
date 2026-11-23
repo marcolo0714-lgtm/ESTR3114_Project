@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Try image models{% endblock %}
+{% block scripts %}<script src="/static/images.js" defer></script>{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <p class="eyebrow">Experiment 2 · CIFAR-100 multitask classification</p>
+  <h1>One image. Two methods.</h1>
+  <p class="lead">Compare Joint and PCGrad on the same image, using a superclass that you supply.</p>
+  <p class="metadata">Seed 42 · 10,000 training steps · Twenty conditional five-class tasks</p>
+</div>
+<div class="notice"><strong>Choose the superclass yourself.</strong> These models choose among five classes within that group. They do not identify the superclass or classify freely among all 100 classes.</div>
+<form id="image-form" class="input-panel">
+  <div class="image-input-grid">
+    <div>
+      <label class="input-label" for="image-file">Your image</label>
+      <input type="file" id="image-file" accept="image/png,image/jpeg,image/webp" aria-describedby="image-help image-source">
+      <p id="image-help" class="helper">Choose a file, or copy an image and press Ctrl+V anywhere on this page (Cmd+V on Mac). PNG, JPEG or WebP; up to 8 MB and 20 million pixels. Images are processed in memory and are not saved.</p>
+      <p id="image-source" class="helper" role="status" aria-live="polite">No image selected.</p>
+      <label class="input-label image-field-label" for="image-task">Known superclass</label>
+      <select id="image-task" required aria-describedby="task-classes">
+        <option value="">Choose a superclass</option>
+        {% for task in tasks %}<option value="{{ task.id }}">{{ task.name | replace('_',' ') }}</option>{% endfor %}
+      </select>
+      <p id="task-classes" class="helper">Select a group to see its five possible classes.</p>
+      <label class="input-label image-field-label" for="image-checkpoint">Checkpoint</label>
+      <select id="image-checkpoint">
+        <option value="best_validation">Best validation</option>
+        <option value="final">Final</option>
+      </select>
+      <p id="checkpoint-help" class="helper">Joint: step 9,500; PCGrad: step 9,200. Selected by highest mean validation accuracy, with lower loss breaking ties.</p>
+    </div>
+    <div class="upload-preview-panel" id="image-paste-area" tabindex="0" role="group" aria-label="Image preview and paste area" aria-describedby="image-help">
+      <p class="input-label">Image preview</p>
+      <img id="upload-preview" alt="Your selected image" hidden>
+      <p id="preview-placeholder" class="helper">Choose a file or click here and press Ctrl+V to paste a copied image.</p>
+    </div>
+  </div>
+  <fieldset class="method-picker"><legend>Compare methods</legend>
+    <label><input type="checkbox" name="image-method" value="joint" checked> Joint</label>
+    <label><input type="checkbox" name="image-method" value="pcgrad" checked> PCGrad</label>
+  </fieldset>
+  <div class="form-actions">
+    <button class="primary" id="image-predict" type="submit">Predict</button>
+    <button class="secondary" id="image-clear" type="button">Clear</button>
+    <span class="helper" id="image-model-status" role="status">Checking image models.</span>
+  </div>
+</form>
+<div id="image-error" class="error" role="alert" hidden></div>
+<section id="image-results-section" aria-busy="false" aria-labelledby="image-results-heading">
+  <div class="section-heading"><h2 id="image-results-heading">Prediction comparison</h2><span id="image-timing" class="helper"></span></div>
+  <p class="helper" id="image-progress" role="status" aria-live="polite">Upload an image and choose its superclass.</p>
+  <div id="processed-image" class="processed-image" hidden><img id="model-preview" alt="The 32 by 32 RGB image used by both models"><p id="processed-image-note" class="helper"></p></div>
+  <div id="image-results" class="image-results"></div>
+</section>
+<section class="reading-notes"><h2>Reading the predictions</h2><ul>
+  <li>Both models receive exactly the same RGB image, resized to 32 × 32 with bilinear interpolation and normalized using training-only statistics. Resizing changes the aspect ratio of a non-square image.</li>
+  <li>The five probabilities cover only the selected superclass and sum to 100% before rounding. The largest is the predicted class.</li>
+  <li>These models were trained on small CIFAR-100 images. Large photographs, unfamiliar objects or an incorrect superclass can produce unreliable predictions, even with high probabilities.</li>
+  <li>The first request loads the selected checkpoints; later requests reuse them. Changing the checkpoint may require another first load.</li>
+  <li>One example does not establish which method is better. <a href="/experiment-2">Read the settings and validation results</a>.</li>
+</ul></section>
+{% endblock %}

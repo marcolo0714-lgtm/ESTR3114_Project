@@ -1,0 +1,418 @@
+{
+  "models": [
+    {
+      "id": "joint",
+      "name": "Joint",
+      "seed": 42,
+      "training_steps": 10000,
+      "checkpoints": {
+        "best_validation": {
+          "path": "joint/best_validation.pt",
+          "step": 9500,
+          "sha256": "29b527898215e876c0698a56882412f3ad5a38fab3e7f8263b6bb899355209a5",
+          "source_sha256": "88dbf84367b4c49328a311fdf536b40b28553fda43b0877e0229e1abf0be18f8"
+        },
+        "final": {
+          "path": "joint/final.pt",
+          "step": 10000,
+          "sha256": "e5348e0f241ab678f39d1f12637e729235c7b8299e365dddf2df154f347ae860",
+          "source_sha256": "51f806be90242590fb632652b19843238c43fb873e094347f964e8d7ad0062ec"
+        }
+      }
+    },
+    {
+      "id": "pcgrad",
+      "name": "PCGrad",
+      "seed": 42,
+      "training_steps": 10000,
+      "checkpoints": {
+        "best_validation": {
+          "path": "pcgrad/best_validation.pt",
+          "step": 9200,
+          "sha256": "cf637a93cdeaf11e6ab891eeceb92846d29df2823d45a97980b1895833da6d86",
+          "source_sha256": "df69d792959c380d96e8b25a2566803b4c05a5b39b00da66eb6d875e54b6466a"
+        },
+        "final": {
+          "path": "pcgrad/final.pt",
+          "step": 10000,
+          "sha256": "f499ab58b5be4da9431c95d6e8445d68b5cb25072168da5f00105c5b007f9254",
+          "source_sha256": "498d46552976f70aa2fdaa6ef0b58f80d5397d58c9f491f55d1f68dd1bd66b57"
+        }
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "id": 0,
+      "name": "aquatic_mammals",
+      "fine_ids": [
+        4,
+        30,
+        55,
+        72,
+        95
+      ],
+      "class_names": [
+        "beaver",
+        "dolphin",
+        "otter",
+        "seal",
+        "whale"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "fish",
+      "fine_ids": [
+        1,
+        32,
+        67,
+        73,
+        91
+      ],
+      "class_names": [
+        "aquarium_fish",
+        "flatfish",
+        "ray",
+        "shark",
+        "trout"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "flowers",
+      "fine_ids": [
+        54,
+        62,
+        70,
+        82,
+        92
+      ],
+      "class_names": [
+        "orchid",
+        "poppy",
+        "rose",
+        "sunflower",
+        "tulip"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "food_containers",
+      "fine_ids": [
+        9,
+        10,
+        16,
+        28,
+        61
+      ],
+      "class_names": [
+        "bottle",
+        "bowl",
+        "can",
+        "cup",
+        "plate"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "fruit_and_vegetables",
+      "fine_ids": [
+        0,
+        51,
+        53,
+        57,
+        83
+      ],
+      "class_names": [
+        "apple",
+        "mushroom",
+        "orange",
+        "pear",
+        "sweet_pepper"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "household_electrical_devices",
+      "fine_ids": [
+        22,
+        39,
+        40,
+        86,
+        87
+      ],
+      "class_names": [
+        "clock",
+        "keyboard",
+        "lamp",
+        "telephone",
+        "television"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "household_furniture",
+      "fine_ids": [
+        5,
+        20,
+        25,
+        84,
+        94
+      ],
+      "class_names": [
+        "bed",
+        "chair",
+        "couch",
+        "table",
+        "wardrobe"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "insects",
+      "fine_ids": [
+        6,
+        7,
+        14,
+        18,
+        24
+      ],
+      "class_names": [
+        "bee",
+        "beetle",
+        "butterfly",
+        "caterpillar",
+        "cockroach"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "large_carnivores",
+      "fine_ids": [
+        3,
+        42,
+        43,
+        88,
+        97
+      ],
+      "class_names": [
+        "bear",
+        "leopard",
+        "lion",
+        "tiger",
+        "wolf"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "large_man-made_outdoor_things",
+      "fine_ids": [
+        12,
+        17,
+        37,
+        68,
+        76
+      ],
+      "class_names": [
+        "bridge",
+        "castle",
+        "house",
+        "road",
+        "skyscraper"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "large_natural_outdoor_scenes",
+      "fine_ids": [
+        23,
+        33,
+        49,
+        60,
+        71
+      ],
+      "class_names": [
+        "cloud",
+        "forest",
+        "mountain",
+        "plain",
+        "sea"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "large_omnivores_and_herbivores",
+      "fine_ids": [
+        15,
+        19,
+        21,
+        31,
+        38
+      ],
+      "class_names": [
+        "camel",
+        "cattle",
+        "chimpanzee",
+        "elephant",
+        "kangaroo"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "medium_mammals",
+      "fine_ids": [
+        34,
+        63,
+        64,
+        66,
+        75
+      ],
+      "class_names": [
+        "fox",
+        "porcupine",
+        "possum",
+        "raccoon",
+        "skunk"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "non-insect_invertebrates",
+      "fine_ids": [
+        26,
+        45,
+        77,
+        79,
+        99
+      ],
+      "class_names": [
+        "crab",
+        "lobster",
+        "snail",
+        "spider",
+        "worm"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "people",
+      "fine_ids": [
+        2,
+        11,
+        35,
+        46,
+        98
+      ],
+      "class_names": [
+        "baby",
+        "boy",
+        "girl",
+        "man",
+        "woman"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "reptiles",
+      "fine_ids": [
+        27,
+        29,
+        44,
+        78,
+        93
+      ],
+      "class_names": [
+        "crocodile",
+        "dinosaur",
+        "lizard",
+        "snake",
+        "turtle"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "small_mammals",
+      "fine_ids": [
+        36,
+        50,
+        65,
+        74,
+        80
+      ],
+      "class_names": [
+        "hamster",
+        "mouse",
+        "rabbit",
+        "shrew",
+        "squirrel"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "trees",
+      "fine_ids": [
+        47,
+        52,
+        56,
+        59,
+        96
+      ],
+      "class_names": [
+        "maple_tree",
+        "oak_tree",
+        "palm_tree",
+        "pine_tree",
+        "willow_tree"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "vehicles_1",
+      "fine_ids": [
+        8,
+        13,
+        48,
+        58,
+        90
+      ],
+      "class_names": [
+        "bicycle",
+        "bus",
+        "motorcycle",
+        "pickup_truck",
+        "train"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "vehicles_2",
+      "fine_ids": [
+        41,
+        69,
+        81,
+        85,
+        89
+      ],
+      "class_names": [
+        "lawn_mower",
+        "rocket",
+        "streetcar",
+        "tank",
+        "tractor"
+      ]
+    }
+  ],
+  "normalization": {
+    "mean": [
+      0.506648960546024,
+      0.48630626208469485,
+      0.4406341824959152
+    ],
+    "std": [
+      0.2670995179632049,
+      0.2562929009534423,
+      0.27613941127051733
+    ]
+  }
+}

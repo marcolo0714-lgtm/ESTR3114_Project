@@ -4,12 +4,16 @@ A standalone, local Python website with four pages:
 
 1. **Try text models**: actual next-token and sentiment predictions from the four
    seed-44, 6,000-step checkpoints. Joint and PCGrad use sentiment weight 3.
-2. **Try image models**: an empty space reserved for experiment 2.
+2. **Try image models**: upload an image, supply its superclass, and compare joint
+   and PCGrad predictions using best-validation or final CNN checkpoints.
 3. **Experiment 1**: settings, methods, metrics, five result tables, graphs,
    and interpretation of the token/sentiment experiment.
-4. **Experiment 2**: an empty space reserved for the unfinished experiment.
+4. **Experiment 2**: the completed 10,000-step, seed-42 CIFAR-100 comparison:
+   settings, validation metrics, per-task/class errors, confusion matrices,
+   learning curves, gradient diagnostics, runtime and limitations.
 
-No image inference or experiment-2 integration has been implemented.
+Experiment 2 has one matched seed and validation scores only. No held-out test
+evaluation or estimate of variation across seeds is available.
 
 ## Run on this computer
 
@@ -72,10 +76,56 @@ does not make it accessible from other computers.
 - Token-only's sentiment output is withheld because its head is untrained.
   Sentiment-only still has a token head, but no token-loss supervision.
 - The interface reports input truncation and separate loading/inference times.
-  Sentences are neither persisted nor logged. Image uploads are not enabled.
-- Example predictions do not establish superiority. Report tables summarize
-  three seeds, whereas the demonstration uses one seed. Demo rerun summaries
+  Sentences are neither persisted nor logged. Image uploads are handled by the
+  separate image page described below.
+- Example predictions do not establish superiority. Experiment 1 tables summarize
+  three seeds, whereas its demonstration uses one seed. Demo rerun summaries
   are shown separately from the original evaluations.
+
+## Image predictions and Experiment 2
+
+Choose an image file or paste a copied image with Ctrl+V (Cmd+V on Mac) while
+the image page is focused. Both input methods share the preview, size limits
+and prediction flow. Clear removes the selected or pasted image. Clipboard
+contents are read only from an explicit paste event; no clipboard permission
+or background access is needed. Pasting an image URL alone does not fetch it.
+
+The image page requires a supplied superclass and chooses among its five fine
+classes. It does not infer the superclass or perform unrestricted 100-class
+recognition. Select Joint, PCGrad or both. Best-validation checkpoints are the
+default: joint step 9,500 and PCGrad step 9,200. Final states are both at 10,000.
+All four states come from the seed-42, 10,000-step training runs.
+
+Images are decoded in memory (PNG/JPEG/WebP, up to 8 MB and 20 million pixels),
+camera orientation is honored, and RGB pixels are bilinearly resized to 32x32.
+The training-only channel normalization is read from bundled model metadata.
+No uploaded image or filename is saved. The API accepts raw image bytes, so
+there is no multipart-upload dependency or temporary upload file.
+
+`inference/image_model.py` contains the local CNN architecture;
+`inference/images.py` loads and verifies checkpoints lazily, caches them, and
+serializes image inference. `models/images/registry.json` records task/class
+mapping, preprocessing and checkpoint hashes. Only weights and inference
+metadata are bundled; optimizer and RNG states remain in the training outputs.
+The four inference checkpoints total about 23 MB.
+
+`experiment_data/images/` holds compact copies of settings, summaries, curves
+and diagnostics. `experiment_data/image_results.json` supplies the report, and
+`static/figures/cifar/` contains its local figures. These files have no runtime
+dependency on `../new_experiment` or the CIFAR dataset. The report distinguishes
+validation-selected states from final states and never labels them test scores.
+
+Optional explicit import/rebuild commands, run from `site`:
+
+```powershell
+python tools/import_image_models.py --results ../new_experiment/results --analysis ../new_experiment/analysis
+python tools/build_image_report.py
+```
+
+The importer reads the training folder only during preparation; the report
+builder uses only the copies already bundled inside `site`. When moving the
+site, include `models/images/` as well as `models/text/`; model weights are not
+included in a source-only Git clone. The import scripts do not train models.
 
 ## Folder contents
 

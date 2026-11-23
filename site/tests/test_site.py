@@ -35,17 +35,17 @@ def client():
     return TestClient(create_app(store=StubStore()))
 
 
-def test_four_pages_and_cifar_is_only_reserved_space(client):
+def test_four_pages_and_image_pages_are_implemented(client):
     for path, heading in [('/text','One sentence. Four methods.'),('/images','Try image models'),
                           ('/experiment-1','Do the two tasks help each other?'),('/experiment-2','Experiment 2')]:
         response = client.get(path)
         assert response.status_code == 200
         assert heading in response.text
         assert response.text.count('aria-current="page"') == 1
-        if path in ('/images','/experiment-2'):
-            assert 'reserved-space' in response.text
-            assert '<input' not in response.text
-    assert client.post('/api/predict-image').status_code == 404
+        assert 'reserved-space' not in response.text
+    assert 'id="image-form"' in client.get('/images').text
+    assert 'Validation performance' in client.get('/experiment-2').text
+    assert client.post('/api/predict-image').status_code == 422
 
 
 def test_report_has_all_conditions_and_local_figures(client):

@@ -1,4 +1,45 @@
 /* Compact prediction results. Each desktop item has its probability below it. */
+/* Experiment 2 shares the restrained layout and permanent report navigation. */
+select { font: inherit; max-width: 100%; width: 100%; padding: 9px 10px; color: var(--ink); background: white; border: 1px solid #aebac5; border-radius: 3px; }
+select:focus-visible { outline: 3px solid #82b8e0; outline-offset: 3px; }
+.image-input-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 32px; }
+.image-input-grid input[type=file] { width: 100%; max-width: 100%; font-size: 14px; }
+.image-field-label { margin-top: 20px; }
+.upload-preview-panel { min-width: 0; background: var(--subtle); padding: 18px; }
+.upload-preview-panel:focus-visible { outline: 3px solid #82b8e0; outline-offset: 3px; }
+.upload-preview-panel img { max-height: 265px; max-width: 100%; display: block; margin: 0 auto; object-fit: contain; }
+.image-results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.image-result-card { border: 1px solid var(--line); padding: 20px; border-radius: 4px; min-width: 0; }
+.image-result-card h3 { margin: 0 0 4px; }
+.image-result-card table { table-layout: fixed; }
+.image-result-card th { min-width: 0; overflow-wrap: anywhere; }
+.image-result-card td { text-align: right; font-variant-numeric: tabular-nums; }
+.image-result-card tbody th { font-weight: 400; }
+.image-result-card .image-predicted-row { font-weight: 700; background: var(--subtle); }
+.image-result-card .image-predicted-row th { font-weight: 700; }
+.image-result-card .helper:last-child { margin: 12px 0 0; }
+.image-predicted-class { font-weight: 650; margin: 18px 0; }
+.processed-image { display: flex; align-items: center; gap: 16px; margin: 12px 0 24px; }
+.processed-image img { width: 96px; height: 96px; image-rendering: pixelated; border: 1px solid var(--line); flex-shrink: 0; }
+.processed-image p { margin: 0; }
+.image-report-tables { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.image-report-tables article { min-width: 0; }
+.image-report-tables table { font-size: 13px; }
+.image-report-tables tbody th { min-width: 85px; }
+.image-report-tables th, .image-report-tables td { padding: 10px 8px; }
+.image-confusions .table-scroll table { min-width: 430px; }
+.image-confusions .matrix-table { font-size: 12px; }
+.image-confusions .matrix-table th { min-width: 0; }
+.image-confusions .matrix-table td { text-align: right; }
+.image-confusions .matrix-table thead th { overflow-wrap: anywhere; }
+.image-task-table td { font-variant-numeric: tabular-nums; }
+@media (max-width: 760px) {
+  .image-input-grid, .image-results, .image-report-tables { grid-template-columns: minmax(0, 1fr); }
+  .image-input-grid { gap: 20px; }
+  .upload-preview-panel img { max-height: 210px; }
+  .image-task-table { min-width: 580px; }
+  .image-result-card { padding: 15px; }
+}
 .prediction-table th:first-child { width: 14%; }
 .prediction-table th:nth-child(2) { width: 47%; }
 .prediction-table th:nth-child(3) { width: 28%; }

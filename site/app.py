@@ -5,11 +5,12 @@ from pathlib import Path
 from threading import Lock
 from typing import Literal
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Query
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field, field_validator
+from starlette.concurrency import run_in_threadpool
 
 ROOT = Path(__file__).resolve().parent
 Method = Literal['token', 'sentiment', 'joint', 'pcgrad']
@@ -33,13 +34,15 @@ class PredictionRequest(BaseModel):
         return list(dict.fromkeys(value))
 
 
-def create_app(store=None, device='cpu'):
+def create_app(store=None, device='cpu', image_store=None):
     app = FastAPI(title='ESTR3114 · Model comparison', docs_url=None, redoc_url=None)
     app.mount('/static', StaticFiles(directory=ROOT/'static'), name='static')
     templates = Jinja2Templates(directory=ROOT/'templates')
     report = json.loads((ROOT/'experiment_data/text_results.json').read_text(encoding='utf-8'))
+    image_report = json.loads((ROOT/'experiment_data/image_results.json').read_text(encoding='utf-8'))
     app.state.store = store
     app.state.device = device
+    app.state.image_store = image_store
     store_lock = Lock()
 
     def model_store():
@@ -48,6 +51,13 @@ def create_app(store=None, device='cpu'):
                 from inference.text import ModelStore
                 app.state.store = ModelStore(ROOT/'models', device=app.state.device)
         return app.state.store
+
+    def image_model_store():
+        with store_lock:
+            if app.state.image_store is None:
+                from inference.images import ImageModelStore
+                app.state.image_store = ImageModelStore(ROOT/'models/images', device=app.state.device)
+        return app.state.image_store
 
     def page(request, template, active, **context):
         return templates.TemplateResponse(request=request, name=template,
@@ -63,8 +73,7 @@ def create_app(store=None, device='cpu'):
 
     @app.get('/images')
     def image_page(request: Request):
-        return page(request, 'placeholder.html', 'images', title='Try image models',
-                    description='Image prediction will be available after experiment 2 is complete.')
+        return page(request, 'images.html', 'images', tasks=image_report['tasks'])
 
     @app.get('/experiment-1')
     def experiment_one(request: Request):
@@ -72,8 +81,34 @@ def create_app(store=None, device='cpu'):
 
     @app.get('/experiment-2')
     def experiment_two(request: Request):
-        return page(request, 'placeholder.html', 'experiment-2', title='Experiment 2',
-                    description='Settings and results will be added when this experiment is complete.')
+        return page(request, 'experiment_2.html', 'experiment-2', report=image_report)
+
+    @app.get('/api/image-models')
+    def image_models():
+        return image_model_store().status()
+
+    @app.post('/api/predict-image')
+    async def predict_image(request: Request, task: int = Query(ge=0, le=19),
+                            methods: list[Literal['joint','pcgrad']] = Query(default=['joint','pcgrad']),
+                            checkpoint: Literal['best_validation','final'] = 'best_validation'):
+        # Raw image bytes avoid multipart spooling; nothing is written to disk.
+        from inference.images import MAX_IMAGE_BYTES
+        chunks = []
+        size = 0
+        async for chunk in request.stream():
+            size += len(chunk)
+            if size > MAX_IMAGE_BYTES:
+                return JSONResponse(status_code=413, content=dict(error='Choose an image no larger than 8 MB.'))
+            chunks.append(chunk)
+        try:
+            return await run_in_threadpool(image_model_store().predict, b''.join(chunks), task,
+                                           list(dict.fromkeys(methods)), checkpoint)
+        except ValueError as exc:
+            return JSONResponse(status_code=400, content=dict(error=str(exc)))
+        except FileNotFoundError:
+            return JSONResponse(status_code=503, content=dict(error='An image checkpoint is missing. Check the local model installation.'))
+        except Exception:
+            return JSONResponse(status_code=500, content=dict(error='Image prediction failed. Check model files and available memory.'))
 
     @app.get('/api/models')
     def models():
