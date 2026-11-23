@@ -9,12 +9,12 @@
   <p class="metadata">Seed 42 · 10,000 training steps · Twenty conditional five-class tasks</p>
 </div>
 <div class="notice"><strong>Choose the superclass yourself.</strong> These models choose among five classes within that group. They do not identify the superclass or classify freely among all 100 classes.</div>
-<form id="image-form" class="input-panel">
+<form id="image-form" class="input-panel" data-max-image-bytes="{{ image_limit_mb * 1024 * 1024 }}">
   <div class="image-input-grid">
     <div>
       <label class="input-label" for="image-file">Your image</label>
       <input type="file" id="image-file" accept="image/png,image/jpeg,image/webp" aria-describedby="image-help image-source">
-      <p id="image-help" class="helper">Choose a file, or copy an image and press Ctrl+V anywhere on this page (Cmd+V on Mac). PNG, JPEG or WebP; up to 8 MB and 20 million pixels. Images are processed in memory and are not saved.</p>
+      <p id="image-help" class="helper">Choose a file, or copy an image and press Ctrl+V anywhere on this page (Cmd+V on Mac). PNG, JPEG or WebP; up to {{ image_limit_mb }} MB and 20 million pixels. Images are processed in memory and are not saved.</p>
       <p id="image-source" class="helper" role="status" aria-live="polite">No image selected.</p>
       <label class="input-label image-field-label" for="image-task">Known superclass</label>
       <select id="image-task" required aria-describedby="task-classes">

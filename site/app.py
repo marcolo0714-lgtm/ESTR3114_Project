@@ -1,6 +1,8 @@
 """Run the standalone four-page local website: python app.py."""
 import argparse
 import json
+import os
+import secrets
 from pathlib import Path
 from threading import Lock
 from typing import Literal
@@ -11,6 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field, field_validator
 from starlette.concurrency import run_in_threadpool
+from deployment import API_PATHS, FRONTEND_IMAGE_LIMIT, LOCAL_IMAGE_LIMIT, InferenceProxy, frontend_mode
 
 ROOT = Path(__file__).resolve().parent
 Method = Literal['token', 'sentiment', 'joint', 'pcgrad']
@@ -34,7 +37,8 @@ class PredictionRequest(BaseModel):
         return list(dict.fromkeys(value))
 
 
-def create_app(store=None, device='cpu', image_store=None):
+def create_app(store=None, device='cpu', image_store=None, *, frontend_only=None,
+               inference_url=None, proxy_transport=None):
     app = FastAPI(title='ESTR3114 · Model comparison', docs_url=None, redoc_url=None)
     app.mount('/static', StaticFiles(directory=ROOT/'static'), name='static')
     templates = Jinja2Templates(directory=ROOT/'templates')
@@ -44,6 +48,11 @@ def create_app(store=None, device='cpu', image_store=None):
     app.state.device = device
     app.state.image_store = image_store
     store_lock = Lock()
+    is_frontend = frontend_mode() if frontend_only is None else frontend_only
+    proxy = InferenceProxy(ROOT, url=os.environ.get('INFERENCE_API_URL','') if inference_url is None else inference_url,
+                           token=os.environ.get('INFERENCE_API_TOKEN',''),transport=proxy_transport)
+    app.state.frontend_only = is_frontend
+    server_token = os.environ.get('MODEL_SERVER_TOKEN','')
 
     def model_store():
         with store_lock:
@@ -73,7 +82,8 @@ def create_app(store=None, device='cpu', image_store=None):
 
     @app.get('/images')
     def image_page(request: Request):
-        return page(request, 'images.html', 'images', tasks=image_report['tasks'])
+        return page(request, 'images.html', 'images', tasks=image_report['tasks'],
+                    image_limit_mb=(FRONTEND_IMAGE_LIMIT if is_frontend else LOCAL_IMAGE_LIMIT)//1024**2)
 
     @app.get('/experiment-1')
     def experiment_one(request: Request):
@@ -85,7 +95,7 @@ def create_app(store=None, device='cpu', image_store=None):
 
     @app.get('/api/image-models')
     def image_models():
-        return image_model_store().status()
+        return dict(**image_model_store().status(),max_image_bytes=LOCAL_IMAGE_LIMIT,location='local')
 
     @app.post('/api/predict-image')
     async def predict_image(request: Request, task: int = Query(ge=0, le=19),
@@ -126,11 +136,18 @@ def create_app(store=None, device='cpu', image_store=None):
 
     @app.get('/api/health')
     def health():
-        return dict(status='ok')
+        return dict(status='ok',mode='frontend' if is_frontend else 'local',
+                    inference_configured=bool(proxy.url) if is_frontend else True)
 
     @app.middleware('http')
     async def headers(request, call_next):
-        response = await call_next(request)
+        if request.url.path in API_PATHS and is_frontend:
+            response = await proxy.forward(request)
+        elif request.url.path in API_PATHS and server_token and not secrets.compare_digest(
+                request.headers.get('authorization',''), 'Bearer '+server_token):
+            response = JSONResponse(status_code=401,content=dict(error='Model server authentication failed.'))
+        else:
+            response = await call_next(request)
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'same-origin'
         response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
@@ -139,6 +156,11 @@ def create_app(store=None, device='cpu', image_store=None):
         return response
 
     return app
+
+
+# Vercel and `uvicorn app:app` import this module; the CLI block is not run.
+# Model loading stays lazy, so importing the frontend does not import PyTorch.
+app = create_app()
 
 
 if __name__ == '__main__':

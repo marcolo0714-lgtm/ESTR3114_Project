@@ -9,6 +9,7 @@ import sys
 from urllib.parse import urlsplit
 import json
 import base64
+import httpx
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
@@ -105,6 +106,10 @@ with sync_playwright() as p:
         assert page.locator('.report-sidebar').is_visible()
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
         page.screenshot(path=str(out/f'report-{label}.png'))
+        page.locator('#three-gradient-example img').scroll_into_view_if_needed()
+        page.wait_for_function("() => document.querySelector('#three-gradient-example img').naturalWidth > 0")
+        assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+        page.locator('#three-gradient-example').screenshot(path=str(out/f'three-gradient-{label}.png'))
         page.locator('#validation-results').scroll_into_view_if_needed()
         page.screenshot(path=str(out/f'results-{label}.png'))
         page.locator('#errors details').first.locator('summary').click()
@@ -118,9 +123,26 @@ with sync_playwright() as p:
         page.locator('.image-result-card').nth(1).wait_for()
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
         page.screenshot(path=str(out/f'images-{label}.png'),full_page=True)
+    # Run the same browser UI against the lightweight frontend with a separate
+    # actual inference app, routed in-process so this check needs no hosting account.
+    backend=client.app
+    client=TestClient(create_app(frontend_only=True,inference_url='https://models.example',
+                                proxy_transport=httpx.ASGITransport(app=backend)))
+    page.set_viewport_size(dict(width=1440,height=1000))
+    page.goto('http://local.test/images')
+    page.get_by_text('2 of 2 image models available on the model server').wait_for()
+    assert 'up to 4 MB' in page.locator('#image-help').inner_text()
+    assert page.locator('#image-form').get_attribute('data-max-image-bytes')==str(4*1024*1024)
+    page.locator('#image-file').set_input_files(upload)
+    page.locator('#image-task').select_option('1')
+    page.get_by_role('button',name='Predict',exact=True).click()
+    page.locator('.image-result-card').nth(1).wait_for()
+    assert not page.locator('#image-error').is_visible()
+    page.screenshot(path=str(out/'frontend-proxy.png'),full_page=True)
     assert not errors,errors
     browser.close()
 (out/'verification.json').write_text(json.dumps(dict(real_checkpoints=True,desktop=True,mobile=True,
     image_paste=True,text_paste_preserved=True,clear_pasted_image=True,
-    two_checkpoint_modes=True,confusion_tables=True,javascript_errors=errors),indent=2))
-print('Browser QA passed: image paste, clear, file selection, real predictions and desktop/mobile pages.')
+    two_checkpoint_modes=True,confusion_tables=True,three_gradient_example=True,
+    frontend_proxy=True,javascript_errors=errors),indent=2))
+print('Browser QA passed: three-gradient diagrams, frontend proxy, image paste and desktop/mobile pages.')

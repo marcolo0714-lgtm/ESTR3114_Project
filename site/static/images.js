@@ -14,6 +14,9 @@ let imageMetadata = null;
 let imageBusy = false;
 let previewSequence = 0;
 let selectedImage = null;
+let imageMaxBytes = Number(imageForm.dataset.maxImageBytes) || 8 * 1024 * 1024;
+
+function imageSizeError() { return `Choose an image no larger than ${imageMaxBytes / 1024 / 1024} MB.`; }
 
 function imageNode(tag, text, className) {
   const node = document.createElement(tag);
@@ -43,7 +46,7 @@ function updateImageAvailability() {
     if (available) count++;
     else input.checked = false;
   }
-  document.querySelector('#image-model-status').textContent = `${count} of 2 image models available locally`;
+  document.querySelector('#image-model-status').textContent = imageMetadata.message || `${count} of 2 image models available ${imageMetadata.location === 'remote' ? 'on the model server' : 'locally'}`;
 }
 function updateTaskClasses() {
   const task = imageMetadata?.tasks.find(t => t.id === Number(imageTask.value));
@@ -62,7 +65,7 @@ function selectImage(file, source = 'file') {
   document.querySelector('#preview-placeholder').hidden = false;
   const sequence = ++previewSequence;
   if (!file) return;
-  if (file.size > 8 * 1024 * 1024) { imageFail('Choose an image no larger than 8 MB.'); return; }
+  if (file.size > imageMaxBytes) { imageFail(imageSizeError()); return; }
   if (file.type && !['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
     imageFail('Use a PNG, JPEG or WebP image.'); return;
   }
@@ -124,7 +127,7 @@ imageForm.addEventListener('submit', async event => {
   const file = selectedImage;
   const methods = [...imageForm.querySelectorAll('input[name="image-method"]:checked')].map(x => x.value);
   if (!file) { imageFail('Choose an image first.'); return; }
-  if (file.size > 8 * 1024 * 1024) { imageFail('Choose an image no larger than 8 MB.'); return; }
+  if (file.size > imageMaxBytes) { imageFail(imageSizeError()); return; }
   if (imageTask.value === '') { imageFail('Choose the known superclass.'); return; }
   if (!methods.length) { imageFail('Select at least one available method.'); return; }
   const params = new URLSearchParams({task: imageTask.value, checkpoint: imageCheckpoint.value});
@@ -179,5 +182,5 @@ imageForm.addEventListener('submit', async event => {
 fetch('/api/image-models').then(async response => {
   if (!response.ok) throw new Error('Cannot read image models');
   return response.json();
-}).then(data => { imageMetadata = data; updateImageAvailability(); updateTaskClasses(); })
+}).then(data => { imageMetadata = data; imageMaxBytes = data.max_image_bytes || imageMaxBytes; updateImageAvailability(); updateTaskClasses(); })
   .catch(() => { document.querySelector('#image-model-status').textContent = 'Image model status unavailable. Check the server.'; });

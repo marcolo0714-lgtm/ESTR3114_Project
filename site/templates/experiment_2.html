@@ -10,6 +10,7 @@
     <a href="#settings">Settings and architecture</a>
     <a href="#methods">Two training methods</a>
     <a class="subsection-link" href="#projection">PCGrad projection</a>
+    <a class="subsection-link" href="#three-gradient-example">Three-gradient 2D example</a>
     <a href="#metrics">Metric definitions</a>
     <a href="#validation-results">Validation performance</a>
     <a class="subsection-link" href="#final-state">Final checkpoints</a>
@@ -56,6 +57,23 @@
   <div class="equations"><div>h<sub>i</sub> ← h<sub>i</sub> − <span class="fraction"><span>h<sub>i</sub> · g<sub>j</sub></span><span>‖g<sub>j</sub>‖²</span></span> g<sub>j</sub></div></div>
   <p>This removes the component opposing that peer. Nonconflicting components are left unchanged. A later projection may reintroduce conflict with an earlier peer, so final pairwise cosines need not all be nonnegative. The implementation uses a Gram matrix to perform the sequential projections.</p>
   <p>Only the shared gradients are projected. Each private head retains its ordinary task gradient weighted by 1/20. The resulting gradients are passed to the same SGD optimizer with momentum and weight decay.</p>
+  <div class="worked-example" id="three-gradient-example">
+    <h3>A 2D example with three gradients</h3>
+    <p>Use three tasks with <span class="inline-formula">g<sub>A</sub> = (2, 0)</span>, <span class="inline-formula">g<sub>B</sub> = (−1, 1)</span>, and <span class="inline-formula">g<sub>C</sub> = (−2, 1)</span>. Give each task weight 1/3. This example illustrates the calculation; it is not a recorded training step.</p>
+    <p><strong>First compute all three original gradients and keep them fixed.</strong> Make separate working copies h<sub>A</sub>, h<sub>B</sub>, h<sub>C</sub>. For this illustration, choose peer orders B then C for A, A then C for B, and A then B for C. Real PCGrad shuffles each task's peers.</p>
+    <div class="table-scroll"><table class="projection-example"><thead><tr><th>Working gradient</th><th>First peer</th><th>Second peer</th><th>Final gradient</th></tr></thead><tbody>
+      <tr><th scope="row">h<sub>A</sub> starts at (2, 0)</th><td>Against original B:<br>dot = −2, ‖g<sub>B</sub>‖² = 2.<br>h<sub>A</sub> = (2, 0) − (−2/2)(−1, 1)<br>= <strong>(1, 1)</strong>.</td><td>Against original C:<br>dot = (1, 1) · (−2, 1) = −1; ‖g<sub>C</sub>‖² = 5.<br>h<sub>A</sub> = (1, 1) − (−1/5)(−2, 1)<br>= <strong>(3/5, 6/5)</strong>.</td><td>(3/5, 6/5)</td></tr>
+      <tr><th scope="row">h<sub>B</sub> starts at (−1, 1)</th><td>Against original A:<br>dot = −2, ‖g<sub>A</sub>‖² = 4.<br>h<sub>B</sub> = (−1, 1) − (−2/4)(2, 0)<br>= <strong>(0, 1)</strong>.</td><td>Against original C:<br>(0, 1) · (−2, 1) = 1 ≥ 0.<br>No projection.</td><td>(0, 1)</td></tr>
+      <tr><th scope="row">h<sub>C</sub> starts at (−2, 1)</th><td>Against original A:<br>dot = −4, ‖g<sub>A</sub>‖² = 4.<br>h<sub>C</sub> = (−2, 1) − (−4/4)(2, 0)<br>= <strong>(0, 1)</strong>.</td><td>Against original B:<br>(0, 1) · (−1, 1) = 1 ≥ 0.<br>No projection.</td><td>(0, 1)</td></tr>
+    </tbody></table></div>
+    <p><strong>Then combine the completed working gradients:</strong></p>
+    <div class="example-calculation"><p>g<sub>PCGrad</sub> = [(3/5, 6/5) + (0, 1) + (0, 1)] / 3 = <strong>(1/5, 16/15)</strong>.</p>
+      <p>Ordinary joint training would use [(2, 0) + (−1, 1) + (−2, 1)] / 3 = <strong>(−1/3, 2/3)</strong>.</p></div>
+    <figure class="vector-figure"><a href="/static/figures/cifar/pcgrad_three_gradients.svg" target="_blank" rel="noopener"><img src="/static/figures/cifar/pcgrad_three_gradients.svg" alt="Four equal-scale vector diagrams: original gradients; A projected against B then C; independent projections of B and C; and the final averaged PCGrad gradient compared with joint training and reversed peer orders." loading="lazy"></a><figcaption>Numbers 1–4 show the calculation sequence. All panels use equal axis scales. Dotted vectors are original/reference gradients. These arrows are gradients; gradient descent moves in the opposite direction.</figcaption></figure>
+    <h4>Why does peer order matter?</h4>
+    <p>If A visits C first, it becomes (2/5, 4/5). Its dot product with original B is then 2/5 ≥ 0, so it stays there. Reversing the other peer orders still leaves h<sub>B</sub> = h<sub>C</sub> = (0, 1). The final average becomes <strong>(2/15, 14/15)</strong>, different from (1/5, 16/15).</p>
+    <p class="helper">It is the peer order within each working gradient that matters. Merely processing A before B or B before A does not change the result when their peer lists are fixed: every projection uses original peers, never another task's already projected h. The twenty-task experiment follows the same sequence with weight 1/20.</p>
+  </div>
 </section>
 <section id="metrics"><h2>What the metrics mean</h2>
   <div class="table-scroll"><table><thead><tr><th>Metric</th><th>Definition and interpretation</th></tr></thead><tbody>

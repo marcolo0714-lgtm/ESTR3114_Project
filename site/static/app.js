@@ -146,7 +146,7 @@ fetch('/api/models').then(async response => {
   return response.json();
 }).then(data => {
   const available = data.models.filter(model => model.available).length;
-  document.querySelector('#model-status').textContent = `${available} of ${data.models.length} models available locally`;
+  document.querySelector('#model-status').textContent = data.message || `${available} of ${data.models.length} models available ${data.location === 'remote' ? 'on the model server' : 'locally'}`;
   for (const model of data.models) {
     if (!model.available) {
       unavailable.add(model.id);

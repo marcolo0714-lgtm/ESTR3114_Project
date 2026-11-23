@@ -1,0 +1,14 @@
+.venv/
+.qa/
+.pytest_cache/
+.test_tmp/
+__pycache__/
+**/__pycache__/
+tests/
+tools/
+models/text/
+models/images/*/*.pt
+models/images/*/*.importing
+*.log
+.env
+.env.*

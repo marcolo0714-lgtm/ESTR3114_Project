@@ -1,5 +1,8 @@
 # ESTR3114 model comparison website
 
+For Vercel hosting with a separate model server, see [DEPLOYMENT.md](DEPLOYMENT.md).
+The module exports `app` for Vercel/Uvicorn; local execution still uses the CLI.
+
 A standalone, local Python website with four pages:
 
 1. **Try text models**: actual next-token and sentiment predictions from the four
@@ -51,14 +54,16 @@ environment; recreate it with Python 3.10 or newer:
 ```powershell
 cd site
 python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-local.txt
 .\.venv\Scripts\python.exe app.py
 ```
 
 On macOS/Linux use `.venv/bin/python` in place of `.venv\Scripts\python.exe`.
 Internet is needed to install dependencies, but model loading, prediction,
-templates, JavaScript, CSS, report data, and figures work offline. There are no
-CDNs, APIs, training-dataset reads, parent-project imports, or external symlinks.
+templates, JavaScript, CSS, report data, and figures work offline in local mode.
+There are no CDNs, external API calls, training-dataset reads, parent-project
+imports, or external symlinks in that mode. Vercel frontend mode forwards
+prediction inputs to the configured model server instead.
 The bundled development environment may reuse installed system packages; it is
 not a portable environment and is not needed on the destination computer.
 
@@ -96,7 +101,8 @@ recognition. Select Joint, PCGrad or both. Best-validation checkpoints are the
 default: joint step 9,500 and PCGrad step 9,200. Final states are both at 10,000.
 All four states come from the seed-42, 10,000-step training runs.
 
-Images are decoded in memory (PNG/JPEG/WebP, up to 8 MB and 20 million pixels),
+Images are decoded in memory (PNG/JPEG/WebP, up to 8 MB locally, 4 MB through
+Vercel, and 20 million pixels),
 camera orientation is honored, and RGB pixels are bilinearly resized to 32x32.
 The training-only channel normalization is read from bundled model metadata.
 No uploaded image or filename is saved. The API accepts raw image bytes, so

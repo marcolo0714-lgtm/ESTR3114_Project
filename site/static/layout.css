@@ -33,6 +33,8 @@ select:focus-visible { outline: 3px solid #82b8e0; outline-offset: 3px; }
 .image-confusions .matrix-table td { text-align: right; }
 .image-confusions .matrix-table thead th { overflow-wrap: anywhere; }
 .image-task-table td { font-variant-numeric: tabular-nums; }
+.projection-example { min-width: 760px; font-size: 14px; }
+.projection-example td { min-width: 180px; }
 @media (max-width: 760px) {
   .image-input-grid, .image-results, .image-report-tables { grid-template-columns: minmax(0, 1fr); }
   .image-input-grid { gap: 20px; }
