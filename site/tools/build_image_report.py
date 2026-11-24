@@ -23,7 +23,7 @@ def main():
                       ['Matching', 'Identical initialization, sampling and augmentation within the seed; all 10,000 batch hashes match. Separate projection RNG.'],
                       ['Evaluation', 'Every 100 steps; evaluation batch size 128. Best checkpoint: highest mean validation accuracy, breaking ties with lower loss.'],
                       ['Hardware and precision', 'Tesla T4; float32; deterministic PyTorch operations enabled.'],
-                      ['Study scope', 'Completed single-seed comparison. Test evaluation was not performed.']
+                      ['Study scope', 'Completed single-seed comparison, with held-out test evaluation of each best-validation checkpoint.']
                   ], results={}, runtime=[], task_rows=[], figures=[], confusions=[])
     for split in ('validation_final','validation_best'):
         result=[]
@@ -54,6 +54,22 @@ def main():
         report['confusions'].append(item)
     report['runtime_ratio']=f'{p["elapsed_seconds"]/j["elapsed_seconds"]:.2f}'
     report['gain']=f'{100*(p["validation_final"]["accuracy"]-j["validation_final"]["accuracy"]):.2f}'
+    test = json.loads((ROOT/'experiment_data/images/test_results.json').read_text(encoding='utf-8'))
+    report['test'] = dict(rows=[], task_rows=[], timing=test['execution'])
+    for method,name in [('joint','Joint'),('pcgrad','PCGrad')]:
+        saved=test['methods'][method];m=saved['metrics']
+        report['test']['rows'].append(dict(name=name,step=saved['step'],
+            accuracy=f'{m["accuracy"]*100:.2f}',f1=f'{m["macro_f1"]*100:.2f}',
+            loss=f'{m["loss"]:.4f}',worst=f'{m["worst_task_accuracy"]*100:.2f}',
+            correct=round(m['accuracy']*m['example_count'])))
+    jt,pt=[test['methods'][m]['metrics'] for m in ('joint','pcgrad')]
+    report['test']['gain']=f'{(pt["accuracy"]-jt["accuracy"])*100:.2f}'
+    report['test']['extra_correct']=round((pt['accuracy']-jt['accuracy'])*10000)
+    report['test']['improved']=sum(b['accuracy']>a['accuracy'] for a,b in zip(jt['tasks'],pt['tasks']))
+    for a,b in zip(jt['tasks'],pt['tasks']):
+        report['test']['task_rows'].append(dict(name=a['name'].replace('_',' '),
+            joint=f'{a["accuracy"]*100:.2f}',pcgrad=f'{b["accuracy"]*100:.2f}',
+            delta=f'{(b["accuracy"]-a["accuracy"])*100:+.2f}'))
     report['figures']=[
         dict(id='learning',title='Learning curves, time and paired accuracy gap',file='comparison_10000_seed42.png',
              caption='Seed 42 only. Stars mark best-validation accuracy checkpoints. Elapsed times are recorded before the corresponding validation evaluation; timing includes prior validation and checkpoint I/O.'),

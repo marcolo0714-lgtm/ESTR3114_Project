@@ -12,11 +12,13 @@ A standalone, local Python website with four pages:
 3. **Experiment 1**: settings, methods, metrics, five result tables, graphs,
    and interpretation of the token/sentiment experiment.
 4. **Experiment 2**: the completed 10,000-step, seed-42 CIFAR-100 comparison:
-   settings, validation metrics, per-task/class errors, confusion matrices,
+   settings, validation and held-out test metrics, per-task/class errors, confusion matrices,
    learning curves, gradient diagnostics, runtime and limitations.
 
-Experiment 2 has one matched seed and validation scores only. No held-out test
-evaluation or estimate of variation across seeds is available.
+Experiment 2 has one matched seed. Each best-validation checkpoint has also been
+evaluated on the 10,000 held-out test images: joint 67.07%, PCGrad 68.80% accuracy.
+These are conditional five-class scores with the superclass supplied. No estimate
+of variation across training seeds is available.
 
 Both experiment reports keep a persistent sidebar on desktop. On smaller
 screens, a top-left **Show sections** button opens the navigation only when
@@ -120,12 +122,16 @@ The four inference checkpoints total about 23 MB.
 and diagnostics. `experiment_data/image_results.json` supplies the report, and
 `static/figures/cifar/` contains its local figures. These files have no runtime
 dependency on `../new_experiment` or the CIFAR dataset. The report distinguishes
-validation-selected states from final states and never labels them test scores.
+validation-selected states from final states, and labels validation and test
+scores separately. `experiment_data/images/test_results.json` bundles test metrics,
+confusion counts, checkpoint/evaluation hashes and local CPU evaluation timings;
+the full per-image prediction files remain in the experiment results directory.
 
 Optional explicit import/rebuild commands, run from `site`:
 
 ```powershell
 python tools/import_image_models.py --results ../new_experiment/results --analysis ../new_experiment/analysis
+python tools/import_image_test_results.py --experiment ../new_experiment
 python tools/build_image_report.py
 ```
 

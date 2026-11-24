@@ -7,3 +7,10 @@ resources/data/
 resources/hf_cache/
 results/
 tmp/
+
+# Presentation materials, generators, assets and rendered previews
+presentation/
+presentations/
+*.ppt
+*.pptx
+*.odp

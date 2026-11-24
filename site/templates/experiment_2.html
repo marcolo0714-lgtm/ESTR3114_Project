@@ -15,6 +15,8 @@
     <a href="#validation-results">Validation performance</a>
     <a class="subsection-link" href="#final-state">Final checkpoints</a>
     <a class="subsection-link" href="#best-state">Best checkpoints</a>
+    <a href="#test-results">Held-out test performance</a>
+    <a class="subsection-link" href="#test-task-results">Test accuracy by task</a>
     <a href="#task-results">Per-task accuracy</a>
     <a href="#errors">Class metrics and confusions</a>
     <a href="#runtime">Runtime</a>
@@ -28,10 +30,10 @@
   <p class="eyebrow">Experiment 2 · CIFAR-100 multitask classification</p>
   <h1>Can gradient surgery help twenty tasks share a CNN?</h1>
   <p class="lead">Ordinary joint training and PCGrad, using identical inputs, initialization, model architecture and optimizer settings.</p>
-  <p class="metadata">Completed comparison · Seed 42 only · 10,000 steps · Validation results</p>
+  <p class="metadata">Completed comparison · Seed 42 only · 10,000 steps · Validation and held-out test results</p>
 </div>
-<div class="finding"><strong>Main finding.</strong> At the final step, PCGrad reaches 69.12% validation accuracy versus 67.12% for joint training, a {{ report.gain }} percentage-point gain. It improves 18 of 20 tasks but takes {{ report.runtime_ratio }} times as long in the recorded implementation.</div>
-<div class="notice"><strong>Scope of the evidence.</strong> These are conditional five-class validation results from one seed. The held-out test set has not been evaluated. No variability across seeds or statistical significance is claimed.</div>
+<div class="finding"><strong>Main finding.</strong> On the held-out test set, PCGrad reaches 68.80% accuracy versus 67.07% for joint training, a {{ report.test.gain }} percentage-point gain using each method's best-validation checkpoint. PCGrad improves {{ report.test.improved }} of 20 test tasks. Training takes {{ report.runtime_ratio }} times as long in the recorded implementation.</div>
+<div class="notice"><strong>Scope of the evidence.</strong> These are conditional five-class results from one seed, with the correct superclass supplied. Test evaluation follows checkpoint selection using validation alone. No variability across seeds or statistical significance is claimed.</div>
 
 <section id="task-definition"><h2>What are the twenty tasks?</h2>
   <p>CIFAR-100 contains 100 fine classes grouped into twenty superclasses. Each superclass becomes a separate five-class task. An image in the fish task must be classified as one of the five fish classes.</p>
@@ -77,7 +79,7 @@
 </section>
 <section id="metrics"><h2>What the metrics mean</h2>
   <div class="table-scroll"><table><thead><tr><th>Metric</th><th>Definition and interpretation</th></tr></thead><tbody>
-    <tr><th scope="row">Accuracy ↑</th><td>Correct predictions divided by images, computed within each task and then averaged equally across twenty tasks. Every validation task has the same number of images.</td></tr>
+    <tr><th scope="row">Accuracy ↑</th><td>Correct predictions divided by images, computed within each task and then averaged equally across twenty tasks. Tasks have equal sizes within each split: 250 validation or 500 test images each. The task mean therefore also equals overall accuracy on that split.</td></tr>
     <tr><th scope="row">Macro-F1 ↑</th><td>For each class, F1 = 2TP / (2TP + FP + FN). Average the five class F1 scores within each task, then average across tasks. Undefined scores use zero.</td></tr>
     <tr><th scope="row">Cross-entropy ↓</th><td>Mean negative log probability assigned to the correct class, averaged across tasks. It considers probability quality, not only which class ranks first.</td></tr>
     <tr><th scope="row">Worst-task accuracy ↑</th><td>The lowest accuracy among the twenty tasks. This checks whether gains in the average also benefit the weakest task.</td></tr>
@@ -98,7 +100,22 @@
   </div>
   <p>The final gain of 2.00 points corresponds to 100 additional correct predictions among 5,000 validation images. At the separately selected best checkpoints, the accuracy gain is 2.04 points.</p>
 </section>
-<section id="task-results"><h2>Per-task accuracy at the final step</h2>
+<section id="test-results"><h2>Held-out test performance</h2>
+  <p>After validation selection, each method's best-validation checkpoint was evaluated on the same 10,000 official CIFAR-100 test images. Each task has 500 images, with 100 per fine class. The superclass is supplied; the model chooses among its five fine classes.</p>
+  <div class="table-scroll"><table class="metrics-table"><thead><tr><th>Method / selected step</th><th>Accuracy</th><th>Macro-F1</th><th>Loss</th><th>Worst task</th><th>Correct / 10,000</th></tr></thead><tbody>
+    {% for row in report.test.rows %}<tr><th scope="row">{{ row.name }}<br><span class="helper">Step {{ '{:,}'.format(row.step) }}</span></th><td>{{ row.accuracy }}%</td><td>{{ row.f1 }}%</td><td>{{ row.loss }}</td><td>{{ row.worst }}%</td><td>{{ '{:,}'.format(row.correct) }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  <p><strong>PCGrad gains {{ report.test.gain }} percentage points:</strong> {{ report.test.extra_correct }} additional correct predictions. Macro-F1 and worst-task accuracy also improve. The test advantage is smaller than the 2.04-point best-checkpoint validation advantage, but favors the same method.</p>
+  <p>Evaluation uses fixed training-only normalization, no random augmentation, and no gradient updates. Prepared dataset, split and mapping hashes exactly match the training record. Both saved prediction files were checked for 10,000 unique matching test IDs and identical task/target assignments.</p>
+  <p class="helper">Local CPU evaluation took {{ '%.1f' | format(report.test.timing.runs.joint.wall_seconds) }} seconds for joint and {{ '%.1f' | format(report.test.timing.runs.pcgrad.wall_seconds) }} seconds for PCGrad, including checkpoint/data loading and output writing, excluding download, preparation and interpreter startup. These are single-run wall times, not a controlled inference-speed benchmark. PCGrad's gradient surgery is used only during training.</p>
+  <details id="test-task-results"><summary>Test accuracy for all twenty tasks</summary>
+    <p>PCGrad improves {{ report.test.improved }} tasks and worsens four. People remains the weakest task. These tasks share a backbone and are not independent training repetitions.</p>
+    <div class="table-scroll"><table class="image-task-table"><thead><tr><th>Task</th><th>Joint (%)</th><th>PCGrad (%)</th><th>Difference (points)</th></tr></thead><tbody>
+      {% for row in report.test.task_rows %}<tr><th scope="row">{{ row.name }}</th><td>{{ row.joint }}</td><td>{{ row.pcgrad }}</td><td>{{ row.delta }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </details>
+</section>
+<section id="task-results"><h2>Per-task validation accuracy at the final step</h2>
   <p>PCGrad improves 18 tasks, ties trees, and worsens vehicles 2 by 1.6 points. People remains the weakest task for both methods. These twenty tasks share a trained backbone; they are not twenty independent repetitions of the experiment.</p>
   <div class="table-scroll"><table class="image-task-table"><thead><tr><th>Task</th><th>Joint (%)</th><th>PCGrad (%)</th><th>Difference (points)</th></tr></thead><tbody>
     {% for row in report.task_rows %}<tr><th scope="row">{{ row.name }}</th><td>{{ row.joint }}</td><td>{{ row.pcgrad }}</td><td>{{ row.delta }}</td></tr>{% endfor %}
@@ -141,11 +158,12 @@
 </section>
 <section id="interpretation"><h2>What the results support</h2><ul class="findings-list">
   <li><strong>A persistent validation advantage.</strong> PCGrad leads at every recorded evaluation and gains 2.00 final accuracy points. At step 6,000, it reaches 67.14%, approximately joint's final accuracy after 10,000 updates.</li>
-  <li><strong>Broad, but not universal, task gains.</strong> Eighteen final task accuracies improve. At the separately selected best checkpoints, seventeen improve, one ties and two worsen.</li>
+  <li><strong>An advantage on held-out images.</strong> Best-validation checkpoints score 67.07% for joint and 68.80% for PCGrad on the test set: {{ report.test.gain }} points and {{ report.test.extra_correct }} more correct predictions. Sixteen test tasks improve and four worsen.</li>
+  <li><strong>Broad, but not universal, validation gains.</strong> Eighteen final validation task accuracies improve. At the separately selected best checkpoints, seventeen improve, one ties and two worsen.</li>
   <li><strong>Diminishing late returns.</strong> The best-accuracy steps are 9,500 for joint and 9,200 for PCGrad. PCGrad's lowest validation cross-entropy occurs earlier, at 6,100; its loss then rises slightly even while accuracy can improve.</li>
   <li><strong>A substantial compute trade-off.</strong> Better accuracy at equal updates does not imply better performance at equal elapsed time.</li>
-  <li><strong>One seed, validation only.</strong> This completed study does not establish repeatability across seeds, statistical significance or held-out test performance. No seed SD or test score is reported.</li>
-  <li><strong>Checkpoint selection is visible.</strong> The image demo defaults to each method's best-validation checkpoint and also offers the final states. Best-validation scores have been used for selection.</li>
+  <li><strong>One training seed.</strong> Test evaluation supports the validation finding for this matched pair, but does not establish repeatability across seeds or statistical significance. No seed SD is available.</li>
+  <li><strong>Checkpoint selection is visible.</strong> The image demo defaults to each method's best-validation checkpoint and also offers the final states. Only validation scores selected the checkpoints; test scores were evaluated afterward and must not guide further tuning. Final-checkpoint test scores are not reported.</li>
   <li><strong>An adaptation of the benchmark.</strong> This is a shared-CNN comparison, without routing networks or independent-per-task baselines. It is not an exact reproduction of the original PCGrad paper's full evaluation.</li>
 </ul>
 <p class="helper">The dataset split, class mapping, code/data hashes, summaries and compact monitoring evidence are bundled with this site. Demo predictions use these saved weights; no training is performed by the website.</p>

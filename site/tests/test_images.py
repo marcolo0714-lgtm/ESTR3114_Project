@@ -41,10 +41,11 @@ def test_image_metadata_and_report_are_complete(client):
         assert all(v['available'] for v in m['checkpoints'].values())
     html = client.get('/experiment-2').text
     for text in ('67.12','69.12','67.34','69.38','9,500','9,200',
-                 'one seed','test set has not been evaluated','18 tasks'):
+                 'one seed','Held-out test performance','67.07','68.80','18 tasks'):
         assert text in html
     assert 'In progress' not in html
     assert 'not a measured training' not in html
+    assert 'test set has not been evaluated' not in html
     report = json.loads((ROOT/'experiment_data/image_results.json').read_text())
     assert len(report['task_rows']) == len(report['confusions']) == 20
     for figure in report['figures']:

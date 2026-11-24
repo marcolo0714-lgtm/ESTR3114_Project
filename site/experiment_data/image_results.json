@@ -410,7 +410,7 @@
     ],
     [
       "Study scope",
-      "Completed single-seed comparison. Test evaluation was not performed."
+      "Completed single-seed comparison, with held-out test evaluation of each best-validation checkpoint."
     ]
   ],
   "results": {
@@ -4710,5 +4710,166 @@
     }
   ],
   "runtime_ratio": "9.65",
-  "gain": "2.00"
+  "gain": "2.00",
+  "test": {
+    "rows": [
+      {
+        "name": "Joint",
+        "step": 9500,
+        "accuracy": "67.07",
+        "f1": "66.85",
+        "loss": "0.8715",
+        "worst": "39.60",
+        "correct": 6707
+      },
+      {
+        "name": "PCGrad",
+        "step": 9200,
+        "accuracy": "68.80",
+        "f1": "68.62",
+        "loss": "0.8685",
+        "worst": "40.20",
+        "correct": 6880
+      }
+    ],
+    "task_rows": [
+      {
+        "name": "aquatic mammals",
+        "joint": "57.40",
+        "pcgrad": "60.40",
+        "delta": "+3.00"
+      },
+      {
+        "name": "fish",
+        "joint": "71.40",
+        "pcgrad": "71.80",
+        "delta": "+0.40"
+      },
+      {
+        "name": "flowers",
+        "joint": "67.00",
+        "pcgrad": "66.80",
+        "delta": "-0.20"
+      },
+      {
+        "name": "food containers",
+        "joint": "67.60",
+        "pcgrad": "68.80",
+        "delta": "+1.20"
+      },
+      {
+        "name": "fruit and vegetables",
+        "joint": "76.60",
+        "pcgrad": "76.20",
+        "delta": "-0.40"
+      },
+      {
+        "name": "household electrical devices",
+        "joint": "64.80",
+        "pcgrad": "69.00",
+        "delta": "+4.20"
+      },
+      {
+        "name": "household furniture",
+        "joint": "70.80",
+        "pcgrad": "69.20",
+        "delta": "-1.60"
+      },
+      {
+        "name": "insects",
+        "joint": "70.20",
+        "pcgrad": "71.00",
+        "delta": "+0.80"
+      },
+      {
+        "name": "large carnivores",
+        "joint": "71.40",
+        "pcgrad": "73.40",
+        "delta": "+2.00"
+      },
+      {
+        "name": "large man-made outdoor things",
+        "joint": "75.80",
+        "pcgrad": "75.60",
+        "delta": "-0.20"
+      },
+      {
+        "name": "large natural outdoor scenes",
+        "joint": "79.00",
+        "pcgrad": "79.20",
+        "delta": "+0.20"
+      },
+      {
+        "name": "large omnivores and herbivores",
+        "joint": "65.80",
+        "pcgrad": "67.40",
+        "delta": "+1.60"
+      },
+      {
+        "name": "medium mammals",
+        "joint": "70.60",
+        "pcgrad": "73.20",
+        "delta": "+2.60"
+      },
+      {
+        "name": "non-insect invertebrates",
+        "joint": "64.20",
+        "pcgrad": "68.80",
+        "delta": "+4.60"
+      },
+      {
+        "name": "people",
+        "joint": "39.60",
+        "pcgrad": "40.20",
+        "delta": "+0.60"
+      },
+      {
+        "name": "reptiles",
+        "joint": "61.80",
+        "pcgrad": "65.20",
+        "delta": "+3.40"
+      },
+      {
+        "name": "small mammals",
+        "joint": "56.00",
+        "pcgrad": "56.60",
+        "delta": "+0.60"
+      },
+      {
+        "name": "trees",
+        "joint": "61.20",
+        "pcgrad": "66.00",
+        "delta": "+4.80"
+      },
+      {
+        "name": "vehicles 1",
+        "joint": "69.80",
+        "pcgrad": "73.40",
+        "delta": "+3.60"
+      },
+      {
+        "name": "vehicles 2",
+        "joint": "80.40",
+        "pcgrad": "83.80",
+        "delta": "+3.40"
+      }
+    ],
+    "timing": {
+      "device": "cpu",
+      "processor": "Intel64 Family 6 Model 170 Stepping 4, GenuineIntel",
+      "torch_version": "2.12.1+cpu",
+      "threads": 8,
+      "runs": {
+        "joint": {
+          "wall_seconds": 9.263969099993119
+        },
+        "pcgrad": {
+          "wall_seconds": 17.136983100004727
+        }
+      }
+    },
+    "gain": "1.73",
+    "extra_correct": 173,
+    "improved": 16
+  }
 }
