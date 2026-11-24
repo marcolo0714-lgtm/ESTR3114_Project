@@ -103,6 +103,14 @@ and prediction flow. Clear removes the selected or pasted image. Clipboard
 contents are read only from an explicit paste event; no clipboard permission
 or background access is needed. Pasting an image URL alone does not fetch it.
 
+Three clickable examples (aquarium fish, sunflower and pickup truck) load a
+bundled image and automatically select its correct superclass. Select Predict
+after choosing an example. These are fixed CIFAR-100 training images, selected
+as the first retained training image of each class without consulting model
+predictions; they illustrate the interface, not held-out performance.
+`experiment_data/image_examples.json` records their labels, original indices
+and source, and `static/examples/` holds the original 32 x 32 PNG images.
+
 The image page requires a supplied superclass and chooses among its five fine
 classes. It does not infer the superclass or perform unrestricted 100-class
 recognition. Select Joint, PCGrad or both. Best-validation checkpoints are the

@@ -11,6 +11,16 @@
 </div>
 <div class="notice"><strong>Choose the superclass yourself.</strong> These models choose among five classes within that group. They do not identify the superclass or classify freely among all 100 classes.</div>
 <form id="image-form" class="input-panel" data-max-image-bytes="{{ image_limit_mb * 1024 * 1024 }}">
+  <div class="image-examples" role="group" aria-labelledby="image-examples-label">
+    <p class="input-label" id="image-examples-label">Try an example</p>
+    <div class="image-example-buttons">
+      {% for example in image_examples %}<button type="button" class="image-example" data-image-example="{{ example.url }}" data-task="{{ example.task }}" data-label="{{ example.label }}" aria-pressed="false">
+        <img src="{{ example.url }}" alt="" width="80" height="80">
+        <span>{{ example.label | capitalize }}<small>{{ example.superclass | replace('_',' ') }}</small></span>
+      </button>{% endfor %}
+    </div>
+    <p class="helper">One click loads an image and selects its correct superclass. Then select Predict. These are CIFAR-100 training examples for trying the interface, not a test of generalization.</p>
+  </div>
   <div class="image-input-grid">
     <div>
       <label class="input-label" for="image-file">Your image</label>

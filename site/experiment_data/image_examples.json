@@ -1,0 +1,32 @@
+[
+  {
+    "label": "aquarium fish",
+    "task": 1,
+    "superclass": "fish",
+    "url": "/static/examples/aquarium_fish.png",
+    "dataset": "CIFAR-100",
+    "split": "train",
+    "index": 4,
+    "source": "https://www.cs.toronto.edu/~kriz/cifar.html"
+  },
+  {
+    "label": "sunflower",
+    "task": 2,
+    "superclass": "flowers",
+    "url": "/static/examples/sunflower.png",
+    "dataset": "CIFAR-100",
+    "split": "train",
+    "index": 274,
+    "source": "https://www.cs.toronto.edu/~kriz/cifar.html"
+  },
+  {
+    "label": "pickup truck",
+    "task": 18,
+    "superclass": "vehicles_1",
+    "url": "/static/examples/pickup_truck.png",
+    "dataset": "CIFAR-100",
+    "split": "train",
+    "index": 451,
+    "source": "https://www.cs.toronto.edu/~kriz/cifar.html"
+  }
+]

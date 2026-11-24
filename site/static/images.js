@@ -57,6 +57,8 @@ function updateTaskClasses() {
 imageTask.addEventListener('change', () => { resetImageResults(); updateTaskClasses(); });
 imageCheckpoint.addEventListener('change', () => { resetImageResults(); updateImageAvailability(); });
 function selectImage(file, source = 'file') {
+  imageButton.disabled = imageBusy;
+  for (const example of imageForm.querySelectorAll('[data-image-example]')) example.setAttribute('aria-pressed', 'false');
   resetImageResults();
   selectedImage = null;
   imageSource.textContent = 'No image selected.';
@@ -70,7 +72,7 @@ function selectImage(file, source = 'file') {
     imageFail('Use a PNG, JPEG or WebP image.'); return;
   }
   selectedImage = file;
-  imageSource.textContent = `${source === 'clipboard' ? 'Pasted image' : 'Selected image'} ready (${Math.max(1, Math.ceil(file.size / 1024))} KB).`;
+  imageSource.textContent = `${source === 'clipboard' ? 'Pasted image' : source === 'example' ? 'Example image' : 'Selected image'} ready (${Math.max(1, Math.ceil(file.size / 1024))} KB).`;
   imageProgress.textContent = imageTask.value === ''
     ? 'Image ready. Choose its known superclass.'
     : 'Image ready. Select Predict to compare the models.';
@@ -88,6 +90,37 @@ function selectImage(file, source = 'file') {
   reader.readAsDataURL(file);
 }
 imageFile.addEventListener('change', () => selectImage(imageFile.files[0]));
+
+for (const example of imageForm.querySelectorAll('[data-image-example]')) {
+  example.addEventListener('click', async () => {
+    if (imageBusy) return;
+    selectImage(null);
+    imageFile.value = '';
+    const sequence = previewSequence;
+    imageButton.disabled = true;
+    imageSource.textContent = 'Loading example image…';
+    try {
+      const response = await fetch(example.dataset.imageExample);
+      if (!response.ok) throw new Error('Example unavailable');
+      const blob = await response.blob();
+      // A newer example, upload, paste or Clear wins over this request.
+      if (sequence !== previewSequence) return;
+      const file = new File([blob], example.dataset.imageExample.split('/').pop(), {type: blob.type});
+      imageTask.value = example.dataset.task;
+      updateTaskClasses();
+      selectImage(file, 'example');
+      if (selectedImage) {
+        example.setAttribute('aria-pressed', 'true');
+        imageSource.textContent = `${example.dataset.label} example ready. Superclass selected automatically.`;
+      }
+    } catch (_) {
+      if (sequence !== previewSequence) return;
+      imageButton.disabled = false;
+      imageSource.textContent = 'No image selected.';
+      imageFail('The example image could not be loaded. Try another example, upload a file, or paste an image.');
+    }
+  });
+}
 document.addEventListener('paste', event => {
   // Clipboard image bytes arrive with the user-triggered paste event. No
   // clipboard permission prompt, background read, or image-URL fetch is needed.
@@ -114,6 +147,8 @@ document.addEventListener('paste', event => {
 imageClear.addEventListener('click', () => {
   if (imageBusy) return;
   imageForm.reset(); previewSequence++; selectedImage = null;
+  imageButton.disabled = false;
+  for (const example of imageForm.querySelectorAll('[data-image-example]')) example.setAttribute('aria-pressed', 'false');
   imageSource.textContent = 'No image selected.';
   imagePreview.removeAttribute('src'); imagePreview.hidden = true;
   document.querySelector('#preview-placeholder').hidden = false;

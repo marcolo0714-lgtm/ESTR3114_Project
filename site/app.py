@@ -44,6 +44,7 @@ def create_app(store=None, device='cpu', image_store=None, *, frontend_only=None
     templates = Jinja2Templates(directory=ROOT/'templates')
     report = json.loads((ROOT/'experiment_data/text_results.json').read_text(encoding='utf-8'))
     image_report = json.loads((ROOT/'experiment_data/image_results.json').read_text(encoding='utf-8'))
+    image_examples = json.loads((ROOT/'experiment_data/image_examples.json').read_text(encoding='utf-8'))
     app.state.store = store
     app.state.device = device
     app.state.image_store = image_store
@@ -85,6 +86,7 @@ def create_app(store=None, device='cpu', image_store=None, *, frontend_only=None
     @app.get('/images')
     def image_page(request: Request):
         return page(request, 'images.html', 'images', tasks=image_report['tasks'],
+                    image_examples=image_examples,
                     image_limit_mb=(FRONTEND_IMAGE_LIMIT if is_frontend else LOCAL_IMAGE_LIMIT)//1024**2)
 
     @app.get('/experiment-1')
