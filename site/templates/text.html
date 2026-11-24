@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Try text models{% endblock %}
-{% block scripts %}<script src="/static/app.js" defer></script>{% endblock %}
+{% block scripts %}{% if not demo.enabled %}<script src="/static/app.js" defer></script>{% endif %}{% endblock %}
 {% block content %}
+{% if demo.enabled %}{% include 'demo_unavailable.html' %}{% else %}
 <div class="page-heading">
   <p class="eyebrow">Experiment 1 · GPT-2 and TweetEval</p>
   <h1>One sentence. Four methods.</h1>
@@ -55,4 +56,5 @@
     <li>A single example illustrates behavior; it does not establish which method performs better overall. <a href="/experiment-1">Read the experiment results</a>.</li>
   </ul>
 </section>
+{% endif %}
 {% endblock %}

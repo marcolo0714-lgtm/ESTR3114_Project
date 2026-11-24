@@ -15,6 +15,11 @@ A standalone, local Python website with four pages:
    settings, validation and held-out test metrics, per-task/class errors, confusion matrices,
    learning curves, gradient diagnostics, runtime and limitations.
 
+For the presentation QR-code entrance and one-file cloudflared URL update, see
+[DEMO.md](DEMO.md). Edit `demo_config.json` after starting your tunnel. Vercel
+shows first-visit guidance and replaces prediction forms with links to the live
+demo; local/cloudflared mode keeps the working forms.
+
 Experiment 2 has one matched seed. Each best-validation checkpoint has also been
 evaluated on the 10,000 held-out test images: joint 67.07%, PCGrad 68.80% accuracy.
 These are conditional five-class scores with the superclass supplied. No estimate

@@ -1,0 +1,9 @@
+{% if demo.url %}
+<div class="demo-actions">
+  <a class="primary demo-link" href="{{ demo.url }}/{{ demo.page }}">Open {{ 'image' if demo.page == 'images' else 'text' }} model demo</a>
+  <a class="secondary demo-link" href="{{ demo.url }}/{{ 'text' if demo.page == 'images' else 'images' }}">Try {{ 'text' if demo.page == 'images' else 'image' }} models</a>
+</div>
+<p class="helper demo-address">Live demo address: <a href="{{ demo.url }}/{{ demo.page }}">{{ demo.url }}</a></p>
+{% else %}
+<p class="notice"><strong>The live demo link has not been published yet.</strong> Please return when the presentation starts, or ask the presenters for the current link.</p>
+{% endif %}

@@ -25,7 +25,9 @@ def test_top_level_export_and_frontend_without_backend():
     client=TestClient(create_app(frontend_only=True,inference_url=''))
     for route in ['/text','/images','/experiment-1','/experiment-2']:
         assert client.get(route).status_code==200
-    assert 'up to 4 MB' in client.get('/images').text
+    assert 'Predictions are unavailable on this permanent website' in client.get('/images').text
+    assert 'id="image-form"' not in client.get('/images').text
+    assert 'id="prediction-form"' not in client.get('/text').text
     assert client.get('/api/health').json()['mode']=='frontend'
     for route in ['/api/models','/api/image-models']:
         data=client.get(route).json()

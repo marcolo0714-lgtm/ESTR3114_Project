@@ -15,6 +15,17 @@ def frontend_mode():
     return os.environ.get('SITE_MODE', 'frontend' if os.environ.get('VERCEL') else 'local') == 'frontend'
 
 
+def load_demo_url(root):
+    """Read the presentation link shared by every page; never used as an API proxy."""
+    url = json.loads((Path(root)/'demo_config.json').read_text(encoding='utf-8-sig'))['url'].strip().rstrip('/')
+    if url:
+        parsed = urlsplit(url)
+        if (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password
+                or parsed.path or parsed.query or parsed.fragment or any(c.isspace() for c in url)):
+            raise ValueError('demo_config.json: url must be an HTTPS base address, without a path, credentials or query.')
+    return url
+
+
 class InferenceProxy:
     def __init__(self, root, url='', token='', transport=None):
         self.root = Path(root)

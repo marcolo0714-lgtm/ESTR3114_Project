@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field, field_validator
 from starlette.concurrency import run_in_threadpool
-from deployment import API_PATHS, FRONTEND_IMAGE_LIMIT, LOCAL_IMAGE_LIMIT, InferenceProxy, frontend_mode
+from deployment import API_PATHS, FRONTEND_IMAGE_LIMIT, LOCAL_IMAGE_LIMIT, InferenceProxy, frontend_mode, load_demo_url
 
 ROOT = Path(__file__).resolve().parent
 Method = Literal['token', 'sentiment', 'joint', 'pcgrad']
@@ -51,6 +51,7 @@ def create_app(store=None, device='cpu', image_store=None, *, frontend_only=None
     is_frontend = frontend_mode() if frontend_only is None else frontend_only
     proxy = InferenceProxy(ROOT, url=os.environ.get('INFERENCE_API_URL','') if inference_url is None else inference_url,
                            token=os.environ.get('INFERENCE_API_TOKEN',''),transport=proxy_transport)
+    demo_url = load_demo_url(ROOT)
     app.state.frontend_only = is_frontend
     server_token = os.environ.get('MODEL_SERVER_TOKEN','')
 
@@ -70,7 +71,8 @@ def create_app(store=None, device='cpu', image_store=None, *, frontend_only=None
 
     def page(request, template, active, **context):
         return templates.TemplateResponse(request=request, name=template,
-                                           context=dict(active=active, **context))
+                                           context=dict(active=active, demo=dict(enabled=is_frontend,
+                                               url=demo_url, page='images' if active == 'images' else 'text'), **context))
 
     @app.get('/', include_in_schema=False)
     def home():

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Try image models{% endblock %}
-{% block scripts %}<script src="/static/images.js" defer></script>{% endblock %}
+{% block scripts %}{% if not demo.enabled %}<script src="/static/images.js" defer></script>{% endif %}{% endblock %}
 {% block content %}
+{% if demo.enabled %}{% include 'demo_unavailable.html' %}{% else %}
 <div class="page-heading">
   <p class="eyebrow">Experiment 2 · CIFAR-100 multitask classification</p>
   <h1>One image. Two methods.</h1>
@@ -59,4 +60,5 @@
   <li>The first request loads the selected checkpoints; later requests reuse them. Changing the checkpoint may require another first load.</li>
   <li>One example does not establish which method is better. <a href="/experiment-2">Read the settings and validation results</a>.</li>
 </ul></section>
+{% endif %}
 {% endblock %}

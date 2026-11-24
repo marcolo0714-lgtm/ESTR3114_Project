@@ -1,0 +1,17 @@
+.demo-link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; text-align: center; }
+.demo-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0 16px; }
+.demo-address { overflow-wrap: anywhere; }
+.demo-guide { border: 1px solid var(--line); border-radius: 8px; padding: 28px; margin-top: 0; max-width: 900px; }
+.live-demo-banner { padding: 12px 28px; border-bottom: 1px solid var(--line); background: #edf5fc; font-size: 15px; }
+.live-demo-banner a { font-weight: 650; }
+.live-demo-dialog { width: min(780px, calc(100% - 32px)); max-height: calc(100dvh - 32px); padding: clamp(24px, 5vw, 52px); border: 0; border-radius: 12px; color: var(--ink); box-shadow: 0 20px 90px #0004; overflow-y: auto; }
+.live-demo-dialog::backdrop { background: #101e2bd9; }
+.live-demo-dialog h2 { font-size: clamp(27px, 4vw, 38px); line-height: 1.2; }
+.live-demo-dialog .lead { font-size: 19px; }
+.live-demo-dialog form { margin-top: 24px; }
+@media(max-width: 760px) {
+  .demo-guide { padding: 20px; }
+  .live-demo-banner { padding: 12px 18px; }
+  .demo-actions { flex-direction: column; }
+  .demo-actions a { width: 100%; }
+}

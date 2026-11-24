@@ -1,0 +1,12 @@
+<div class="page-heading">
+  <p class="eyebrow">{{ 'Experiment 2 · Image models' if demo.page == 'images' else 'Experiment 1 · Text models' }}</p>
+  <h1>Try the models on our live demo</h1>
+  <p class="lead">Predictions are unavailable on this permanent website. Open the temporary demo website to run the saved models.</p>
+</div>
+<section class="demo-guide" aria-labelledby="demo-guide-title">
+  <h2 id="demo-guide-title">Continue to the {{ 'image' if demo.page == 'images' else 'text' }} model demo</h2>
+  {% include 'demo_link.html' %}
+  <p>The live demo is hosted on the presenter's computer through Cloudflare Tunnel. It is available while the computer and tunnel are running during the presentation.</p>
+  <p>If the demo does not open, its session may have ended. Ask the presenters for an updated address. The experiment reports and results remain available here.</p>
+  <p><a href="/experiment-1">Read Experiment 1</a> · <a href="/experiment-2">Read Experiment 2</a></p>
+</section>

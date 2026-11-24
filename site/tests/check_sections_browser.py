@@ -34,6 +34,8 @@ with sync_playwright() as p:
         for width,height in ((390,844),(768,1024)):
             page.set_viewport_size(dict(width=width,height=height))
             page.goto('http://sections.test/'+report)
+            if page.locator('#live-demo-dialog').is_visible():
+                page.get_by_role('button',name='Stay here and read the reports').click()
             toggle = page.locator('#report-sections-toggle')
             sidebar = page.locator('#report-sidebar')
             assert toggle.is_visible() and not sidebar.is_visible()

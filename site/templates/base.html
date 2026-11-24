@@ -7,6 +7,10 @@
   <title>{% block title %}Model comparison{% endblock %} · ESTR3114</title>
   <link rel="stylesheet" href="/static/styles.css">
   <link rel="stylesheet" href="/static/layout.css">
+  {% if demo.enabled %}
+  <link rel="stylesheet" href="/static/demo-guide.css">
+  <script src="/static/demo-guide.js" defer></script>
+  {% endif %}
   {% if active in ('experiment-1', 'experiment-2') %}<script src="/static/sections.js" defer></script>{% endif %}
   {% block scripts %}{% endblock %}
 </head>
@@ -25,6 +29,20 @@
       </nav>
     </div>
   </header>
+  {% if demo.enabled %}
+  <div class="live-demo-banner">
+    {% if demo.url %}For predictions, <a href="{{ demo.url }}/{{ demo.page }}">open the live model demo</a>. Available during the presentation.
+    {% else %}The live model demo link will be published for the presentation. Experiment reports are available below.{% endif %}
+  </div>
+  <dialog id="live-demo-dialog" class="live-demo-dialog" aria-labelledby="live-demo-title" aria-describedby="live-demo-description" data-demo-url="{{ demo.url }}">
+    <p class="eyebrow">Welcome · ESTR3114 presentation</p>
+    <h2 id="live-demo-title">Looking to try the models?</h2>
+    <p id="live-demo-description" class="lead">Use our temporary live demo website for text and image predictions. This permanent website hosts the experiment reports.</p>
+    {% include 'demo_link.html' %}
+    <p class="helper">The demo runs on the presenter's computer through Cloudflare Tunnel and is available while the presentation session is running. If the address no longer opens, ask the presenters for the current link.</p>
+    <form method="dialog"><button class="secondary" autofocus>Stay here and read the reports</button></form>
+  </dialog>
+  {% endif %}
   <main id="main" class="container">{% block content %}{% endblock %}</main>
   <footer class="container site-footer">ESTR3114 project · Joint training and PCGrad</footer>
 </body>

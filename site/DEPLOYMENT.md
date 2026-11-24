@@ -4,6 +4,12 @@ The website now exports a top-level `app = create_app()` from `app.py`.
 `pyproject.toml` explicitly identifies `app:app` as the Vercel entry point.
 The same code supports a lightweight frontend and a full inference server.
 
+For the current presentation setup, follow [DEMO.md](DEMO.md): run the full site
+locally through cloudflared and edit only `demo_config.json` to publish the
+temporary address. Frontend mode shows an entrance popup and guide pages in
+place of prediction forms. Local mode keeps the forms. The optional API proxy
+below is still supported, but is not needed for the presentation setup.
+
 ## Why there are two services
 
 The checkpoints total about 2.63 GB before PyTorch and other dependencies.
@@ -74,9 +80,9 @@ also excludes weights and local environments from CLI uploads. The default
 `requirements.txt` and `pyproject.toml` install only lightweight web/proxy
 dependencies. Full local/server requirements are in `requirements-local.txt`.
 
-If no inference URL is configured, all four pages still render; prediction
-controls explain that a model server must be configured, and prediction API
-requests return a clear 503. A website deployment alone does not deploy models.
+If no inference URL is configured, all four pages still render. Frontend model
+pages guide visitors to the temporary demo, and direct prediction API requests
+return a clear 503. A website deployment alone does not deploy models.
 
 The proxy permits images up to **4 MiB**, safely below Vercel's 4.5 MB request
 limit. Local inference permits **8 MiB**. The page, clipboard input and file
@@ -87,8 +93,10 @@ picker use the applicable limit. Smaller CIFAR-sized images need far less.
 1. Visit `/api/health` on the website: expect `mode: "frontend"` and
    `inference_configured: true`.
 2. Visit all four pages and open the report figures.
-3. On each prediction page, verify models are available **on the model server**.
-4. Predict a short sentence, then upload/paste an image and select its superclass.
+3. For the presentation flow, verify the popup and model guide pages open the
+   configured temporary website; test predictions there.
+4. For an optional proxy setup, verify availability through `/api/models` and
+   `/api/image-models`; the permanent model pages still guide visitors to the demo.
 5. If the site reports 401, check that the two server-token values match. A 502
    usually means the backend URL/service is unreachable or is returning HTML
    instead of the API. A 503 from the backend can mean checkpoint files are absent.
